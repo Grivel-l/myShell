@@ -6,14 +6,14 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/31 00:57:01 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/31 14:43:13 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/31 17:54:59 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	get_env_index(char ***environ, char **args)
+int			get_env_index(char ***environ, char *arg)
 {
 	int		i;
 	int		index;
@@ -24,7 +24,7 @@ static int	get_env_index(char ***environ, char **args)
 	pointer = *environ;
 	while (**environ != NULL)
 	{
-		if (ft_strncmp(**environ, args[1], ft_strlen(args[1])) == 0)
+		if (ft_strncmp(**environ, arg, ft_strlen(arg)) == 0)
 		{
 			index = i;
 			break ;
@@ -56,7 +56,7 @@ int			unsetenv_builtin(char ***environ, char **args, t_ret *ret)
 		return (0);
 	}
 	ret->cmd_ret = 0;
-	if ((index = get_env_index(environ, args)) == -1)
+	if ((index = get_env_index(environ, args[1])) == -1)
 		ret->cmd_ret = -1;
 	else
 	{
@@ -66,53 +66,21 @@ int			unsetenv_builtin(char ***environ, char **args, t_ret *ret)
 	return (0);
 }
 
-static int	env_exist(char **environ, char *arg, t_ret *ret)
-{
-	t_list	*list;
-
-	ret->cmd_ret = -1;
-	if ((list = get_env(environ, arg, 0)) == NULL)
-	{
-		ret->ret = -1;
-		return (-1);
-	}
-	if (((char *)list->content)[0] == '\0')
-	{
-		ft_lstfree(&list);
-		return (0);
-	}
-	else
-	{
-		ft_lstfree(&list);
-		return (1);
-	}
-}
-
 int			setenv_builtin(char ***environ, char **args, t_ret *ret)
 {
-	char	*tmp;
-	int		exist;
+	t_list	*value;
 
 	ret->builtin = 1;
 	if (check_args(args, "setenv KEY VALUE", ret) == -1)
 		return (0);
-	if ((exist = env_exist(*environ, args[1], ret)) == -1)
+	if ((value = ft_lstnew(args[2], ft_strlen(args[2]))) == NULL)
 		return (-1);
-	if (exist == 1)
-		return (0);
+	if (update_env(args[1], value, environ) == -1)
+	{
+		ft_lstfree(&value);
+		return (-1);
+	}
+	ft_lstfree(&value);
 	ret->cmd_ret = 0;
-	if ((tmp = ft_strjoin(args[1], "=")) == NULL)
-		return (-1);
-	if ((tmp = ft_strrealloc(tmp, args[2])) == NULL)
-	{
-		free(tmp);
-		return (-1);
-	}
-	if (ft_pushstr(environ, tmp) == -1)
-	{
-		free(tmp);
-		return (-1);
-	}
-	free(tmp);
 	return (0);
 }

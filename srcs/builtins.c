@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/28 16:14:57 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/31 00:57:52 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/31 17:18:03 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -72,10 +72,16 @@ static int	echo_builtin(char **args, t_ret *ret)
 
 int			check_builtin(t_ret *ret, char **args, char ***environ)
 {
+	int		ret_value;
+
 	if (ft_strcmp(args[0], "exit") == 0)
 		exit_builtin(args, ret);
 	else if (ft_strcmp(args[0], "cd") == 0)
-		return (cd_builtin(args, environ, ret));
+	{
+		if ((ret_value = cd_builtin(args, environ, ret)) == -1)
+			return (-1);
+		return (update_pwd(environ));
+	}
 	else if (ft_strcmp(args[0], "env") == 0)
 		return (env_builtin(environ, ret));
 	else if (ft_strcmp(args[0], "setenv") == 0)

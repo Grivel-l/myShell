@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:25:27 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/31 14:34:30 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/31 17:55:03 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -43,6 +43,9 @@ void				free_everything(char ***environ,
 
 int					delete_env(char ***environ, int index);
 t_list				*get_env(char **environ, char *env_name, int parse);
+int					get_env_index(char ***environ, char *arg);
+int					update_pwd(char ***environ);
+int					update_env(char *key, t_list *value, char ***environ);
 int					env_builtin(char ***environ, t_ret *ret);
 int					setenv_builtin(char ***environ, char **args, t_ret *ret);
 int					unsetenv_builtin(char ***environ,
@@ -54,6 +57,6 @@ void				eacces_error(char *path, char *extra);
 void				enoent_error(char *path, char *extra);
 
 void				print_usage(char *extra);
-int 		 	 	check_args(char **args, char *extra, t_ret *ret);
+int					check_args(char **args, char *extra, t_ret *ret);
 
 #endif

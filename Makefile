@@ -6,14 +6,14 @@
 #    By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2017/12/11 16:25:45 by legrivel     #+#   ##    ##    #+#        #
-#    Updated: 2018/01/31 13:56:16 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/01/31 17:58:17 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
 
 NAME = 21sh
 SRCS = main.c prompt.c process.c free_alloc.c env.c errors.c builtins.c \
-	   usage.c env_manipulations.c bins.c
+	   usage.c env_manipulations.c bins.c pwd.c
 OBJS = $(SRCS:.c=.o)
 SRCS_PATH = ./srcs/
 INCS_PATH = ./includes/
