@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/31 00:57:01 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/31 00:59:54 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/31 14:43:13 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -66,17 +66,40 @@ int			unsetenv_builtin(char ***environ, char **args, t_ret *ret)
 	return (0);
 }
 
+static int	env_exist(char **environ, char *arg, t_ret *ret)
+{
+	t_list	*list;
+
+	ret->cmd_ret = -1;
+	if ((list = get_env(environ, arg, 0)) == NULL)
+	{
+		ret->ret = -1;
+		return (-1);
+	}
+	if (((char *)list->content)[0] == '\0')
+	{
+		ft_lstfree(&list);
+		return (0);
+	}
+	else
+	{
+		ft_lstfree(&list);
+		return (1);
+	}
+}
+
 int			setenv_builtin(char ***environ, char **args, t_ret *ret)
 {
 	char	*tmp;
+	int		exist;
 
 	ret->builtin = 1;
-	if (args[1] == NULL || (args[1] != NULL && args[2] == NULL))
-	{
-		ret->cmd_ret = -1;
-		print_usage("setenv KEY VALUE");
+	if (check_args(args, "setenv KEY VALUE", ret) == -1)
 		return (0);
-	}
+	if ((exist = env_exist(*environ, args[1], ret)) == -1)
+		return (-1);
+	if (exist == 1)
+		return (0);
 	ret->cmd_ret = 0;
 	if ((tmp = ft_strjoin(args[1], "=")) == NULL)
 		return (-1);

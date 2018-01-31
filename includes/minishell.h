@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:25:27 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/31 01:05:58 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/31 14:34:30 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,8 +38,8 @@ int					exec_commands(t_list *commands,
 
 int					check_builtin(t_ret *ret, char **args, char ***environ);
 
-void				free_everything(char ***environ, t_list **path_env,
-			char ***args, t_list **commands);
+void				free_everything(char ***environ,
+		char ***args, t_list **commands);
 
 int					delete_env(char ***environ, int index);
 t_list				*get_env(char **environ, char *env_name, int parse);
@@ -49,9 +49,11 @@ int					unsetenv_builtin(char ***environ,
 		char **args, t_ret *ret);
 
 void				not_found(char *name);
-void				print_usage(char *extra);
 void				not_dir(char *path, char *extra);
 void				eacces_error(char *path, char *extra);
 void				enoent_error(char *path, char *extra);
+
+void				print_usage(char *extra);
+int 		 	 	check_args(char **args, char *extra, t_ret *ret);
 
 #endif

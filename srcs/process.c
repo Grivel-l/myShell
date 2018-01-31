@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 23:39:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/31 13:36:20 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/31 14:42:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -46,12 +46,12 @@ int			exec_commands(t_list *commands, char ***environ, t_ret *ret)
 	{
 		if (split_and_check(commands->content, &args, ret, environ) == -1)
 		{
-			free_everything(environ, NULL, &args, &begin);
+			free_everything(environ, &args, &begin);
 			return (-1);
 		}
 		if (ret->stop)
 		{
-			free_everything(environ, NULL, &args, &begin);
+			free_everything(environ, &args, &begin);
 			exit(ret->ret);
 		}
 		ft_freetab(&args);
