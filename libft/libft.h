@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 19:15:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/01 23:10:53 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/01 23:44:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,6 +33,13 @@ typedef struct			s_fd_list
 	char				*content;
 	struct s_fd_list	*next;
 }						t_fd_list;
+
+typedef struct			s_dlist
+{
+	struct s_dlist		*next;
+	char				*content;
+	struct s_dlist		*previous;
+}						t_dlist;
 
 typedef struct			s_quote
 {
@@ -167,6 +174,17 @@ char					*ft_strrealloc(char *str, char *to_append);
 char					*ft_strchr_qh(char *str, char c);
 /*
 ** Str functions
+*/
+
+/*
+** Dlist functions
+*/
+void					ft_putdlst(t_dlist *list);
+t_dlist					*ft_dlstnew(char *content);
+void					ft_dlstnappend(t_dlist **list, t_dlist *link);
+void					ft_dlstpappend(t_dlist **list, t_dlist *link);
+/*
+** Dlist functions
 */
 
 /*
