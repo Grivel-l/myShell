@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 19:15:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/01 23:44:35 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/02 00:05:00 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -181,6 +181,7 @@ char					*ft_strchr_qh(char *str, char c);
 */
 void					ft_putdlst(t_dlist *list);
 t_dlist					*ft_dlstnew(char *content);
+void					ft_dlstfree(t_dlist **list);
 void					ft_dlstnappend(t_dlist **list, t_dlist *link);
 void					ft_dlstpappend(t_dlist **list, t_dlist *link);
 /*
