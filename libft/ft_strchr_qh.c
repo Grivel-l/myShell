@@ -1,41 +1,38 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   ft_lstnew.c                                      .::    .:/ .      .::   */
+/*   ft_strchr_qh.c                                   .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2017/11/26 01:54:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/01 23:10:33 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Created: 2018/02/01 22:34:31 by legrivel     #+#   ##    ##    #+#       */
+/*   Updated: 2018/02/01 22:47:16 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstnew(void const *content, size_t content_size)
+static void	check_quotes(char c, t_quote *quotes)
 {
-	char	*str;
-	char	*copy;
-	t_list	*link;
+	if (c == '"' && !quotes->simpleq)
+		quotes->doubleq = !quotes->doubleq;
+	else if (c == '\'' && !quotes->doubleq)
+		quotes->simpleq = !quotes->simpleq;
+}
 
-	str = NULL;
-	if ((link = malloc(sizeof(t_list))) == NULL)
-		return (NULL);
-	if (content != NULL && (str = malloc(content_size + 1)) == NULL)
+char	*ft_strchr_qh(char *str, char c)
+{
+	t_quote	quotes;
+
+	quotes.simpleq = 0;
+	quotes.doubleq = 0;
+	while (*str)
 	{
-		free(link);
-		return (NULL);
+		check_quotes(*str, &quotes);
+		if (*str == c && !quotes.simpleq && !quotes.doubleq)
+			return (str);
+		str += 1;
 	}
-	link->next = NULL;
-	link->content = str;
-	link->content_size = content_size;
-	if (content != NULL)
-	{
-		copy = (char *)content;
-		while (*copy)
-			*str++ = *copy++;
-		*str = '\0';
-	}
-	return (link);
+	return (NULL);
 }

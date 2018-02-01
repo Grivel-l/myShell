@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/11/26 01:54:20 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2017/11/26 01:54:20 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/01 23:11:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,6 +15,5 @@
 
 void	ft_putstr_fd(char const *s, int fd)
 {
-	while (s != NULL && *s)
-		ft_putchar_fd(*s++, fd);
+	write(fd, s, ft_strlen(s));
 }

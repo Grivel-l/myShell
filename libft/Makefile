@@ -6,7 +6,7 @@
 #    By: legrivel <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/09 18:32:02 by legrivel          #+#    #+#              #
-#    Updated: 2018/01/30 00:11:41 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/02/01 22:45:30 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ OBJS = ft_isalpha.o ft_memccpy.o ft_memset.o ft_putnbr_fd.o ft_strcmp.o  \
 	   ft_tablen.o ft_puttab.o ft_pushstr.o ft_readdir.o ft_lstappend.o \
 	   ft_strtolower.o ft_strcmp_ci.o ft_putofft.o ft_putlonglong.o \
 	   get_next_line.o ft_tabdup.o ft_freetab.o ft_strsplit_qh.o ft_putlst.o \
-	   ft_tabtolist.o ft_lstfree.o
+	   ft_tabtolist.o ft_lstfree.o ft_strchr_qh.o
 
 FLAGS = -Wall -Wextra -Werror
 

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 19:15:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/30 22:47:47 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/01 23:10:53 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -164,6 +164,7 @@ t_list					*ft_tabtolist(char **tab);
 int						ft_strcmp_ci(char const *str1, char const *str2);
 char					*ft_strtolower(char *str);
 char					*ft_strrealloc(char *str, char *to_append);
+char					*ft_strchr_qh(char *str, char c);
 /*
 ** Str functions
 */
