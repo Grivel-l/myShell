@@ -6,14 +6,15 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/28 00:08:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/31 14:03:26 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/02 00:10:56 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "shell.h"
 
-void		free_everything(char ***environ, char ***args, t_list **commands)
+void		free_everything(char ***environ, t_dlist **list,
+		char ***args, t_list **commands)
 {
 	if (environ != NULL)
 		ft_freetab(environ);
@@ -21,4 +22,6 @@ void		free_everything(char ***environ, char ***args, t_list **commands)
 		ft_freetab(args);
 	if (commands != NULL)
 		ft_lstfree(commands);
+	if (list != NULL)
+		ft_dlstfree(list);
 }
