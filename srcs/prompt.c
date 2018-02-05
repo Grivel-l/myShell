@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 20:29:01 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 22:27:42 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -55,7 +55,7 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
 	ret = 0;
 	line = NULL;
 	ft_putstr("$ ");
-	while (1)
+	while (ret != 1)
 	{
 		if (read(STDIN_FILENO, buffer, 3) == -1)
 			ret = -1;
@@ -66,9 +66,10 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
 			free(line);
 			return (-1);
 		}
-		else if (ret == 1)
-			break ;
 	}
 	ft_putchar('\n');
+	if (line != NULL)
+		*list = (*list)->next;
+	ft_strdel(&line);
 	return (wait_prompt(environ, cmd_ret, list));
 }

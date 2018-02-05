@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 21:19:50 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 22:27:31 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -67,12 +67,12 @@ static int	previous_command(char **line, size_t *pos, t_dlist **list)
 	{
 		if (clear_line(line, pos, list) == -1)
 			return (-1);
+		if ((*list)->previous != NULL)
+			*list = (*list)->previous;
 		if ((*line = ft_strdup((*list)->content)) == NULL)
 			return (-1);
 		*pos = ft_strlen(*line);
 		ft_putstr(*line);
-		if ((*list)->previous != NULL)
-			*list = (*list)->previous;
 	}
 	return (0);
 }
@@ -85,11 +85,11 @@ static int	next_command(char **line, size_t *pos, t_dlist **list)
 			return (-1);
 		if ((*list)->next != NULL)
 		{
-			if ((*line = ft_strdup((*list)->next->content)) == NULL)
+			*list = (*list)->next;
+			if ((*line = ft_strdup((*list)->content)) == NULL)
 				return (-1);
 			*pos = ft_strlen(*line);
 			ft_putstr(*line);
-			*list = (*list)->next;
 		}
 	}
 	return (0);
@@ -125,17 +125,22 @@ static int	handle_return(char **line, t_dlist **list)
 {
 	t_dlist	*new;
 
+	if (*line == NULL)
+		return (1);
 	if ((new = ft_dlstnew(*line)) == NULL)
 		return (-1);
 	if (*list == NULL)
 		*list = new;
 	else
 	{
-		new->previous = *list;
-		(*list)->next = new;
-		*list = (*list)->next;
+		new->previous = (*list)->previous;
+		new->previous->next = new;
+		free(*list);
+		*list = new;
 	}
-	ft_strdel(line);
+	if (((*list)->next = ft_dlstnew("")) == NULL)
+		return (-1);
+	(*list)->next->previous = *list;
 	return (1);
 }
 
