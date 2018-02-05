@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 22:27:31 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 22:47:02 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -125,6 +125,8 @@ static int	handle_return(char **line, t_dlist **list)
 {
 	t_dlist	*new;
 
+	while (*list != NULL && (*list)->next != NULL)
+		*list = (*list)->next;
 	if (*line == NULL)
 		return (1);
 	if ((new = ft_dlstnew(*line)) == NULL)
