@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/05 12:20:51 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 18:09:51 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 18:17:07 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,7 +42,7 @@ int		remove_char(char **line, size_t *index)
 {
 	char	*new;
 
-	if (ft_strlen(*line) == 1 || *index == 0)
+	if (*line == NULL || ft_strlen(*line) == 1 || *index == 0)
 	{
 		if (*index == 1)
 		{

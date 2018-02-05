@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 17:46:03 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 18:16:51 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,21 +15,18 @@
 
 static int	handle_backspace(char **line, size_t *pos)
 {
-	(void)line;
-	if (*pos > 2)
+	if (*pos > 0)
 	{
 		if (put_cap("le") == -1)
 			return (-1);
 		if (put_cap("dc") == -1)
 			return (-1);
-		return (remove_char(line, pos));
 	}
-	return (0);
+	return (remove_char(line, pos));
 }
 
 static int	handle_arrows(char buffer[3], char **line, size_t *pos)
 {
-	(void)line;
 	int		ret;
 
 	if (buffer[2] == 68)
@@ -42,8 +39,11 @@ static int	handle_arrows(char buffer[3], char **line, size_t *pos)
 	}
 	if (buffer[2] == 67)
 	{
-		*pos += 1;
-		ret = put_cap("nd");
+		if (*pos < ft_strlen(*line))
+		{
+			*pos += 1;
+			ret = put_cap("nd");
+		}
 	}
 	return (ret);
 }

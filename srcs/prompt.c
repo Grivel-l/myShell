@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 17:58:37 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 18:14:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -63,7 +63,6 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
 			ret = -1;
 		if (ret == -1)
 			return (-1);
-		printf("\nLine %s, index: %zu\n", line, pos);
 	}
 	return (wait_prompt(environ, cmd_ret, list));
 }
