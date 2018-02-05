@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 18:14:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 18:39:43 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -59,8 +59,8 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
 	{
 		if (read(STDIN_FILENO, buffer, 3) == -1)
 			ret = -1;
-		if (ret == 0 && handle_input(buffer, &line, &pos) == -1)
-			ret = -1;
+		if (ret == 0)
+			ret = handle_input(buffer, &line, &pos);
 		if (ret == -1)
 			return (-1);
 	}
