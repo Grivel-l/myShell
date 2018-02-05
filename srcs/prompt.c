@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/02 17:29:58 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 17:58:37 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -39,7 +39,7 @@ int				set_canonical(void)
 		free(name);
 		return (-1);
 	}
-	if (put_cpblt("im") == -1)
+	if (put_cap("im") == -1)
 		return (-1);
 	return (0);
 }
@@ -47,9 +47,11 @@ int				set_canonical(void)
 int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
 {
 	int		ret;
+	size_t	pos;
 	char	*line;
 	char	buffer[3];
 
+	pos = 0;
 	ret = 0;
 	line = NULL;
 	ft_putstr("$ ");
@@ -57,17 +59,11 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
 	{
 		if (read(STDIN_FILENO, buffer, 3) == -1)
 			ret = -1;
-		if (ret == 0 && handle_input(buffer) == -1)
+		if (ret == 0 && handle_input(buffer, &line, &pos) == -1)
 			ret = -1;
-		if (ret == 0 && line != NULL)
-			if ((line = ft_strrealloc(line, buffer)) == NULL)
-				ret = -1;
-		if (ret == 0 && line == NULL)
-			if ((line = ft_strdup(buffer)) == NULL)
-				ret = -1;
-		ft_strdel(&line);
 		if (ret == -1)
 			return (-1);
+		printf("\nLine %s, index: %zu\n", line, pos);
 	}
 	return (wait_prompt(environ, cmd_ret, list));
 }

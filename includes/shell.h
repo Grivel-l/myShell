@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/02 17:36:32 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 17:38:23 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -32,8 +32,11 @@ typedef struct	s_ret
 int				set_canonical(void);
 int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list);
 
-int				put_cpblt(char *cpblt);
-int				handle_input(char buffer[3]);
+int				put_cap(char *cap);
+int				handle_input(char buffer[3], char **line, size_t *pos);
+
+int				remove_char(char **line, size_t *index);
+int				insert_char(char **line, char c, size_t *index);
 
 void			free_everything(char ***environ, t_dlist **list,
 		char ***args, t_list **commands);
