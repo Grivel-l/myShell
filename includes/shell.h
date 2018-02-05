@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 18:51:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/05 20:31:17 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,8 +33,8 @@ int				set_canonical(void);
 int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list);
 
 int				put_cap(char *cap);
-int				handle_input(char buffer[3], char **line, size_t *pos);
-static int		handle_arrows(char buffer[3], char **line, size_t *pos);
+int				handle_input(char buffer[3], char **line, size_t *pos, t_dlist **list);
+int				handle_arrows(char buffer[3], char **line, size_t *pos, t_dlist **list);
 
 int				remove_char(char **line, size_t *index);
 int				insert_char(char **line, char c, size_t *index);
