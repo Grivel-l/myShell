@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/05 22:27:42 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/06 21:01:40 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -44,7 +44,7 @@ int				set_canonical(void)
 	return (0);
 }
 
-int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
+int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list, char *copy_buffer)
 {
 	int		ret;
 	size_t	pos;
@@ -59,10 +59,13 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
 	{
 		if (read(STDIN_FILENO, buffer, 3) == -1)
 			ret = -1;
-		if (ret == 0)
+		if (ret == 0 && buffer[0] != 6 && buffer[0] != 7 && buffer[0] != 8)
 			ret = handle_input(buffer, &line, &pos, list);
+		else if (ret == 0)
+			ret = handle_copy_buffer(buffer, &line, &pos, &copy_buffer);
 		if (ret == -1)
 		{
+			ft_strdel(&copy_buffer);
 			free(line);
 			return (-1);
 		}
@@ -71,5 +74,5 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list)
 	if (line != NULL)
 		*list = (*list)->next;
 	ft_strdel(&line);
-	return (wait_prompt(environ, cmd_ret, list));
+	return (wait_prompt(environ, cmd_ret, list, copy_buffer));
 }

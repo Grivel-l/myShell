@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/02 17:42:55 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/06 20:28:09 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -32,7 +32,7 @@ int		main(int argc, char **argv, char **environ)
 		free_everything(&environ, NULL, NULL, NULL);
 		return (-1);
 	}
-	if (wait_prompt(environ, ret, &list) == -1)
+	if (wait_prompt(environ, ret, &list, NULL) == -1)
 	{
 		free_everything(&environ, &list, NULL, NULL);
 		return (-1);
