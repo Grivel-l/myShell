@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/06 22:13:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/06 23:19:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,7 +48,7 @@ static int	cut(char **line, size_t *pos, char **copy_buffer)
 	return (1);
 }
 
-static int	rewind_cursor(size_t *pos, size_t length)
+int			rewind_cursor(size_t *pos, size_t length)
 {
 	while (length > 0)
 	{
@@ -56,6 +56,18 @@ static int	rewind_cursor(size_t *pos, size_t length)
 			return (-1);
 		length -= 1;
 		*pos -= 1;
+	}
+	return (0);
+}
+
+int			forward_cursor(size_t *pos, size_t length)
+{
+	while (length > 0)
+	{
+		if (put_cap("nd") == -1)
+			return (-1);
+		length -= 1;
+		*pos += 1;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/06 21:01:40 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/06 22:55:50 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -59,10 +59,12 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list, char *copy_buf
 	{
 		if (read(STDIN_FILENO, buffer, 3) == -1)
 			ret = -1;
-		if (ret == 0 && buffer[0] != 6 && buffer[0] != 7 && buffer[0] != 8)
+		if (ret == 0 && ft_strchr("14678", buffer[0] + 48) == NULL)
 			ret = handle_input(buffer, &line, &pos, list);
-		else if (ret == 0)
+		else if (ret == 0 && ft_strchr("678", buffer[0] + 48) != NULL)
 			ret = handle_copy_buffer(buffer, &line, &pos, &copy_buffer);
+		else if (ret == 0 && ft_strchr("14", buffer[0] + 48) != NULL)
+			ret = handle_movements(buffer[0], line, &pos);
 		if (ret == -1)
 		{
 			ft_strdel(&copy_buffer);

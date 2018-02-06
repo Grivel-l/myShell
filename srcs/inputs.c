@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/06 21:55:28 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/06 22:17:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -177,5 +177,7 @@ int		handle_input(char buffer[3], char **line, size_t *pos, t_dlist **list)
 			return (-1);
 		ft_putchar(buffer[0]);
 	}
+	else
+		printf("%i\n", buffer[0]);
 	return (0);
 }
