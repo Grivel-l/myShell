@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/06 21:55:15 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/06 22:13:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,6 +15,8 @@
 
 static int	copy(char **line, size_t *pos, char **copy_buffer)
 {
+	if (*line == NULL)
+		return (0);
 	ft_strdel(copy_buffer);
 	if ((*copy_buffer = malloc(ft_strlen(&((*line)[*pos])) + 1)) == NULL)
 		return (-1);
@@ -27,6 +29,8 @@ static int	cut(char **line, size_t *pos, char **copy_buffer)
 	char	*copy;
 	size_t	length;
 
+	if (*line == NULL)
+		return (0);
 	ft_strdel(copy_buffer);
 	if ((*copy_buffer = malloc(ft_strlen(&((*line)[*pos])) + 1)) == NULL)
 		return (-1);
