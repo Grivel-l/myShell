@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 22:54:28 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/06 23:31:11 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/07 14:47:46 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -47,9 +47,9 @@ int			handle_movements(char key, char *line, size_t *pos)
 {
 	if (line == NULL)
 		return (0);
-	if (key == 1)
+	if (key == 18)
 		return (left(line, pos));
-	else if (key == 4)
+	else if (key == 20)
 		return (right(line, pos));
 	return (0);
 }
