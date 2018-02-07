@@ -6,28 +6,28 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/07 23:59:45 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/08 00:04:27 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-static int	write_line(char **line, size_t *pos)
+int			write_line(char *line, size_t *pos)
 {
 	size_t	length;
 
-	if (*line != NULL)
+	if (line != NULL)
 	{
-		ft_putstr(*line);
-		length = ft_strlen(*line) - *pos;
-		*pos = ft_strlen(*line);
+		ft_putstr(line);
+		length = ft_strlen(line) - *pos;
+		*pos = ft_strlen(line);
 		return (rewind_cursor(pos, length));
 	}
 	return (0);
 }
 
-static int	clear_all(size_t *pos)
+int			clear_all(size_t *pos)
 {
 	size_t	old_pos;
 
@@ -50,7 +50,7 @@ static int	handle_backspace(char **line, size_t *pos)
 		return (-1);
 	if (remove_char(line, pos) == -1)
 		return (-1);
-	return(write_line(line, pos));
+	return(write_line(*line, pos));
 }
 
 static int	clear_line(char **line, size_t *pos)
@@ -154,7 +154,7 @@ static int	handle_printable(char **line, size_t *pos, char c)
 		return (-1);
 	if (insert_char(line, c, pos) == -1)
 		return (-1);
-	return(write_line(line, pos));
+	return(write_line(*line, pos));
 }
 
 static int	my_putc(int i)

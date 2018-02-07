@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/06 23:19:06 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/08 00:05:09 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -74,13 +74,10 @@ int			forward_cursor(size_t *pos, size_t length)
 
 static int	rewrite_line(char *line, size_t *pos)
 {
-	if (rewind_cursor(pos, *pos) == -1)
+	if (clear_all(pos) == -1)
 		return (-1);
-	if (put_cap("ce") == -1)
-		return (-1);
-	ft_putstr(line);
 	*pos = ft_strlen(line);
-	return (0);
+	return (write_line(line, pos));
 }
 
 static int	paste(char **line, size_t *pos, char **copy_buffer)

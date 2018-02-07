@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/06 23:16:47 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/08 00:04:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,6 +34,8 @@ int				wait_prompt(char **environ, t_ret cmd_ret,
 		t_dlist **list, char *copy_buffer);
 
 int				put_cap(char *cap);
+int				clear_all(size_t *pos);
+int				write_line(char *line, size_t *pos);
 int				rewind_cursor(size_t *pos, size_t length);
 int				forward_cursor(size_t *pos, size_t length);
 
