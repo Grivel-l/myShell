@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 22:54:28 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/07 14:47:46 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/08 00:33:28 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -43,6 +43,26 @@ static int	right(char *line, size_t *pos)
 	return (forward_cursor(pos, length - *pos));
 }
 
+static int	up(size_t *pos)
+{
+	int		col;
+
+	if ((col = tgetnum("co")) == -1)
+		return (-1);
+	return (rewind_cursor(pos, (size_t)col > *pos ? *pos : col));
+}
+
+static int	down(char *line, size_t *pos)
+{
+	int		col;
+	size_t	length;
+
+	if ((col = tgetnum("co")) == -1)
+		return (-1);
+	length = ft_strlen(line);
+	return (forward_cursor(pos, ((size_t)col + *pos) > length ? length - *pos : col));
+}
+
 int			handle_movements(char key, char *line, size_t *pos)
 {
 	if (line == NULL)
@@ -51,5 +71,9 @@ int			handle_movements(char key, char *line, size_t *pos)
 		return (left(line, pos));
 	else if (key == 20)
 		return (right(line, pos));
+	else if (key == 23)
+		return (up(pos));
+	else if (key == 5)
+		return (down(line, pos));
 	return (0);
 }

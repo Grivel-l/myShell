@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/08 00:04:27 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/08 00:16:02 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -184,7 +184,5 @@ int		handle_input(char buffer[3], char **line, size_t *pos, t_dlist **list)
 		return (handle_return(line, list));
 	else if (buffer[0] >= 32 && buffer[0] <= 126)
 		return (handle_printable(line, pos, buffer[0]));
-	else
-		printf("%i\n", buffer[0]);
 	return (0);
 }
