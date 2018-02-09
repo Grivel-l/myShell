@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/08 00:16:02 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/09 16:22:59 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -32,7 +32,7 @@ int			clear_all(size_t *pos)
 	size_t	old_pos;
 
 	old_pos = *pos;
-	*pos += 2;
+	*pos += PL;
 	if (rewind_cursor(pos, *pos) == -1)
 		return (-1);
 	if (put_cap("cd") == -1)
@@ -97,30 +97,47 @@ static int	next_command(char **line, size_t *pos, t_dlist **list)
 	return (0);
 }
 
-int			handle_arrows(char buffer[3], char **line, size_t *pos, t_dlist **list)
+int			left_arrow(size_t *pos)
 {
-	int		ret;
-
-	ret = 0;
-	if (buffer[2] == 68 && *pos > 0)
+	if (*pos > 0)
 	{
 		*pos -= 1;
-		ret = put_cap("le");
+		return (put_cap("le"));
 	}
-	else if (buffer[2] == 67 && *line != NULL && *pos < ft_strlen(*line))
+	return (0);
+}
+
+int			right_arrow(size_t *pos, char *line)
+{
+	int		col;
+
+	if (line != NULL && *pos < ft_strlen(line))
 	{
+		if ((col = tgetnum("co")) == -1)
+			return (-1);
 		*pos += 1;
-		ret = put_cap("nd");
+		if (*pos + PL != 0 && ((*pos + PL) % col) == 0)
+			return (put_cap("do"));
+		return (put_cap("nd"));
 	}
+	return (0);
+}
+
+int			handle_arrows(char buffer[3], char **line, size_t *pos, t_dlist **list)
+{
+	if (buffer[2] == 68)
+		return (left_arrow(pos));
+	else if (buffer[2] == 67)
+		return (right_arrow(pos, *line));
 	else if (buffer[2] == 70 && *line != NULL)
-		ret = forward_cursor(pos, ft_strlen(*line) - *pos);
+		return (forward_cursor(pos, ft_strlen(*line) - *pos, *line));
 	else if (buffer[2] == 72 && *line != NULL)
-		ret = rewind_cursor(pos, *pos);
+		return (rewind_cursor(pos, *pos));
 	else if (buffer[2] == 65)
-		ret = previous_command(line, pos, list);
+		return (previous_command(line, pos, list));
 	else if (buffer[2] == 66)
-		ret = next_command(line, pos, list);
-	return (ret);
+		return (next_command(line, pos, list));
+	return (0);
 }
 
 static int	handle_return(char **line, t_dlist **list)

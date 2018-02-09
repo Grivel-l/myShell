@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/08 00:04:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/09 16:21:57 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,6 +20,8 @@
 # include <sys/stat.h>
 # include <termios.h>
 # include <term.h>
+
+# define PL 2
 
 typedef struct	s_ret
 {
@@ -36,8 +38,11 @@ int				wait_prompt(char **environ, t_ret cmd_ret,
 int				put_cap(char *cap);
 int				clear_all(size_t *pos);
 int				write_line(char *line, size_t *pos);
+
+int				left_arrow(size_t *pos);
+int				right_arrow(size_t *pos, char *line);
 int				rewind_cursor(size_t *pos, size_t length);
-int				forward_cursor(size_t *pos, size_t length);
+int				forward_cursor(size_t *pos, size_t length, char *line);
 
 int				handle_input(char buffer[3], char **line, size_t *pos, t_dlist **list);
 int				handle_arrows(char buffer[3], char **line, size_t *pos, t_dlist **list);
