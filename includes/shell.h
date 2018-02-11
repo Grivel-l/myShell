@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 15:55:28 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 17:22:40 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,7 +40,6 @@ int				write_line(char *line, size_t *pos);
 int				clear_all(size_t *pos, t_dlist **list);
 
 int				isquoting(t_dlist *list);
-char			*get_previous_command(t_dlist *list);
 
 int				left_arrow(size_t *pos);
 int				right_arrow(size_t *pos, char *line);

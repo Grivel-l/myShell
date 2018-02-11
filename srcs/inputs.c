@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 15:55:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 17:56:24 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -166,39 +166,52 @@ static int	check_quotes(char **line, t_dlist **list, size_t *pos)
 	char	*command;
 	t_dlist	*pointer;
 
-	pointer = *list;
 	if (*list == NULL)
+	{
+		if (!ft_quotesclosed(*line) && handle_printable(line, pos, '\n', list) == -1)
+			return (-1);
+		return (0);
+	}
+	pointer = *list;
+	if ((*list)->previous != NULL)
+		*list = (*list)->previous;
+	if (!isquoting(*list))
 	{
 		if (!ft_quotesclosed(*line))
 			if (handle_printable(line, pos, '\n', list) == -1)
 				return (-1);
+		*list = pointer;
 		return (0);
 	}
-	if ((*list)->previous != NULL)
-		*list = (*list)->previous;
-	if ((command = get_previous_command(*list)) == NULL)
-		return (-1);
-	ret = 0;
-	if ((command = ft_strrealloc(command, *line)) == NULL)
+	ret = 1;
+	if ((command = ft_strjoin((*list)->content, *line)) == NULL)
 		ret = -1;
-	if (ret == 0 && !ft_quotesclosed(command))
+	if (ret == 1 && !ft_quotesclosed(command))
 		if (handle_printable(line, pos, '\n', list) == -1)
 			ret = -1;
-	*list = pointer;
 	ft_strdel(&command);
+	if (ret == 1 && ((*list)->content = ft_strrealloc((*list)->content, *line)) == NULL)
+		ret = -1;
+	if (ft_quotesclosed((*list)->content))
+		ret = 2;
 	return (ret);
 }
 
 static int	handle_return(char **line, t_dlist **list, size_t *pos)
 {
+	int		ret;
 	t_dlist	*new;
 
-	while (*list != NULL && (*list)->next != NULL)
-		*list = (*list)->next;
 	if (*line == NULL)
 		return (1);
-	if (check_quotes(line, list, pos) == -1)
+	while (*list != NULL && (*list)->next != NULL)
+		*list = (*list)->next;
+	if ((ret = check_quotes(line, list, pos)) == -1)
 		return (-1);
+	if (ret == 1)
+		return (next_line(line, pos));
+	else if (ret == 2)
+		return (1);
 	if ((new = ft_dlstnew(*line)) == NULL)
 		return (-1);
 	if (*list == NULL)
