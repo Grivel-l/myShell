@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 19:46:01 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 20:29:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -103,7 +103,7 @@ static int	paste(char **line, size_t *pos, char **copy_buffer, t_dlist **list)
 	return (ret);
 }
 
-int			handle_copy_buffer(t_prompt *prompt)
+int			handle_ccp(t_prompt *prompt)
 {
 	int		ret;
 
