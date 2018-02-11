@@ -6,44 +6,12 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 20:28:58 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 20:52:45 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-int			write_line(char *line, size_t *pos)
-{
-	size_t	length;
-
-	if (line != NULL)
-	{
-		ft_putstr(line);
-		length = ft_strlen(line) - *pos;
-		*pos = ft_strlen(line);
-		return (rewind_cursor(pos, length));
-	}
-	return (0);
-}
-
-int			clear_all(size_t *pos, t_dlist *commands)
-{
-	size_t	old_pos;
-
-	old_pos = *pos;
-	*pos += PL;
-	if (rewind_cursor(pos, *pos) == -1)
-		return (-1);
-	if (put_cap("cd") == -1)
-		return (-1);
-	if (isquoting(commands))
-		ft_putstr("> ");
-	else
-		ft_putstr("$ ");
-	*pos = old_pos;
-	return (0);
-}
 
 static int	handle_backspace(t_prompt *prompt)
 {
@@ -54,96 +22,6 @@ static int	handle_backspace(t_prompt *prompt)
 	if (remove_char(&(prompt->line), &(prompt->pos)) == -1)
 		return (-1);
 	return(write_line(prompt->line, &(prompt->pos)));
-}
-
-static int	clear_line(char **line, size_t *pos)
-{
-	if (rewind_cursor(pos, *pos) == -1)
-		return (-1);
-	if (put_cap("ce") == -1)
-		return (-1);
-	ft_strdel(line);
-	return (0);
-}
-
-static int	previous_command(t_prompt *prompt)
-{
-	if (prompt->commands != NULL)
-	{
-		if (clear_line(&(prompt->line), &(prompt->pos)) == -1)
-			return (-1);
-		if (prompt->commands->previous != NULL)
-			prompt->commands = prompt->commands->previous;
-		if ((prompt->line = ft_strdup(prompt->commands->content)) == NULL)
-			return (-1);
-		prompt->pos = ft_strlen(prompt->line);
-		ft_putstr(prompt->line);
-	}
-	return (0);
-}
-
-static int	next_command(t_prompt *prompt)
-{
-	if (prompt->commands != NULL)
-	{
-		if (clear_line(&(prompt->line), &(prompt->pos)) == -1)
-			return (-1);
-		if (prompt->commands->next != NULL)
-		{
-			prompt->commands = prompt->commands->next;
-			if ((prompt->line = ft_strdup(prompt->commands->content)) == NULL)
-				return (-1);
-			prompt->pos = ft_strlen(prompt->line);
-			ft_putstr(prompt->line);
-		}
-	}
-	return (0);
-}
-
-int			left_arrow(size_t *pos)
-{
-	if (*pos > 0)
-	{
-		*pos -= 1;
-		return (put_cap("le"));
-	}
-	return (0);
-}
-
-int			right_arrow(t_prompt *prompt)
-{
-	int		col;
-
-	if (prompt->line != NULL && prompt->pos < ft_strlen(prompt->line))
-	{
-		if ((col = tgetnum("co")) == -1)
-			return (-1);
-		prompt->pos += 1;
-		if (prompt->pos + PL != 0 && ((prompt->pos + PL) % col) == 0)
-			return (put_cap("do"));
-		return (put_cap("nd"));
-	}
-	return (0);
-}
-
-int			handle_arrows(t_prompt *prompt)
-{
-	char	buffer[3];
-
-	buffer[2] = prompt->buffer[2];
-	if (buffer[2] == 68)
-		return (left_arrow(&(prompt->pos)));
-	else if (buffer[2] == 67)
-		return (right_arrow(prompt));
-	else if (buffer[2] == 70 && prompt->line != NULL)
-		return (forward_cursor(prompt, ft_strlen(prompt->line) - prompt->pos));
-	else if (buffer[2] == 72 && prompt->line != NULL)
-		return (rewind_cursor(&(prompt->pos), prompt->pos));
-	else if (buffer[2] == 65)
-		return (previous_command(prompt));
-	else if (buffer[2] == 66)
-		return (next_command(prompt));
-	return (0);
 }
 
 static int	handle_printable(t_prompt *prompt, char c)
@@ -232,23 +110,6 @@ static int	handle_return(t_prompt *prompt)
 	if (isquoting(prompt->commands))
 		return (next_line(&(prompt->line), &(prompt->pos)));
 	return (1);
-}
-
-static int	my_putc(int i)
-{
-	ft_putchar(i);
-	return (0);
-}
-
-int			put_cap(char *cap)
-{
-	char	*str;
-
-	if ((str = tgetstr(cap, NULL)) == NULL)
-		return (-1);
-	if (tputs(str, 1, my_putc) == -1)
-		return (-1);
-	return (0);
 }
 
 static int		handle_basics(t_prompt *prompt)

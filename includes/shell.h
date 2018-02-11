@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 20:29:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 20:48:14 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -46,6 +46,7 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt);
 
 int				put_cap(char *cap);
 int				write_line(char *line, size_t *pos);
+int				clear_line(char **line, size_t *pos);
 int				clear_all(size_t *pos, t_dlist *commands);
 
 int				isquoting(t_dlist *list);
