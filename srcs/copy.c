@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/09 16:22:11 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/09 19:55:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -70,15 +70,15 @@ int			forward_cursor(size_t *pos, size_t length, char *line)
 	return (0);
 }
 
-static int	rewrite_line(char *line, size_t *pos)
+static int	rewrite_line(char *line, size_t *pos, t_dlist **list)
 {
-	if (clear_all(pos) == -1)
+	if (clear_all(pos, list) == -1)
 		return (-1);
 	*pos = ft_strlen(line);
 	return (write_line(line, pos));
 }
 
-static int	paste(char **line, size_t *pos, char **copy_buffer)
+static int	paste(char **line, size_t *pos, char **copy_buffer, t_dlist **list)
 {
 	int		ret;
 	char	*copy;
@@ -94,7 +94,7 @@ static int	paste(char **line, size_t *pos, char **copy_buffer)
 		ret = -1;
 	if (ret == 0 && (*line = ft_strrealloc(*line, *copy_buffer)) == NULL)
 		ret = -1;
-	if (ret == 0 && rewrite_line(*line, pos) == -1)
+	if (ret == 0 && rewrite_line(*line, pos, list) == -1)
 		ret = -1;
 	if (ret == 0 && rewind_cursor(pos, ft_strlen(*copy_buffer)) == -1)
 		ret = -1;
@@ -104,7 +104,7 @@ static int	paste(char **line, size_t *pos, char **copy_buffer)
 }
 
 int			handle_copy_buffer(char buffer[3], char **line,
-		size_t *pos, char **copy_buffer)
+		size_t *pos, char **copy_buffer, t_dlist **list)
 {
 	int		ret;
 
@@ -114,11 +114,11 @@ int			handle_copy_buffer(char buffer[3], char **line,
 	else if (buffer[0] == 7)
 		ret = cut(line, pos, copy_buffer);
 	else if (buffer[0] == 8)
-		ret = paste(line, pos, copy_buffer);
+		ret = paste(line, pos, copy_buffer, list);
 	if (ret == 1)
 	{
 		ret = 0;
-		if (rewrite_line(*line, pos) == -1)
+		if (rewrite_line(*line, pos, list) == -1)
 			return (-1);
 	}
 	return (ret);

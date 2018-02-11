@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/09 16:22:59 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 15:55:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -27,7 +27,7 @@ int			write_line(char *line, size_t *pos)
 	return (0);
 }
 
-int			clear_all(size_t *pos)
+int			clear_all(size_t *pos, t_dlist **list)
 {
 	size_t	old_pos;
 
@@ -37,16 +37,19 @@ int			clear_all(size_t *pos)
 		return (-1);
 	if (put_cap("cd") == -1)
 		return (-1);
-	ft_putstr("$ ");
+	if (isquoting(*list))
+		ft_putstr("> ");
+	else
+		ft_putstr("$ ");
 	*pos = old_pos;
 	return (0);
 }
 
-static int	handle_backspace(char **line, size_t *pos)
+static int	handle_backspace(char **line, size_t *pos, t_dlist **list)
 {
 	if (*pos == 0)
 		return (0);
-	if (clear_all(pos) == -1)
+	if (clear_all(pos, list) == -1)
 		return (-1);
 	if (remove_char(line, pos) == -1)
 		return (-1);
@@ -140,7 +143,53 @@ int			handle_arrows(char buffer[3], char **line, size_t *pos, t_dlist **list)
 	return (0);
 }
 
-static int	handle_return(char **line, t_dlist **list)
+static int	handle_printable(char **line, size_t *pos, char c, t_dlist **list)
+{
+	if (clear_all(pos, list) == -1)
+		return (-1);
+	if (insert_char(line, c, pos) == -1)
+		return (-1);
+	return(write_line(*line, pos));
+}
+
+static int	next_line(char **line, size_t *pos)
+{
+	ft_strdel(line);
+	*pos = 0;
+	ft_putstr("> ");
+	return (0);
+}
+
+static int	check_quotes(char **line, t_dlist **list, size_t *pos)
+{
+	int		ret;
+	char	*command;
+	t_dlist	*pointer;
+
+	pointer = *list;
+	if (*list == NULL)
+	{
+		if (!ft_quotesclosed(*line))
+			if (handle_printable(line, pos, '\n', list) == -1)
+				return (-1);
+		return (0);
+	}
+	if ((*list)->previous != NULL)
+		*list = (*list)->previous;
+	if ((command = get_previous_command(*list)) == NULL)
+		return (-1);
+	ret = 0;
+	if ((command = ft_strrealloc(command, *line)) == NULL)
+		ret = -1;
+	if (ret == 0 && !ft_quotesclosed(command))
+		if (handle_printable(line, pos, '\n', list) == -1)
+			ret = -1;
+	*list = pointer;
+	ft_strdel(&command);
+	return (ret);
+}
+
+static int	handle_return(char **line, t_dlist **list, size_t *pos)
 {
 	t_dlist	*new;
 
@@ -148,6 +197,8 @@ static int	handle_return(char **line, t_dlist **list)
 		*list = (*list)->next;
 	if (*line == NULL)
 		return (1);
+	if (check_quotes(line, list, pos) == -1)
+		return (-1);
 	if ((new = ft_dlstnew(*line)) == NULL)
 		return (-1);
 	if (*list == NULL)
@@ -162,16 +213,9 @@ static int	handle_return(char **line, t_dlist **list)
 	if (((*list)->next = ft_dlstnew("")) == NULL)
 		return (-1);
 	(*list)->next->previous = *list;
+	if (isquoting(*list))
+		return (next_line(line, pos));
 	return (1);
-}
-
-static int	handle_printable(char **line, size_t *pos, char c)
-{
-	if (clear_all(pos) == -1)
-		return (-1);
-	if (insert_char(line, c, pos) == -1)
-		return (-1);
-	return(write_line(*line, pos));
 }
 
 static int	my_putc(int i)
@@ -196,10 +240,10 @@ int		handle_input(char buffer[3], char **line, size_t *pos, t_dlist **list)
 	if (buffer[0] == 27)
 		return (handle_arrows(buffer, line, pos, list));
 	else if (buffer[0] == 127)
-		return (handle_backspace(line, pos));
+		return (handle_backspace(line, pos, list));
 	else if (buffer[0] == 10)
-		return (handle_return(line, list));
+		return (handle_return(line, list, pos));
 	else if (buffer[0] >= 32 && buffer[0] <= 126)
-		return (handle_printable(line, pos, buffer[0]));
+		return (handle_printable(line, pos, buffer[0], list));
 	return (0);
 }
