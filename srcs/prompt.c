@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 17:30:42 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 20:12:37 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -44,50 +44,28 @@ int				set_canonical(void)
 	return (0);
 }
 
-void			yo(t_dlist *list)
+int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt)
 {
-	while (list->previous != NULL)
-		list = list->previous;
-	while (list->next != NULL)
-	{
-		printf("Command: %s\n\n", list->content);
-		list = list->next;
-	}
-}
+	int			ret;
 
-int				wait_prompt(char **environ, t_ret cmd_ret, t_dlist **list, char *copy_buffer)
-{
-	int		ret;
-	size_t	pos;
-	char	*line;
-	char	buffer[3];
-
-	pos = 0;
 	ret = 0;
-	line = NULL;
+	prompt->pos = 0;
+	prompt->line = NULL;
 	ft_putstr("$ ");
 	while (ret != 1)
 	{
-		if (read(STDIN_FILENO, buffer, 3) == -1)
+		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
 			ret = -1;
-		if (ret == 0 && ((buffer[0] >= 32 && buffer[0] <= 127) || buffer[0] == 27 || buffer[0] == 10))
-			ret = handle_input(buffer, &line, &pos, list);
-		else if (ret == 0 && (buffer[0] == 6 || buffer[0] == 7 || buffer[0] == 8))
-			ret = handle_copy_buffer(buffer, &line, &pos, &copy_buffer, list);
-		else if (ret == 0 && (buffer[0] == 18 || buffer[0] == 20 || buffer[0] == 23 || buffer[0] == 5))
-			ret = handle_movements(buffer[0], line, &pos);
-		else
-			yo(*list);
-		if (ret == -1)
+		if ((ret = handle_input2(prompt)) == -1)
 		{
-			ft_strdel(&copy_buffer);
-			free(line);
+			ft_strdel(&(prompt->copy_buffer));
+			free(prompt->line);
 			return (-1);
 		}
 	}
 	ft_putchar('\n');
-	if (line != NULL)
-		*list = (*list)->next;
-	ft_strdel(&line);
-	return (wait_prompt(environ, cmd_ret, list, copy_buffer));
+	if (prompt->line != NULL)
+		prompt->commands = prompt->commands->next;
+	ft_strdel(&(prompt->line));
+	return (wait_prompt(environ, cmd_ret, prompt));
 }

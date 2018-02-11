@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 22:54:28 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/09 16:23:49 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 19:51:56 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -29,18 +29,18 @@ static int	left(char *line, size_t *pos)
 	return (rewind_cursor(pos, *pos - length));
 }
 
-static int	right(char *line, size_t *pos)
+static int	right(t_prompt *prompt)
 {
 	size_t	length;
 	size_t	max_length;
 
-	length = *pos;
-	max_length = ft_strlen(line);
-	while ((line[length] == ' ' || line[length] == ';') && length < max_length)
+	length = prompt->pos;
+	max_length = ft_strlen(prompt->line);
+	while ((prompt->line[length] == ' ' || prompt->line[length] == ';') && length < max_length)
 		length += 1;
-	while (line[length] != ' ' && line[length] != ';' && length < max_length)
+	while (prompt->line[length] != ' ' && prompt->line[length] != ';' && length < max_length)
 		length += 1;
-	return (forward_cursor(pos, length - *pos, line));
+	return (forward_cursor(prompt, length - prompt->pos));
 }
 
 static int	up(size_t *pos)
@@ -52,28 +52,28 @@ static int	up(size_t *pos)
 	return (rewind_cursor(pos, (size_t)col > *pos ? *pos : col));
 }
 
-static int	down(char *line, size_t *pos)
+static int	down(t_prompt *prompt)
 {
 	int		col;
 	size_t	length;
 
 	if ((col = tgetnum("co")) == -1)
 		return (-1);
-	length = ft_strlen(line);
-	return (forward_cursor(pos, ((size_t)col + *pos) > length ? length - *pos : col, line));
+	length = ft_strlen(prompt->line);
+	return (forward_cursor(prompt, ((size_t)col + prompt->pos) > length ? length - prompt->pos : col));
 }
 
-int			handle_movements(char key, char *line, size_t *pos)
+int			handle_movements(t_prompt *prompt)
 {
-	if (line == NULL)
+	if (prompt->line == NULL)
 		return (0);
-	if (key == 18)
-		return (left(line, pos));
-	else if (key == 20)
-		return (right(line, pos));
-	else if (key == 23)
-		return (up(pos));
-	else if (key == 5)
-		return (down(line, pos));
+	if (prompt->buffer[0] == 18)
+		return (left(prompt->line, &(prompt->pos)));
+	else if (prompt->buffer[0] == 20)
+		return (right(prompt));
+	else if (prompt->buffer[0] == 23)
+		return (up(&(prompt->pos)));
+	else if (prompt->buffer[0] == 5)
+		return (down(prompt));
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 17:22:40 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 19:47:50 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -31,25 +31,35 @@ typedef struct	s_ret
 	int				cmd_ret;
 }				t_ret;
 
+typedef struct	s_prompt
+{
+	size_t		pos;
+	char		*line;
+	size_t		quoting;
+	char		buffer[3];
+	t_dlist		*commands;
+	char		*copy_buffer;
+}				t_prompt;
+
 int				set_canonical(void);
-int				wait_prompt(char **environ, t_ret cmd_ret,
-		t_dlist **list, char *copy_buffer);
+int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt);
 
 int				put_cap(char *cap);
 int				write_line(char *line, size_t *pos);
-int				clear_all(size_t *pos, t_dlist **list);
+int				clear_all(size_t *pos, t_dlist *commands);
 
 int				isquoting(t_dlist *list);
 
 int				left_arrow(size_t *pos);
-int				right_arrow(size_t *pos, char *line);
+int				right_arrow(t_prompt *prompt);
 int				rewind_cursor(size_t *pos, size_t length);
-int				forward_cursor(size_t *pos, size_t length, char *line);
+int				forward_cursor(t_prompt *prompt, size_t length);
 
-int				handle_input(char buffer[3], char **line, size_t *pos, t_dlist **list);
-int				handle_arrows(char buffer[3], char **line, size_t *pos, t_dlist **list);
-int				handle_copy_buffer(char buffer[3], char **line, size_t *pos, char **copy_buffer, t_dlist **list);
-int				handle_movements(char key, char *line, size_t *pos);
+int				handle_input(t_prompt *prompt);
+int				handle_input2(t_prompt *prompt);
+int				handle_arrows(t_prompt *prompt);
+int				handle_copy_buffer(t_prompt *prompt);
+int				handle_movements(t_prompt *prompt);
 
 int				remove_char(char **line, size_t *index);
 int				insert_char(char **line, char c, size_t *index);

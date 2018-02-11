@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/09 19:55:06 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 19:46:01 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -59,11 +59,11 @@ int			rewind_cursor(size_t *pos, size_t length)
 	return (0);
 }
 
-int			forward_cursor(size_t *pos, size_t length, char *line)
+int			forward_cursor(t_prompt *prompt, size_t length)
 {
 	while (length > 0)
 	{
-		if (right_arrow(pos, line) == -1)
+		if (right_arrow(prompt) == -1)
 			return (-1);
 		length -= 1;
 	}
@@ -72,7 +72,7 @@ int			forward_cursor(size_t *pos, size_t length, char *line)
 
 static int	rewrite_line(char *line, size_t *pos, t_dlist **list)
 {
-	if (clear_all(pos, list) == -1)
+	if (clear_all(pos, *list) == -1)
 		return (-1);
 	*pos = ft_strlen(line);
 	return (write_line(line, pos));
@@ -103,22 +103,21 @@ static int	paste(char **line, size_t *pos, char **copy_buffer, t_dlist **list)
 	return (ret);
 }
 
-int			handle_copy_buffer(char buffer[3], char **line,
-		size_t *pos, char **copy_buffer, t_dlist **list)
+int			handle_copy_buffer(t_prompt *prompt)
 {
 	int		ret;
 
 	ret = 0;
-	if (buffer[0] == 6)
-		ret = copy(line, pos, copy_buffer);
-	else if (buffer[0] == 7)
-		ret = cut(line, pos, copy_buffer);
-	else if (buffer[0] == 8)
-		ret = paste(line, pos, copy_buffer, list);
+	if (prompt->buffer[0] == 6)
+		ret = copy(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer));
+	else if (prompt->buffer[0] == 7)
+		ret = cut(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer));
+	else if (prompt->buffer[0] == 8)
+		ret = paste(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer), &(prompt->commands));
 	if (ret == 1)
 	{
 		ret = 0;
-		if (rewrite_line(*line, pos, list) == -1)
+		if (rewrite_line(prompt->line, &(prompt->pos), &(prompt->commands)) == -1)
 			return (-1);
 	}
 	return (ret);
