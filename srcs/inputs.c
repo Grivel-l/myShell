@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 20:11:49 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 20:27:51 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -251,14 +251,12 @@ int			put_cap(char *cap)
 	return (0);
 }
 
-int		handle_input(t_prompt *prompt)
+static int		handle_basics(t_prompt *prompt)
 {
 	char	buffer[1];
 
 	buffer[0] = prompt->buffer[0];
-	if (buffer[0] == 27)
-		return (handle_arrows(prompt));
-	else if (buffer[0] == 127)
+	if (buffer[0] == 127)
 		return (handle_backspace(prompt));
 	else if (buffer[0] == 10)
 		return (handle_return(prompt));
@@ -278,16 +276,16 @@ void			yo(t_dlist *list)
 	}
 }
 
-int		handle_input2(t_prompt *prompt)
+int		handle_input(t_prompt *prompt)
 {
 	char	b[1];
 
 	b[0] = prompt->buffer[0];
-	if ((b[0] >= 32 && b[0] <= 127) || b[0] == 27 || b[0] == 10)
-		return (handle_input(prompt));
+	if ((b[0] >= 32 && b[0] <= 127) || b[0] == 10)
+		return (handle_basics(prompt));
 	else if (b[0] == 6 || b[0] == 7 || b[0] == 8)
 		return (handle_copy_buffer(prompt));
-	else if (b[0] == 18 || b[0] == 20 || b[0] == 23 || b[0] == 5)
+	else if (b[0] == 18 || b[0] == 20 || b[0] == 23 || b[0] == 5 || b[0] == 27)
 		return (handle_movements(prompt));
 	else
 		yo(prompt->commands);

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 19:47:50 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 20:27:56 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -56,7 +56,6 @@ int				rewind_cursor(size_t *pos, size_t length);
 int				forward_cursor(t_prompt *prompt, size_t length);
 
 int				handle_input(t_prompt *prompt);
-int				handle_input2(t_prompt *prompt);
 int				handle_arrows(t_prompt *prompt);
 int				handle_copy_buffer(t_prompt *prompt);
 int				handle_movements(t_prompt *prompt);
