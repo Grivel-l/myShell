@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 22:54:28 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/12 12:04:49 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/12 13:04:17 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,24 +48,10 @@ static int	right(t_prompt *prompt)
 static int	up(t_prompt *prompt)
 {
 	int		col;
-	size_t	pos;
-	size_t	length;
 
 	if ((col = tgetnum("co")) == -1)
 		return (-1);
-	length = 0;
-	pos = prompt->pos;
-	while (pos > 0 && prompt->commands->content[pos] != '\n')
-	{
-		pos -= 1;
-		length += 1;
-	}
-	if (pos > 0)
-		pos -= 1;
-	while (pos > 0 && prompt->commands->content[pos] != '\n')
-		pos -= 1;
-	length = prompt->pos - pos + 2;
-	return (rewind_cursor(prompt, length));
+	return (rewind_cursor(prompt, (size_t)col > prompt->pos ? prompt->pos : col));
 }
 
 static int	down(t_prompt *prompt)
