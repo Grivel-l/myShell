@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/12 11:56:57 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/12 13:16:08 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -72,15 +72,13 @@ static int	end_of_line(t_prompt *prompt)
 
 int			left_arrow(t_prompt *prompt)
 {
-	char	*content;
-
 	if (prompt->pos > 0)
 	{
 		prompt->pos -= 1;
-		if (prompt->commands != NULL)
+		if (prompt->commands != NULL &&
+				ft_strchr(prompt->commands->content, '\n') != NULL)
 		{
-			content = prompt->commands->content;
-			if (content[prompt->pos] == '\n')
+			if (prompt->commands->content[prompt->pos] == '\n')
 			{
 				if (put_cap("up") == -1)
 					return (-1);
