@@ -6,52 +6,52 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:46:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 20:48:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 22:00:50 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int			write_line(char *line, size_t *pos)
+int			write_line(t_prompt *prompt)
 {
 	size_t	length;
 
-	if (line != NULL)
+	if (prompt->line != NULL)
 	{
-		ft_putstr(line);
-		length = ft_strlen(line) - *pos;
-		*pos = ft_strlen(line);
-		return (rewind_cursor(pos, length));
+		ft_putstr(prompt->line);
+		length = ft_strlen(prompt->line) - prompt->pos;
+		prompt->pos = ft_strlen(prompt->line);
+		return (rewind_cursor(prompt, length));
 	}
 	return (0);
 }
 
-int			clear_all(size_t *pos, t_dlist *commands)
+int			clear_all(t_prompt *prompt)
 {
 	size_t	old_pos;
 
-	old_pos = *pos;
-	*pos += PL;
-	if (rewind_cursor(pos, *pos) == -1)
+	old_pos = prompt->pos;
+	prompt->pos += PL;
+	if (rewind_cursor(prompt, prompt->pos) == -1)
 		return (-1);
 	if (put_cap("cd") == -1)
 		return (-1);
-	if (isquoting(commands))
+	if (isquoting(prompt->commands))
 		ft_putstr("> ");
 	else
 		ft_putstr("$ ");
-	*pos = old_pos;
+	prompt->pos = old_pos;
 	return (0);
 }
 
-int			clear_line(char **line, size_t *pos)
+int			clear_line(t_prompt *prompt)
 {
-	if (rewind_cursor(pos, *pos) == -1)
+	if (rewind_cursor(prompt, prompt->pos) == -1)
 		return (-1);
 	if (put_cap("ce") == -1)
 		return (-1);
-	ft_strdel(line);
+	ft_strdel(&(prompt->line));
 	return (0);
 }
 

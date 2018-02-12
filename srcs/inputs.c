@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 20:52:45 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 22:01:31 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,20 +17,20 @@ static int	handle_backspace(t_prompt *prompt)
 {
 	if (prompt->pos == 0)
 		return (0);
-	if (clear_all(&(prompt->pos), prompt->commands) == -1)
+	if (clear_all(prompt) == -1)
 		return (-1);
 	if (remove_char(&(prompt->line), &(prompt->pos)) == -1)
 		return (-1);
-	return(write_line(prompt->line, &(prompt->pos)));
+	return(write_line(prompt));
 }
 
 static int	handle_printable(t_prompt *prompt, char c)
 {
-	if (clear_all(&(prompt->pos), prompt->commands) == -1)
+	if (clear_all(prompt) == -1)
 		return (-1);
 	if (insert_char(&(prompt->line), c, &(prompt->pos)) == -1)
 		return (-1);
-	return(write_line(prompt->line, &(prompt->pos)));
+	return(write_line(prompt));
 }
 
 static int	next_line(char **line, size_t *pos)

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 20:29:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 22:00:11 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,11 +48,11 @@ static int	cut(char **line, size_t *pos, char **copy_buffer)
 	return (1);
 }
 
-int			rewind_cursor(size_t *pos, size_t length)
+int			rewind_cursor(t_prompt *prompt, size_t length)
 {
 	while (length > 0)
 	{
-		if (left_arrow(pos) == -1)
+		if (left_arrow(prompt) == -1)
 			return (-1);
 		length -= 1;
 	}
@@ -70,36 +70,36 @@ int			forward_cursor(t_prompt *prompt, size_t length)
 	return (0);
 }
 
-static int	rewrite_line(char *line, size_t *pos, t_dlist **list)
+static int	rewrite_line(t_prompt *prompt)
 {
-	if (clear_all(pos, *list) == -1)
+	if (clear_all(prompt) == -1)
 		return (-1);
-	*pos = ft_strlen(line);
-	return (write_line(line, pos));
+	prompt->pos = ft_strlen(prompt->line);
+	return (write_line(prompt));
 }
 
-static int	paste(char **line, size_t *pos, char **copy_buffer, t_dlist **list)
+static int	paste(t_prompt *prompt)
 {
 	int		ret;
 	char	*copy;
 
 	ret = 0;
-	if (*copy_buffer == NULL)
+	if (prompt->copy_buffer == NULL)
 		return (0);
-	if ((copy = ft_strdup(*copy_buffer)) == NULL)
+	if ((copy = ft_strdup(prompt->copy_buffer)) == NULL)
 		return (-1);
-	if (ret == 0 && cut(line, pos, copy_buffer) == -1)
+	if (ret == 0 && cut(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer)) == -1)
 		ret = -1;
-	if (ret == 0 && (*line = ft_strrealloc(*line, copy)) == NULL)
+	if (ret == 0 && (prompt->line = ft_strrealloc(prompt->line, copy)) == NULL)
 		ret = -1;
-	if (ret == 0 && (*line = ft_strrealloc(*line, *copy_buffer)) == NULL)
+	if (ret == 0 && (prompt->line = ft_strrealloc(prompt->line, prompt->copy_buffer)) == NULL)
 		ret = -1;
-	if (ret == 0 && rewrite_line(*line, pos, list) == -1)
+	if (ret == 0 && rewrite_line(prompt) == -1)
 		ret = -1;
-	if (ret == 0 && rewind_cursor(pos, ft_strlen(*copy_buffer)) == -1)
+	if (ret == 0 && rewind_cursor(prompt, ft_strlen(prompt->copy_buffer)) == -1)
 		ret = -1;
-	ft_strdel(copy_buffer);
-	*copy_buffer = copy;
+	ft_strdel(&(prompt->copy_buffer));
+	prompt->copy_buffer = copy;
 	return (ret);
 }
 
@@ -113,11 +113,11 @@ int			handle_ccp(t_prompt *prompt)
 	else if (prompt->buffer[0] == 7)
 		ret = cut(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer));
 	else if (prompt->buffer[0] == 8)
-		ret = paste(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer), &(prompt->commands));
+		ret = paste(prompt);
 	if (ret == 1)
 	{
 		ret = 0;
-		if (rewrite_line(prompt->line, &(prompt->pos), &(prompt->commands)) == -1)
+		if (rewrite_line(prompt) == -1)
 			return (-1);
 	}
 	return (ret);

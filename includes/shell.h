@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 20:48:14 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/11 22:01:03 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,7 +35,6 @@ typedef struct	s_prompt
 {
 	size_t		pos;
 	char		*line;
-	size_t		quoting;
 	char		buffer[3];
 	t_dlist		*commands;
 	char		*copy_buffer;
@@ -45,15 +44,15 @@ int				set_canonical(void);
 int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt);
 
 int				put_cap(char *cap);
-int				write_line(char *line, size_t *pos);
-int				clear_line(char **line, size_t *pos);
-int				clear_all(size_t *pos, t_dlist *commands);
+int				clear_all(t_prompt *prompt);
+int				write_line(t_prompt *prompt);
+int				clear_line(t_prompt *prompt);
 
 int				isquoting(t_dlist *list);
 
-int				left_arrow(size_t *pos);
+int				left_arrow(t_prompt *prompt);
 int				right_arrow(t_prompt *prompt);
-int				rewind_cursor(size_t *pos, size_t length);
+int				rewind_cursor(t_prompt *prompt, size_t length);
 int				forward_cursor(t_prompt *prompt, size_t length);
 
 int				handle_ccp(t_prompt *prompt);
