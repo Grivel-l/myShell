@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/12 13:16:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/12 18:57:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -75,10 +75,10 @@ int			left_arrow(t_prompt *prompt)
 	if (prompt->pos > 0)
 	{
 		prompt->pos -= 1;
-		if (prompt->commands != NULL &&
-				ft_strchr(prompt->commands->content, '\n') != NULL)
+		if (prompt->commands != NULL && prompt->commands->content != NULL)
 		{
-			if (prompt->commands->content[prompt->pos] == '\n')
+			if (!isquoting(prompt->commands) &&
+					prompt->commands->content[prompt->pos] == '\n')
 			{
 				if (put_cap("up") == -1)
 					return (-1);
@@ -101,7 +101,7 @@ int			right_arrow(t_prompt *prompt)
 			return (-1);
 		if (prompt->pos + PL != 0 &&
 				(((prompt->pos + PL) % col) == 0 ||
-				prompt->commands->content[prompt->pos - 1] == '\n'))
+				(prompt->commands != NULL && prompt->commands->content[prompt->pos - 1] == '\n')))
 			return (put_cap("do"));
 		return (put_cap("nd"));
 	}

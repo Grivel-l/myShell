@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 22:00:11 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/12 18:37:05 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -55,6 +55,12 @@ int			rewind_cursor(t_prompt *prompt, size_t length)
 		if (left_arrow(prompt) == -1)
 			return (-1);
 		length -= 1;
+	}
+	while (prompt->extra > 0)
+	{
+		if (put_cap("le") == -1)
+			return (-1);
+		prompt->extra -= 1;
 	}
 	return (0);
 }

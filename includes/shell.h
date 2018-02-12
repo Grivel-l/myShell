@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 22:01:03 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/12 16:32:17 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,6 +34,7 @@ typedef struct	s_ret
 typedef struct	s_prompt
 {
 	size_t		pos;
+	size_t		extra;
 	char		*line;
 	char		buffer[3];
 	t_dlist		*commands;
