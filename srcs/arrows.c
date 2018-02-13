@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 14:59:09 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 15:32:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -122,9 +122,9 @@ int			handle_arrows(t_prompt *prompt)
 	else if (buffer[0] == 67)
 		return (right_arrow(prompt));
 	else if (buffer[0] == 70 && prompt->line != NULL)
-		return (forward_cursor(prompt, ft_strlen(prompt->line) - prompt->pos));
+		return (forward_cursor(prompt, to_line_end_length(prompt)));
 	else if (buffer[0] == 72 && prompt->line != NULL)
-		return (rewind_cursor(prompt, prompt->pos));
+		return (rewind_cursor(prompt, to_line_start_length(prompt)));
 	else if (buffer[0] == 65)
 		return (previous_command(prompt));
 	else if (buffer[0] == 66)

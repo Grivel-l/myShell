@@ -6,13 +6,12 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/29 18:58:36 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/30 22:49:24 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 15:03:50 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
 static void	forward(char **str, char c)
 {
