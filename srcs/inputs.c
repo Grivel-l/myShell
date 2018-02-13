@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/12 16:50:24 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 14:25:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -65,12 +65,15 @@ static int	check_quotes(t_prompt *prompt)
 		return (0);
 	}
 	ret = 1;
-	if ((command = ft_strjoin(prompt->commands->content, prompt->line)) == NULL)
-		ret = -1;
+	if (prompt->line != NULL && (command = ft_strjoin(prompt->commands->content, prompt->line)) == NULL)
+			ret = -1;
+	if (prompt->line == NULL)
+		command = prompt->commands->content;
 	if (ret == 1 && !ft_quotesclosed(command))
 		if (handle_printable(prompt, '\n') == -1)
 			ret = -1;
-	ft_strdel(&command);
+	if (prompt->line[0] != '\n')
+		ft_strdel(&command);
 	if (ret == 1 && (prompt->commands->content = ft_strrealloc(prompt->commands->content, prompt->line)) == NULL)
 		ret = -1;
 	if (ft_quotesclosed(prompt->commands->content))
@@ -83,7 +86,7 @@ static int	handle_return(t_prompt *prompt)
 	int		ret;
 	t_dlist	*new;
 
-	if (prompt->line == NULL)
+	if (!isquoting(prompt->commands) && prompt->line == NULL)
 		return (1);
 	while (prompt->commands != NULL && prompt->commands->next != NULL)
 		prompt->commands = prompt->commands->next;
