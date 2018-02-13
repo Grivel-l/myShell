@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:46:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/12 18:50:51 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 14:10:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -70,16 +70,6 @@ int			clear_all(t_prompt *prompt)
 	else
 		ft_putstr("$ ");
 	prompt->pos = old_pos;
-	return (0);
-}
-
-int			clear_line(t_prompt *prompt)
-{
-	if (rewind_cursor(prompt, prompt->pos) == -1)
-		return (-1);
-	if (put_cap("ce") == -1)
-		return (-1);
-	ft_strdel(&(prompt->line));
 	return (0);
 }
 

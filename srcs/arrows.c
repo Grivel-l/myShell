@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/12 18:57:48 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 14:09:44 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,7 +17,7 @@ static int	previous_command(t_prompt *prompt)
 {
 	if (prompt->commands != NULL)
 	{
-		if (clear_line(prompt) == -1)
+		if (clear_all(prompt) == -1)
 			return (-1);
 		if (prompt->commands->previous != NULL)
 			prompt->commands = prompt->commands->previous;
@@ -33,7 +33,7 @@ static int	next_command(t_prompt *prompt)
 {
 	if (prompt->commands != NULL)
 	{
-		if (clear_line(prompt) == -1)
+		if (clear_all(prompt) == -1)
 			return (-1);
 		if (prompt->commands->next != NULL)
 		{
@@ -75,7 +75,7 @@ int			left_arrow(t_prompt *prompt)
 	if (prompt->pos > 0)
 	{
 		prompt->pos -= 1;
-		if (prompt->commands != NULL && prompt->commands->content != NULL)
+		if (prompt->commands != NULL && prompt->commands->content != NULL && prompt->commands->content[0] != '\0')
 		{
 			if (!isquoting(prompt->commands) &&
 					prompt->commands->content[prompt->pos] == '\n')
