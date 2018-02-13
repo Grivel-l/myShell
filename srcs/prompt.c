@@ -6,12 +6,17 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/11 21:34:30 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 16:13:08 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
+
+void			reset_term(struct termios term)
+{
+	tcsetattr(0, TCSANOW, &term);
+}
 
 int				set_canonical(void)
 {
@@ -27,18 +32,12 @@ int				set_canonical(void)
 	ret = tgetent(NULL, name);
 	if (ret == 1 && tcgetattr(0, &term) == -1)
 		ret = -1;
-	if (ret == -1)
-	{
-		free(name);
+	if (ret == -1 || ret == 0)
 		return (-1);
-	}
 	term.c_lflag &= ~ICANON;
 	term.c_lflag &= ~(ECHO);
 	if (tcsetattr(0, TCSANOW, &term) == -1)
-	{
-		free(name);
 		return (-1);
-	}
 	if (put_cap("im") == -1)
 		return (-1);
 	return (0);

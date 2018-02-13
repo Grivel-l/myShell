@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 15:31:49 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 16:09:46 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,6 +42,7 @@ typedef struct	s_prompt
 }				t_prompt;
 
 int				set_canonical(void);
+void			reset_term(struct termios term);
 int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt);
 
 int				put_cap(char *cap);
