@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 22:54:28 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/12 13:04:17 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 14:54:37 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,6 +18,8 @@ static int	left(t_prompt *prompt)
 	char	*line;
 	size_t	length;
 
+	if (prompt->line == NULL)
+		return (0);
 	line = prompt->line;
 	length = prompt->pos > 0 ? prompt->pos - 1 : prompt->pos;
 	if (line[length] == ' ' || line[length] == ';')
@@ -36,6 +38,8 @@ static int	right(t_prompt *prompt)
 	size_t	length;
 	size_t	max_length;
 
+	if (prompt->line == NULL)
+		return (0);
 	length = prompt->pos;
 	max_length = ft_strlen(prompt->line);
 	while ((prompt->line[length] == ' ' || prompt->line[length] == ';') && length < max_length)
@@ -59,6 +63,8 @@ static int	down(t_prompt *prompt)
 	int		col;
 	size_t	length;
 
+	if (prompt->line == NULL)
+		return (0);
 	if ((col = tgetnum("co")) == -1)
 		return (-1);
 	length = ft_strlen(prompt->line);

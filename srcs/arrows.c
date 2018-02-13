@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 14:43:40 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/13 14:59:09 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,6 +17,8 @@ static int	previous_command(t_prompt *prompt)
 {
 	if (prompt->commands != NULL)
 	{
+		if (isquoting(prompt->commands))
+			return (0);
 		if (clear_all(prompt) == -1)
 			return (-1);
 		if (prompt->commands->previous != NULL)
@@ -33,6 +35,8 @@ static int	next_command(t_prompt *prompt)
 {
 	if (prompt->commands != NULL)
 	{
+		if (isquoting(prompt->commands))
+			return (0);
 		if (clear_all(prompt) == -1)
 			return (-1);
 		if (prompt->commands->next != NULL)
