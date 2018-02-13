@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 16:10:48 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/14 00:19:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,16 +35,16 @@ int		main(int argc, char **argv, char **environ)
 	if (set_canonical() == -1)
 	{
 		reset_term(term);
-		free_everything(&environ, NULL, NULL, NULL);
+		free_everything(&environ, NULL);
 		return (-1);
 	}
 	if (wait_prompt(environ, ret, &prompt) == -1)
 	{
 		reset_term(term);
-		// free_everything(&environ, &list, NULL, NULL);
+		free_everything(&environ, &prompt);
 		return (-1);
 	}
 	reset_term(term);
-	// free_everything(&environ, &list, NULL, NULL);
+	free_everything(&environ, &prompt);
 	return (0);
 }

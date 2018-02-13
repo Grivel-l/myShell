@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 16:13:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/14 00:53:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -56,12 +56,10 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt)
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
 			ret = -1;
 		if ((ret = handle_input(prompt)) == -1)
-		{
-			ft_strdel(&(prompt->copy_buffer));
-			free(prompt->line);
 			return (-1);
-		}
 	}
+	if (forward_cursor(prompt, ft_strlen(prompt->commands->content) - prompt->pos) == -1)
+		return (-1);
 	ft_putchar('\n');
 	if (prompt->line != NULL)
 		prompt->commands = prompt->commands->next;
