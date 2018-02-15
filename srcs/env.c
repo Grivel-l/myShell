@@ -6,14 +6,14 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/28 00:52:21 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/31 00:55:20 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/15 21:39:07 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "shell.h"
 
-static int		add_link(char *value, t_list **list)
+/* static int		add_link(char *value, t_list **list)
 {
 	char	*tmp;
 	char	*chr;
@@ -58,36 +58,23 @@ static t_list	*parse_env(char *path_env)
 		path_env += 1;
 	}
 	return (begin_list == NULL ? values : begin_list);
-}
+} */
 
-t_list			*get_env(char **environ, char *env_name, int parse)
+char			*get_myenv(char *env, char **environ)
 {
-	char	*tmp;
 	size_t	length;
 
-	if ((tmp = ft_strjoin(env_name, "=")) == NULL)
-		return (NULL);
-	length = ft_strlen(env_name) + 1;
+	length = ft_strlen(env);
 	while (*environ)
 	{
-		if (parse && ft_strncmp(*environ, tmp, length) == 0)
-		{
-			free(tmp);
-			return (parse_env(&((*environ)[length])));
-		}
-		if (!parse && ft_strncmp(*environ, tmp, length) == 0)
-		{
-			free(tmp);
-			return (ft_lstnew(&((*environ)[length]),
-						ft_strlen(&((*environ)[length]))));
-		}
+		if (ft_strncmp(*environ, env, length) == 0 && (*environ)[length] == '=')
+			return (&((*environ)[length + 1]));
 		environ += 1;
 	}
-	free(tmp);
-	return (ft_lstnew("", 0));
+	return (NULL);
 }
 
-static int		copy_env(char ***new, char **pointer, char ***environ)
+/* static int		copy_env(char ***new, char **pointer, char ***environ)
 {
 	if ((**new = ft_strdup(**environ)) == NULL)
 	{
@@ -122,4 +109,4 @@ int				delete_env(char ***environ, int index)
 	free(pointer);
 	*environ = new_pointer;
 	return (0);
-}
+}*/

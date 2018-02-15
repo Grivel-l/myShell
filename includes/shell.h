@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/14 00:30:56 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/15 20:59:09 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -67,5 +67,9 @@ int				remove_char(char **line, size_t *index);
 int				insert_char(char **line, char c, size_t *index);
 
 void			free_everything(char ***environ, t_prompt *prompt);
+
+char			*get_myenv(char *env, char **environ);
+
+int				treate_command(t_prompt *prompt, char **environ);
 
 #endif
