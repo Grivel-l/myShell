@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/15 20:59:09 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/16 19:21:13 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,6 +20,7 @@
 # include <sys/stat.h>
 # include <termios.h>
 # include <term.h>
+# include <errno.h>
 
 # define PL 2
 
