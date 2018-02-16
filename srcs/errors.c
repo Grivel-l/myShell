@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/28 02:59:08 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/29 14:52:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/16 21:45:17 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,7 +15,7 @@
 
 static void	print_bin(void)
 {
-	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd("21sh: ", 2);
 }
 
 void		eacces_error(char *path, char *extra)

@@ -6,14 +6,14 @@
 #    By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2017/12/11 16:25:45 by legrivel     #+#   ##    ##    #+#        #
-#    Updated: 2018/02/15 20:58:41 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/02/16 21:42:30 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
 
 NAME = 21sh
 SRCS = main.c free_alloc.c prompt.c inputs.c line_manipulation.c copy.c \
-	   movements.c commands.c arrows.c tools.c env.c exec.c
+	   movements.c commands.c arrows.c tools.c env.c exec.c errors.c
 OBJS = $(SRCS:.c=.o)
 SRCS_PATH = ./srcs/
 INCS_PATH = ./includes/

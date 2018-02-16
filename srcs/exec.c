@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/16 19:21:36 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/16 21:56:17 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -67,6 +67,9 @@ static int	check_paths(char **paths, char *command, char **bin)
 			return (0);
 		paths += 1;
 	}
+	if (error != NULL)
+		ft_putstr_fd(error, 2);
+	ft_strdel(&error);
 	return (0);
 }
 
@@ -93,6 +96,7 @@ static int	exec_command(char *command, char **environ)
 	char	*bin;
 	char	**args;
 
+	bin = NULL;
 	if (ft_strsplit_qh(command, ' ', &args) == -1)
 		return (-1);
 	if ((ret = get_bin_path(&bin, args[0], environ)) == -1)
@@ -105,8 +109,9 @@ static int	exec_command(char *command, char **environ)
 		ft_freetab(&args);
 		return (path_missing());
 	}
-	printf("Bin to execute: %s\n", bin);
-	free(bin);
+	if (bin == NULL)
+		not_found(args[0]);
+	ft_strdel(&bin);
 	ft_freetab(&args);
 	return (0);
 }
@@ -145,7 +150,7 @@ int		treate_command(t_prompt *prompt, char **environ)
 	t_list	*pointer;
 	t_list	*commands;
 
-	if (ft_strsplit_qh(prompt->line, ';', &split_tab) == -1)
+	if (ft_strsplit_qh(prompt->commands->content, ';', &split_tab) == -1)
 		return (-1);
 	if ((commands = ft_tabtolist(split_tab)) == NULL)
 	{

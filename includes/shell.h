@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/16 19:21:13 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/16 21:43:05 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -72,5 +72,7 @@ void			free_everything(char ***environ, t_prompt *prompt);
 char			*get_myenv(char *env, char **environ);
 
 int				treate_command(t_prompt *prompt, char **environ);
+
+void			not_found(char *name);
 
 #endif
