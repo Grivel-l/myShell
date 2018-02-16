@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/16 21:56:17 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/17 00:42:07 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -90,6 +90,21 @@ static int	get_bin_path(char **bin, char *command, char **environ)
 	return (0);
 }
 
+static int	exec_bin(char *bin, char **args, char **environ)
+{
+	pid_t	pid;
+	int		ret;
+
+	if ((pid = fork()) == -1)
+		return (0);
+	if (pid == 0)
+		execve(bin, args, environ);
+	else
+		if (wait(&ret) == -1)
+			return (-1);
+	return (0);
+}
+
 static int	exec_command(char *command, char **environ)
 {
 	int		ret;
@@ -111,9 +126,11 @@ static int	exec_command(char *command, char **environ)
 	}
 	if (bin == NULL)
 		not_found(args[0]);
+	else
+		ret = exec_bin(bin, args, environ);
 	ft_strdel(&bin);
 	ft_freetab(&args);
-	return (0);
+	return (ret);
 }
 
 static int	split_pipe(char *command, char **environ)
