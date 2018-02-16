@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/17 00:42:07 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/17 00:50:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -98,8 +98,9 @@ static int	exec_bin(char *bin, char **args, char **environ)
 	if ((pid = fork()) == -1)
 		return (0);
 	if (pid == 0)
-		execve(bin, args, environ);
-	else
+		if (execve(bin, args, environ) == -1)
+			return (-1);
+	if (pid != 0)
 		if (wait(&ret) == -1)
 			return (-1);
 	return (0);
