@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/16 21:43:05 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/17 01:16:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,6 +42,13 @@ typedef struct	s_prompt
 	char		*copy_buffer;
 }				t_prompt;
 
+typedef struct	s_command
+{
+	char		*bin;
+	char		**args;
+	char		**environ;
+}				t_command;
+
 int				set_canonical(void);
 void			reset_term(struct termios term);
 int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt);
@@ -71,7 +78,7 @@ void			free_everything(char ***environ, t_prompt *prompt);
 
 char			*get_myenv(char *env, char **environ);
 
-int				treate_command(t_prompt *prompt, char **environ);
+int				treate_command(t_prompt *prompt, t_command *cmd);
 
 void			not_found(char *name);
 

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/15 19:59:25 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/17 01:14:45 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -46,6 +46,7 @@ int				set_canonical(void)
 int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt)
 {
 	int			ret;
+	t_command	command;
 
 	ret = 0;
 	prompt->pos = 0;
@@ -61,8 +62,11 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt)
 	if (forward_cursor(prompt, ft_strlen(prompt->commands->content) - prompt->pos) == -1)
 		return (-1);
 	ft_putchar('\n');
+	command.bin = NULL;
+	command.args = NULL;
+	command.environ = environ;
 	if (prompt->line != NULL)
-		if (treate_command(prompt, environ) == -1)
+		if (treate_command(prompt, &command) == -1)
 			return (-1);
 	ft_strdel(&(prompt->line));
 	return (wait_prompt(environ, cmd_ret, prompt));
