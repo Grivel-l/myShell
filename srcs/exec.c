@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/17 01:27:46 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/18 00:30:16 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -90,23 +90,36 @@ static int	get_bin_path(t_command *cmd)
 	return (0);
 }
 
-static int	exec_bin(t_command *cmd)
+static int	exec_bin(t_command *cmd, int fildes[2])
 {
 	int		ret;
 	pid_t	pid;
 
+	pipe(fildes);
 	if ((pid = fork()) == -1)
-		return (0);
+		return (-1);
 	if (pid == 0)
+	{
+		if (dup2(fildes[1], STDOUT_FILENO) == -1)
+			return (-1);
+		if (close(fildes[0]) == -1)
+			return (-1);
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);
+	}
 	if (pid != 0)
+	{
 		if (wait(&ret) == -1)
 			return (-1);
+		if (close(fildes[1]) == -1)
+			return (-1);
+		if (dup2(fildes[0], STDIN_FILENO) == -1)
+			return (-1);
+	}
 	return (0);
 }
 
-static int	exec_command(char *command, t_command *cmd)
+static int	exec_command(char *command, t_command *cmd, int fildes[2])
 {
 	int		ret;
 
@@ -125,18 +138,43 @@ static int	exec_command(char *command, t_command *cmd)
 	if (cmd->bin == NULL)
 		not_found(cmd->args[0]);
 	else
-		ret = exec_bin(cmd);
+		ret = exec_bin(cmd, fildes);
 	ft_strdel(&(cmd->bin));
 	ft_freetab(&(cmd->args));
+	if (ret == -1)
+		printf("%s for %s\n", strerror(errno), command);
+	return (ret);
+}
+
+static int	close_fd(int fildes[2])
+{
+	close(fildes[0]);
+	close(fildes[1]);
+	return (-1);
+}
+
+static int	write_stdout(int fildes[2])
+{
+	int		ret;
+	char	buffer[1];
+
+	while ((ret = read(fildes[0], &buffer, 1)) > 0)
+		ft_putchar(buffer[0]);
 	return (ret);
 }
 
 static int	split_pipe(char *command, t_command *cmd)
 {
-	char	**split_tab;
 	t_list	*split;
 	t_list	*pointer;
+	int		fildes[2];
+	int		old_fd[2];
+	char	**split_tab;
 
+	if (pipe(old_fd) == -1)
+		return (-1);
+	if (dup2(STDIN_FILENO, old_fd[0]) == -1)
+		return (-1);
 	if ((split_tab = ft_strsplit(command, '|')) == NULL)
 		return (-1);
 	if ((split = ft_tabtolist(split_tab)) == NULL)
@@ -148,14 +186,18 @@ static int	split_pipe(char *command, t_command *cmd)
 	ft_freetab(&split_tab);
 	while (split != NULL)
 	{
-		if (exec_command(split->content, cmd) == -1)
+		if (exec_command(split->content, cmd, fildes) == -1)
 		{
 			ft_lstfree(&pointer);
 			return (-1);
 		}
 		split = split->next;
 	}
+	if (dup2(old_fd[0], STDIN_FILENO) == -1)
+		return (-1);
+	write_stdout(fildes);
 	ft_lstfree(&pointer);
+	close_fd(fildes);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/17 01:16:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/17 02:53:14 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,6 +21,7 @@
 # include <termios.h>
 # include <term.h>
 # include <errno.h>
+# include <fcntl.h>
 
 # define PL 2
 

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 00:01:35 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/02 03:47:16 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/17 01:54:24 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,12 +19,14 @@ void	ft_dlstfree(t_dlist **list)
 		*list = (*list)->previous;
 	while (*list != NULL)
 	{
-		if ((*list)->previous != NULL)
-			free((*list)->previous);
 		free((*list)->content);
 		if ((*list)->next == NULL)
+		{
 			free(*list);
-		*list = (*list)->next;
+			*list = NULL;
+		}
+		else
+			*list = (*list)->next;
 	}
 	*list = NULL;
 }
