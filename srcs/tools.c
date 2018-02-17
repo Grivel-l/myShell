@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:46:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 15:33:05 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/17 01:28:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -99,8 +99,7 @@ int			clear_all(t_prompt *prompt)
 
 static int	my_putc(int i)
 {
-	ft_putchar(i);
-	return (0);
+	return (write(1, &i, 1));
 }
 
 int			put_cap(char *cap)

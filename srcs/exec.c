@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/17 01:20:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/17 01:27:46 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -155,7 +155,7 @@ static int	split_pipe(char *command, t_command *cmd)
 		}
 		split = split->next;
 	}
-	pointer = split;
+	ft_lstfree(&pointer);
 	return (0);
 }
 
