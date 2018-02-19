@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/19 14:39:55 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/19 15:29:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -92,12 +92,15 @@ static int	get_bin_path(t_command *cmd)
 
 static int	close_fd(int *fd)
 {
+	int		ret;
+
+	ret = 0;
 	if (*fd != -1)
 	{
-		close(*fd);
+		ret = close(*fd);
 		*fd = -1;
 	}
-	return (-1);
+	return (ret);
 }
 
 static int	exec_bin(t_command *cmd, int fildes[2])
