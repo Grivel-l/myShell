@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/18 00:30:16 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/19 14:39:55 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -90,6 +90,16 @@ static int	get_bin_path(t_command *cmd)
 	return (0);
 }
 
+static int	close_fd(int *fd)
+{
+	if (*fd != -1)
+	{
+		close(*fd);
+		*fd = -1;
+	}
+	return (-1);
+}
+
 static int	exec_bin(t_command *cmd, int fildes[2])
 {
 	int		ret;
@@ -102,7 +112,7 @@ static int	exec_bin(t_command *cmd, int fildes[2])
 	{
 		if (dup2(fildes[1], STDOUT_FILENO) == -1)
 			return (-1);
-		if (close(fildes[0]) == -1)
+		if (close_fd(&(fildes[0])) == -1)
 			return (-1);
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);
@@ -111,7 +121,7 @@ static int	exec_bin(t_command *cmd, int fildes[2])
 	{
 		if (wait(&ret) == -1)
 			return (-1);
-		if (close(fildes[1]) == -1)
+		if (close_fd(&(fildes[1])) == -1)
 			return (-1);
 		if (dup2(fildes[0], STDIN_FILENO) == -1)
 			return (-1);
@@ -146,10 +156,18 @@ static int	exec_command(char *command, t_command *cmd, int fildes[2])
 	return (ret);
 }
 
-static int	close_fd(int fildes[2])
+static int	close_all_fd(int fildes[2])
 {
-	close(fildes[0]);
-	close(fildes[1]);
+	if (fildes[0] != -1)
+	{
+		close(fildes[0]);
+		fildes[0] = -1;
+	}
+	if (fildes[1] != -1)
+	{
+		close(fildes[1]);
+		fildes[1] = -1;
+	}
 	return (-1);
 }
 
@@ -189,15 +207,15 @@ static int	split_pipe(char *command, t_command *cmd)
 		if (exec_command(split->content, cmd, fildes) == -1)
 		{
 			ft_lstfree(&pointer);
-			return (-1);
+			return (close_all_fd(fildes));
 		}
 		split = split->next;
 	}
-	if (dup2(old_fd[0], STDIN_FILENO) == -1)
-		return (-1);
-	write_stdout(fildes);
 	ft_lstfree(&pointer);
-	close_fd(fildes);
+	if (dup2(old_fd[0], STDIN_FILENO) == -1)
+		return (close_all_fd(fildes));
+	write_stdout(fildes);
+	close_all_fd(fildes);
 	return (0);
 }
 
