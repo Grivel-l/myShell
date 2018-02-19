@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/19 15:29:06 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/19 23:01:02 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -90,44 +90,65 @@ static int	get_bin_path(t_command *cmd)
 	return (0);
 }
 
-static int	close_fd(int *fd)
+static int	close_all_fd(int fildes[2])
 {
-	int		ret;
-
-	ret = 0;
-	if (*fd != -1)
+	if (fildes[0] != -1)
 	{
-		ret = close(*fd);
-		*fd = -1;
+		close(fildes[0]);
+		fildes[0] = -1;
 	}
-	return (ret);
+	if (fildes[1] != -1)
+	{
+		close(fildes[1]);
+		fildes[1] = -1;
+	}
+	return (-1);
 }
 
-static int	exec_bin(t_command *cmd, int fildes[2])
+static int	yo(t_command *cmd, int fildes[2])
 {
 	int		ret;
 	pid_t	pid;
 
-	pipe(fildes);
 	if ((pid = fork()) == -1)
 		return (-1);
 	if (pid == 0)
 	{
-		if (dup2(fildes[1], STDOUT_FILENO) == -1)
+		if (dup2(fildes[0], STDIN_FILENO) == -1)
 			return (-1);
-		if (close_fd(&(fildes[0])) == -1)
-			return (-1);
+		close_all_fd(fildes);
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);
 	}
-	if (pid != 0)
+	else
 	{
-		if (wait(&ret) == -1)
+		close_all_fd(fildes);
+		if (waitpid(pid, &ret, 0) == -1)
 			return (-1);
-		if (close_fd(&(fildes[1])) == -1)
+	}
+	return (0);
+}
+
+static int	exec_bin(t_command *cmd, int fildes[2])
+{
+	pid_t	pid;
+
+	if (fildes[0] != -1 || fildes[1] != -1)
+		return (yo(cmd, fildes));
+	else
+	{
+		if (pipe(fildes) == -1)
 			return (-1);
-		if (dup2(fildes[0], STDIN_FILENO) == -1)
+		if ((pid = fork()) == -1)
 			return (-1);
+		if (pid == 0)
+		{
+			if (dup2(fildes[1], STDOUT_FILENO) == -1)
+				return (-1);
+			close_all_fd(fildes);
+			if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
+				return (-1);
+		}
 	}
 	return (0);
 }
@@ -159,31 +180,6 @@ static int	exec_command(char *command, t_command *cmd, int fildes[2])
 	return (ret);
 }
 
-static int	close_all_fd(int fildes[2])
-{
-	if (fildes[0] != -1)
-	{
-		close(fildes[0]);
-		fildes[0] = -1;
-	}
-	if (fildes[1] != -1)
-	{
-		close(fildes[1]);
-		fildes[1] = -1;
-	}
-	return (-1);
-}
-
-static int	write_stdout(int fildes[2])
-{
-	int		ret;
-	char	buffer[1];
-
-	while ((ret = read(fildes[0], &buffer, 1)) > 0)
-		ft_putchar(buffer[0]);
-	return (ret);
-}
-
 static int	split_pipe(char *command, t_command *cmd)
 {
 	t_list	*split;
@@ -192,6 +188,8 @@ static int	split_pipe(char *command, t_command *cmd)
 	int		old_fd[2];
 	char	**split_tab;
 
+	fildes[0] = -1;
+	fildes[1] = -1;
 	if (pipe(old_fd) == -1)
 		return (-1);
 	if (dup2(STDIN_FILENO, old_fd[0]) == -1)
@@ -217,8 +215,6 @@ static int	split_pipe(char *command, t_command *cmd)
 	ft_lstfree(&pointer);
 	if (dup2(old_fd[0], STDIN_FILENO) == -1)
 		return (close_all_fd(fildes));
-	write_stdout(fildes);
-	close_all_fd(fildes);
 	return (0);
 }
 
