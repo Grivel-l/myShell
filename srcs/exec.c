@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/20 13:51:57 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/20 16:09:43 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -92,6 +92,26 @@ static int	get_bin_path(t_command *cmd)
 
 static int	close_all_fd(int fildes[2])
 {
+	int		ret1;
+	int		ret2;
+
+	ret1 = 0;
+	ret2 = 0;
+	if (fildes[0] != -1)
+	{
+		ret1 = close(fildes[0]);
+		fildes[0] = -1;
+	}
+	if (fildes[1] != -1)
+	{
+		ret2 = close(fildes[1]);
+		fildes[1] = -1;
+	}
+	return ((ret1 == -1 || ret2 == -1) ? -1 : 0);
+}
+
+static int	exit_all_fd(int fildes[2])
+{
 	if (fildes[0] != -1)
 	{
 		close(fildes[0]);
@@ -114,23 +134,23 @@ static int	exec_bin(t_command *cmd, int fildes[2], size_t is_last)
 	is_first = fildes[0] == -1 || fildes[1] == -1;
 	if (is_first && pipe(fildes) == -1)
 		return (-1);
-	if (is_last && dup2(STDOUT_FILENO, fildes[1]) == -1)
-		return (-1);
 	if ((pid = fork()) == -1)
 		return (-1);
 	if (pid == 0)
 	{
-		if (is_first && dup2(fildes[1], STDOUT_FILENO) == -1)
+		if (is_first && !is_last && dup2(fildes[1], STDOUT_FILENO) == -1)
 			return (-1);
-		if (!is_first && dup2(fildes[0], STDIN_FILENO) == -1)
+		if (!is_first && is_last && dup2(fildes[0], STDIN_FILENO) == -1)
 			return (-1);
-		close_all_fd(fildes);
+		if (close_all_fd(fildes) == -1)
+			return (-1);
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);
 	}
 	if (is_last)
 	{
-		close_all_fd(fildes);
+		if (close_all_fd(fildes) == -1)
+			return (-1);
 		if (waitpid(pid, &ret, 0) == -1)
 			return (-1);
 	}
@@ -192,13 +212,13 @@ static int	split_pipe(char *command, t_command *cmd)
 		if (exec_command(split->content, cmd, fildes, split->next == NULL) == -1)
 		{
 			ft_lstfree(&pointer);
-			return (close_all_fd(fildes));
+			return (exit_all_fd(fildes));
 		}
 		split = split->next;
 	}
 	ft_lstfree(&pointer);
 	if (dup2(old_fd[0], STDIN_FILENO) == -1)
-		return (close_all_fd(fildes));
+		return (exit_all_fd(fildes));
 	return (0);
 }
 
