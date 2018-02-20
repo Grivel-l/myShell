@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/20 22:35:38 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/20 23:36:16 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -179,22 +179,17 @@ static int	get_side(char *command)
 		return (2);
 }
 
-static char	*my_trim(char *str)
-{
-	while (*str == ' ')
-		str += 1;
-	return (str);
-}
-
 static int	set_fildes(char **args)
 {
 	int		fd;
+	int		flags;
 	size_t	length;
 
 	length = ft_tablen(args);
 	if (length == 1)
 		return (0);
-	if ((fd = open(my_trim(args[length - 1]), O_RDWR)) == -1)
+	flags = args[length - 2][0] == '\0' ? O_RDWR | O_APPEND : O_RDWR;
+	if ((fd = open(args[length - 1], flags)) == -1)
 	{
 		if (errno == EACCES)
 			return (0);
@@ -218,12 +213,12 @@ static int	split_string(t_list *split, char c, char ***args)
 		return (-1);
 	pointer = *args;
 	pointer += 1;
-	while (*pointer)
+	while (*pointer && (*pointer)[0] != '\0')
 	{
-		if ((fd = open(my_trim(*pointer), O_CREAT, 0666)) == -1)
+		if ((fd = open(*pointer, O_CREAT, 0666)) == -1)
 		{
 			if (errno == EACCES)
-				eacces_error(my_trim(*pointer), NULL);
+				eacces_error(*pointer, NULL);
 			if (errno != EACCES)
 			{
 				ft_freetab(args);

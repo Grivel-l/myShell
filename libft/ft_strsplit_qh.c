@@ -6,12 +6,13 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/29 18:58:36 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/20 22:54:35 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/20 23:31:57 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 static void	forward(char **str, char c)
 {
@@ -19,7 +20,7 @@ static void	forward(char **str, char c)
 		*str += 1;
 }
 
-static int	push_tab(char ***tab, char **str, int index, char c)
+static int	push_tab(char ***tab, char **str, int index)
 {
 	char	*tmp;
 	int		quoted;
@@ -38,7 +39,6 @@ static int	push_tab(char ***tab, char **str, int index, char c)
 	}
 	free(tmp);
 	*str = *str + index;
-	forward(str, c);
 	return (0);
 }
 
@@ -52,20 +52,25 @@ static int	split_str(char ***tab, char *str, char c)
 	pointer = str;
 	quotes.simpleq = 0;
 	quotes.doubleq = 0;
-	while (*str)
+	if (*str != c)
 	{
-		if (*str == '"' && !quotes.simpleq)
-			quotes.doubleq = !quotes.doubleq;
-		else if (*str == '\'' && !quotes.doubleq)
-			quotes.simpleq = !quotes.simpleq;
-		if (*str == c)
-			if (!quotes.doubleq && !quotes.simpleq)
-				break ;
-		str += 1;
-		i += 1;
+		while (*str)
+		{
+			if (*str == '"' && !quotes.simpleq)
+				quotes.doubleq = !quotes.doubleq;
+			else if (*str == '\'' && !quotes.doubleq)
+				quotes.simpleq = !quotes.simpleq;
+			if (*str == c)
+				if (!quotes.doubleq && !quotes.simpleq)
+					break ;
+			str += 1;
+			i += 1;
+		}
 	}
-	if (push_tab(tab, &pointer, i, c) == -1)
+	if (push_tab(tab, &pointer, i) == -1)
 		return (-1);
+	if (str == pointer)
+		pointer += 1;
 	if (*pointer == '\0')
 		return ((quotes.doubleq || quotes.simpleq));
 	return (split_str(tab, pointer, c));
