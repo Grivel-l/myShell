@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/20 16:09:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/20 22:35:38 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -157,11 +157,152 @@ static int	exec_bin(t_command *cmd, int fildes[2], size_t is_last)
 	return (0);
 }
 
-static int	exec_command(char *command, t_command *cmd, int fildes[2], size_t is_last)
+static int	get_side(char *command)
+{
+	char	*inside;
+	char	*outside;
+
+	inside = ft_strrchr(command, '>');
+	outside = ft_strrchr(command, '<');
+	if (inside != NULL && outside != NULL)
+	{
+		if (ft_strlen(inside) < ft_strlen(outside))
+			outside = NULL;
+		else
+			inside = NULL;
+	}
+	if (inside == NULL && outside == NULL)
+		return (0);
+	else if (inside != NULL)
+		return (1);
+	else
+		return (2);
+}
+
+static char	*my_trim(char *str)
+{
+	while (*str == ' ')
+		str += 1;
+	return (str);
+}
+
+static int	set_fildes(char **args)
+{
+	int		fd;
+	size_t	length;
+
+	length = ft_tablen(args);
+	if (length == 1)
+		return (0);
+	if ((fd = open(my_trim(args[length - 1]), O_RDWR)) == -1)
+	{
+		if (errno == EACCES)
+			return (0);
+		ft_freetab(&args);
+		return (-1);
+	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		ft_freetab(&args);
+		return (-1);
+	}
+	return (0);
+}
+
+static int	split_string(t_list *split, char c, char ***args)
+{
+	int		fd;
+	char	**pointer;
+
+	if (ft_strsplit_qh(split->content, c, args) == -1)
+		return (-1);
+	pointer = *args;
+	pointer += 1;
+	while (*pointer)
+	{
+		if ((fd = open(my_trim(*pointer), O_CREAT, 0666)) == -1)
+		{
+			if (errno == EACCES)
+				eacces_error(my_trim(*pointer), NULL);
+			if (errno != EACCES)
+			{
+				ft_freetab(args);
+				return (-1);
+			}
+		}
+		if (close(fd) == -1)
+		{
+			ft_freetab(args);
+			return (-1);
+		}
+		pointer += 1;
+	}
+	if (set_fildes(*args) == -1)
+		return (-1);
+	return (0);
+}
+
+static int	crop_args(t_command *cmd, char **args)
+{
+	char	*str;
+	char	*inside;
+	char	*outside;
+	size_t	length1;
+	size_t	length2;
+
+	inside = ft_strchr(*args, '>');
+	outside = ft_strchr(*args, '<');
+	if (inside == NULL && outside == NULL)
+		if ((str = ft_strdup(*args)) == NULL)
+			return (-1);
+	if (inside != NULL && outside != NULL)
+	{
+		length1 = ft_strlen(inside);
+		length2 = ft_strlen(outside);
+		length1 = length1 > length2 ? length2 : length1;
+	}
+	if ((inside == NULL && outside != NULL) ||
+			(outside == NULL && inside != NULL))
+		length1 = inside == NULL ? ft_strlen(outside) : ft_strlen(inside);
+	if (!(inside == NULL && outside == NULL))
+	{
+		if ((str = ft_strnew(length1 + 1)) == NULL)
+			return (-1);
+		ft_strncpy(str, *args, length1);
+	}
+	ft_freetab(&(cmd->args));
+	if (ft_strsplit_qh(str, ' ', &(cmd->args)) == -1)
+	{
+		free(str);
+		return (-1);
+	}
+	free(str);
+	return (0);
+}
+
+static int	split_heredoc(t_command *cmd, int fildes[2], t_list *split)
+{
+	int		ret;
+	char	**args;
+
+	if ((ret = get_side(split->content)) == -1)
+		return (-1);
+	args = NULL;
+	if (ret == 0)
+		return (exec_bin(cmd, fildes, split->next == NULL));
+	else if (ret == 1 && split_string(split, '>', &args) == -1)
+		return (-1);
+	if (crop_args(cmd, args) == -1)
+		return (-1);
+	ft_freetab(&args);
+	return (exec_bin(cmd, fildes, split->next == NULL));
+}
+
+static int	exec_command(t_list *split, t_command *cmd, int fildes[2])
 {
 	int		ret;
 
-	if (ft_strsplit_qh(command, ' ', &(cmd->args)) == -1)
+	if (ft_strsplit_qh(split->content, ' ', &(cmd->args)) == -1)
 		return (-1);
 	if ((ret = get_bin_path(cmd)) == -1)
 	{
@@ -176,11 +317,11 @@ static int	exec_command(char *command, t_command *cmd, int fildes[2], size_t is_
 	if (cmd->bin == NULL)
 		not_found(cmd->args[0]);
 	else
-		ret = exec_bin(cmd, fildes, is_last);
+		ret = split_heredoc(cmd, fildes, split);
 	ft_strdel(&(cmd->bin));
 	ft_freetab(&(cmd->args));
 	if (ret == -1)
-		printf("%s for %s\n", strerror(errno), command);
+		printf("%s for %s\n", strerror(errno), split->content);
 	return (ret);
 }
 
@@ -198,6 +339,8 @@ static int	split_pipe(char *command, t_command *cmd)
 		return (-1);
 	if (dup2(STDIN_FILENO, old_fd[0]) == -1)
 		return (-1);
+	if (dup2(STDOUT_FILENO, old_fd[1]) == -1)
+		return (-1);
 	if ((split_tab = ft_strsplit(command, '|')) == NULL)
 		return (-1);
 	if ((split = ft_tabtolist(split_tab)) == NULL)
@@ -209,7 +352,7 @@ static int	split_pipe(char *command, t_command *cmd)
 	ft_freetab(&split_tab);
 	while (split != NULL)
 	{
-		if (exec_command(split->content, cmd, fildes, split->next == NULL) == -1)
+		if (exec_command(split, cmd, fildes) == -1)
 		{
 			ft_lstfree(&pointer);
 			return (exit_all_fd(fildes));
@@ -218,6 +361,8 @@ static int	split_pipe(char *command, t_command *cmd)
 	}
 	ft_lstfree(&pointer);
 	if (dup2(old_fd[0], STDIN_FILENO) == -1)
+		return (exit_all_fd(fildes));
+	if (dup2(old_fd[1], STDOUT_FILENO) == -1)
 		return (exit_all_fd(fildes));
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 19:15:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/09 16:59:47 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/20 22:55:30 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -168,6 +168,7 @@ t_list					*ft_tabtolist(char **tab);
 /*
 ** Str functions
 */
+int						ft_trim(char **str);
 int						ft_quotesclosed(char *str);
 int						ft_strcmp_ci(char const *str1, char const *str2);
 char					*ft_strtolower(char *str);

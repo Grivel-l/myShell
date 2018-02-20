@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/29 18:58:36 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 15:03:50 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/20 22:54:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -29,6 +29,8 @@ static int	push_tab(char ***tab, char **str, int index, char c)
 		return (-1);
 	ft_strncpy(tmp, quoted ? *str + 1 : *str, quoted ? index - 2 : index);
 	tmp[quoted ? index - 2 : index] = '\0';
+	if (ft_trim(&tmp) == -1)
+		return (-1);
 	if (ft_pushstr(tab, tmp) == -1)
 	{
 		free(tmp);
