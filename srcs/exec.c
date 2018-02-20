@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/19 23:01:02 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/20 13:51:57 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -105,22 +105,30 @@ static int	close_all_fd(int fildes[2])
 	return (-1);
 }
 
-static int	yo(t_command *cmd, int fildes[2])
+static int	exec_bin(t_command *cmd, int fildes[2], size_t is_last)
 {
 	int		ret;
 	pid_t	pid;
+	size_t	is_first;
 
+	is_first = fildes[0] == -1 || fildes[1] == -1;
+	if (is_first && pipe(fildes) == -1)
+		return (-1);
+	if (is_last && dup2(STDOUT_FILENO, fildes[1]) == -1)
+		return (-1);
 	if ((pid = fork()) == -1)
 		return (-1);
 	if (pid == 0)
 	{
-		if (dup2(fildes[0], STDIN_FILENO) == -1)
+		if (is_first && dup2(fildes[1], STDOUT_FILENO) == -1)
+			return (-1);
+		if (!is_first && dup2(fildes[0], STDIN_FILENO) == -1)
 			return (-1);
 		close_all_fd(fildes);
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);
 	}
-	else
+	if (is_last)
 	{
 		close_all_fd(fildes);
 		if (waitpid(pid, &ret, 0) == -1)
@@ -129,31 +137,7 @@ static int	yo(t_command *cmd, int fildes[2])
 	return (0);
 }
 
-static int	exec_bin(t_command *cmd, int fildes[2])
-{
-	pid_t	pid;
-
-	if (fildes[0] != -1 || fildes[1] != -1)
-		return (yo(cmd, fildes));
-	else
-	{
-		if (pipe(fildes) == -1)
-			return (-1);
-		if ((pid = fork()) == -1)
-			return (-1);
-		if (pid == 0)
-		{
-			if (dup2(fildes[1], STDOUT_FILENO) == -1)
-				return (-1);
-			close_all_fd(fildes);
-			if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
-				return (-1);
-		}
-	}
-	return (0);
-}
-
-static int	exec_command(char *command, t_command *cmd, int fildes[2])
+static int	exec_command(char *command, t_command *cmd, int fildes[2], size_t is_last)
 {
 	int		ret;
 
@@ -172,7 +156,7 @@ static int	exec_command(char *command, t_command *cmd, int fildes[2])
 	if (cmd->bin == NULL)
 		not_found(cmd->args[0]);
 	else
-		ret = exec_bin(cmd, fildes);
+		ret = exec_bin(cmd, fildes, is_last);
 	ft_strdel(&(cmd->bin));
 	ft_freetab(&(cmd->args));
 	if (ret == -1)
@@ -205,7 +189,7 @@ static int	split_pipe(char *command, t_command *cmd)
 	ft_freetab(&split_tab);
 	while (split != NULL)
 	{
-		if (exec_command(split->content, cmd, fildes) == -1)
+		if (exec_command(split->content, cmd, fildes, split->next == NULL) == -1)
 		{
 			ft_lstfree(&pointer);
 			return (close_all_fd(fildes));
