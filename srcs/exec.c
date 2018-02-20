@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/20 23:36:16 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/20 23:40:13 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -188,7 +188,7 @@ static int	set_fildes(char **args)
 	length = ft_tablen(args);
 	if (length == 1)
 		return (0);
-	flags = args[length - 2][0] == '\0' ? O_RDWR | O_APPEND : O_RDWR;
+	flags = args[length - 2][0] == '\0' ? O_RDWR | O_APPEND : O_RDWR | O_TRUNC;
 	if ((fd = open(args[length - 1], flags)) == -1)
 	{
 		if (errno == EACCES)
