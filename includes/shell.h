@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 02:32:37 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 03:47:43 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -37,6 +37,7 @@ typedef struct	s_prompt
 {
 	size_t		pos;
 	size_t		extra;
+	size_t		quoting;
 	char		*line;
 	char		buffer[3];
 	t_dlist		*commands;

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/17 21:26:20 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 03:48:00 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -30,6 +30,7 @@ int		main(int argc, char **argv, char **environ)
 	ret.stop = 0;
 	ret.cmd_ret = 0;
 	prompt.extra = 0;
+	prompt.quoting = 0;
 	prompt.commands = NULL;
 	prompt.copy_buffer = NULL;
 	if (set_canonical() == -1)

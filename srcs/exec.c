@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 02:30:44 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 04:17:15 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -110,6 +110,7 @@ static int	exec_command(t_list *split, t_command *cmd, int fildes[2], t_prompt *
 		not_found(cmd->args[0]);
 	else
 		ret = split_heredoc(cmd, fildes, split, prompt);
+	printf("Everything is alright !\n");
 	ft_strdel(&(cmd->bin));
 	ft_freetab(&(cmd->args));
 	if (ret == -1)

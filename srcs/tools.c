@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:46:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/17 01:28:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 03:53:09 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -89,7 +89,7 @@ int			clear_all(t_prompt *prompt)
 		return (-1);
 	if (put_cap("cd") == -1)
 		return (-1);
-	if (isquoting(prompt->commands))
+	if (prompt->quoting || isquoting(prompt->commands))
 		ft_putstr("> ");
 	else
 		ft_putstr("$ ");
