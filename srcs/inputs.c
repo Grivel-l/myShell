@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 14:25:35 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 03:38:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -31,14 +31,6 @@ static int	handle_printable(t_prompt *prompt, char c)
 	if (insert_char(&(prompt->line), c, &(prompt->pos)) == -1)
 		return (-1);
 	return(write_line(prompt));
-}
-
-static int	next_line(char **line, size_t *pos)
-{
-	ft_strdel(line);
-	*pos = 0;
-	ft_putstr("> ");
-	return (0);
 }
 
 static int	check_quotes(t_prompt *prompt)
@@ -129,15 +121,12 @@ static int		handle_basics(t_prompt *prompt)
 	return (0);
 }
 
-void			yo(t_dlist *list)
+int			next_line(char **line, size_t *pos)
 {
-	while (list->previous != NULL)
-		list = list->previous;
-	while (list->next != NULL)
-	{
-		printf("Command: %s\n\n", list->content);
-		list = list->next;
-	}
+	ft_strdel(line);
+	*pos = 0;
+	ft_putstr("> ");
+	return (0);
 }
 
 int		handle_input(t_prompt *prompt)
@@ -151,7 +140,5 @@ int		handle_input(t_prompt *prompt)
 		return (handle_ccp(prompt));
 	else if (b[0] == 18 || b[0] == 20 || b[0] == 23 || b[0] == 5 || b[0] == 27)
 		return (handle_movements(prompt));
-	else
-		yo(prompt->commands);
 	return (0);
 }

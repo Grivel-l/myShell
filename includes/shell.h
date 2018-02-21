@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 01:05:22 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 02:32:37 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -60,6 +60,7 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt);
 int				put_cap(char *cap);
 int				clear_all(t_prompt *prompt);
 int				write_line(t_prompt *prompt);
+int				next_line(char **line, size_t *pos);
 size_t			to_line_end_length(t_prompt *prompt);
 size_t			to_line_start_length(t_prompt *prompt);
 
@@ -87,11 +88,12 @@ int				insert_char(char **line, char c, size_t *index);
 int				treate_command(t_prompt *prompt, t_command *cmd);
 int				exec_bin(t_command *cmd, int fildes[2], size_t is_last);
 
-int				split_heredoc(t_command *cmd, int fildes[2], t_list *split);
+int				split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prompt);
 
-int				set_fildes(char **args);
+int				set_stdout_fd(char **args);
 int				exit_all_fd(int fildes[2]);
 int				close_all_fd(int fildes[2]);
+int				set_stdin_fd(char **file, char ***args);
 /*
 **	Command exec
 */
@@ -102,5 +104,6 @@ char			*get_myenv(char *env, char **environ);
 
 void			not_found(char *name);
 void			eacces_error(char *name, char *extra);
+void			enoent_error(char *path, char *extra);
 
 #endif

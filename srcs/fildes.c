@@ -6,14 +6,14 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 01:03:35 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 01:05:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 03:36:05 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int		set_fildes(char **args)
+int		set_stdout_fd(char **args)
 {
 	int		fd;
 	int		flags;
@@ -33,6 +33,27 @@ int		set_fildes(char **args)
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
 		ft_freetab(&args);
+		return (-1);
+	}
+	return (0);
+}
+
+int		set_stdin_fd(char **file, char ***args)
+{
+	int		fd;
+	int		target;
+
+	if ((fd = open(*file, O_RDONLY)) == -1)
+	{
+		ft_freetab(args);
+		return (-1);
+	}
+	target = ft_atoi((*file - 1));
+	target = target <= 0 ? STDIN_FILENO : target;
+	if (dup2(fd, target) == -1)
+	{
+		close(fd);
+		ft_freetab(args);
 		return (-1);
 	}
 	return (0);

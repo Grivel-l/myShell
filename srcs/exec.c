@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 01:04:40 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 02:30:44 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -90,7 +90,7 @@ static int	get_bin_path(t_command *cmd)
 	return (0);
 }
 
-static int	exec_command(t_list *split, t_command *cmd, int fildes[2])
+static int	exec_command(t_list *split, t_command *cmd, int fildes[2], t_prompt *prompt)
 {
 	int		ret;
 
@@ -109,7 +109,7 @@ static int	exec_command(t_list *split, t_command *cmd, int fildes[2])
 	if (cmd->bin == NULL)
 		not_found(cmd->args[0]);
 	else
-		ret = split_heredoc(cmd, fildes, split);
+		ret = split_heredoc(cmd, fildes, split, prompt);
 	ft_strdel(&(cmd->bin));
 	ft_freetab(&(cmd->args));
 	if (ret == -1)
@@ -117,7 +117,7 @@ static int	exec_command(t_list *split, t_command *cmd, int fildes[2])
 	return (ret);
 }
 
-static int	split_pipe(char *command, t_command *cmd)
+static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 {
 	t_list	*split;
 	t_list	*pointer;
@@ -144,7 +144,7 @@ static int	split_pipe(char *command, t_command *cmd)
 	ft_freetab(&split_tab);
 	while (split != NULL)
 	{
-		if (exec_command(split, cmd, fildes) == -1)
+		if (exec_command(split, cmd, fildes, prompt) == -1)
 		{
 			ft_lstfree(&pointer);
 			return (exit_all_fd(fildes));
@@ -159,7 +159,7 @@ static int	split_pipe(char *command, t_command *cmd)
 	return (0);
 }
 
-int		treate_command(t_prompt *prompt, t_command *cmd)
+int			treate_command(t_prompt *prompt, t_command *cmd)
 {
 	char	**split_tab;
 	t_list	*pointer;
@@ -176,7 +176,7 @@ int		treate_command(t_prompt *prompt, t_command *cmd)
 	pointer = commands;
 	while (commands != NULL)
 	{
-		if (split_pipe(commands->content, cmd) == -1)
+		if (split_pipe(commands->content, cmd, prompt) == -1)
 		{
 			ft_lstfree(&pointer);
 			return (-1);

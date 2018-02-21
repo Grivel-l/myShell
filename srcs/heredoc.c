@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 01:04:04 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 03:38:17 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,7 +35,7 @@ static int	get_side(char *command)
 		return (2);
 }
 
-static int	set_inside(t_list *split, char c, char ***args)
+static int	set_stdout(t_list *split, char c, char ***args)
 {
 	int		fd;
 	char	**pointer;
@@ -44,9 +44,9 @@ static int	set_inside(t_list *split, char c, char ***args)
 		return (-1);
 	pointer = *args;
 	pointer += 1;
-	while (*pointer && (*pointer)[0] != '\0')
+	while (*pointer)
 	{
-		if ((fd = open(*pointer, O_CREAT, 0666)) == -1)
+		if ((*pointer)[0] != '\0' && (fd = open(*pointer, O_CREAT, 0666)) == -1)
 		{
 			if (errno == EACCES)
 				eacces_error(*pointer, NULL);
@@ -56,15 +56,86 @@ static int	set_inside(t_list *split, char c, char ***args)
 				return (-1);
 			}
 		}
-		if (close(fd) == -1)
+		if ((*pointer)[0] != '\0' && close(fd) == -1)
 		{
 			ft_freetab(args);
 			return (-1);
 		}
 		pointer += 1;
 	}
-	if (set_fildes(*args) == -1)
+	if (set_stdout_fd(*args) == -1)
 		return (-1);
+	return (0);
+}
+
+static int	check_return(t_prompt *prompt, char **match, char **buffer)
+{
+	int		fd;
+
+	if (prompt->buffer[0] == 10)
+	{
+		if (*buffer == NULL)
+			*buffer = ft_strdup(prompt->line);
+		else
+			*buffer = ft_strrealloc(*buffer, prompt->line);
+		if (*buffer == NULL)
+			return (-1);
+		if (ft_strcmp(prompt->line, *(match + 1)) == 0)
+		{
+			fd = ft_atoi(*(match - 1));
+			fd = fd <= -1 ? STDIN_FILENO : fd;
+			write(fd, *buffer, ft_strlen(*buffer));
+			return (2);
+		}
+		next_line(&(prompt->line), &(prompt->pos));
+		return (1);
+	}
+	return (0);
+}
+
+static int	read_set_stdin(char **match, t_prompt *prompt, char **buffer)
+{
+	int		ret;
+
+	next_line(&(prompt->line), &(prompt->pos));
+	if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
+		return (-1);
+	ret = check_return(prompt, match, buffer);
+	if (ret == 0 && handle_input(prompt) == -1)
+		return (-1);
+	if (ret != 2)
+		return (read_set_stdin(match, prompt, buffer));
+	free(*buffer);
+	if (ret == -1)
+		return (-1);
+	return (0);
+}
+
+static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
+{
+	char	*buffer;
+	char	**pointer;
+
+	if (ft_strsplit_qh(split->content, c, args) == -1)
+		return (-1);
+	pointer = *args;
+	pointer += 1;
+	buffer = NULL;
+	while (*pointer)
+	{
+		if ((*pointer)[0] != '\0' && access(*pointer, F_OK) == -1)
+		{
+			enoent_error(*pointer, NULL);
+			return (1);
+		}
+		if ((*pointer)[0] != '\0')
+			if (set_stdin_fd(pointer, args) == -1)
+				return (-1);
+		if ((*pointer)[0] == '\0')
+			if (read_set_stdin(pointer, prompt, &buffer) == -1)
+				return (-1);
+		pointer += 1;
+	}
 	return (0);
 }
 
@@ -106,20 +177,24 @@ static int	crop_args(t_command *cmd, char **args, char c)
 	return (0);
 }
 
-int			split_heredoc(t_command *cmd, int fildes[2], t_list *split)
+int			split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prompt)
 {
 	int		ret;
+	int		stop;
 	char	**args;
 
 	if ((ret = get_side(split->content)) == -1)
 		return (-1);
+	stop = 0;
 	args = NULL;
 	if (ret == 0)
 		return (exec_bin(cmd, fildes, split->next == NULL));
-	else if (ret == 1 && set_inside(split, '>', &args) == -1)
+	else if (ret == 1 && set_stdout(split, '>', &args) == -1)
 		return (-1);
-	if (crop_args(cmd, args, ret == 1 ? '>' : '<') == -1)
+	else if (ret == 2 && (stop = set_stdin(split, '<', &args, prompt)) == -1)
+		return (-1);
+	if (stop == 0 && crop_args(cmd, args, ret == 1 ? '>' : '<') == -1)
 		return (-1);
 	ft_freetab(&args);
-	return (exec_bin(cmd, fildes, split->next == NULL));
+	return (stop == 1 ? 0 : exec_bin(cmd, fildes, split->next == NULL));
 }
