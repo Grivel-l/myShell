@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 01:00:38 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 01:05:22 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -88,6 +88,10 @@ int				treate_command(t_prompt *prompt, t_command *cmd);
 int				exec_bin(t_command *cmd, int fildes[2], size_t is_last);
 
 int				split_heredoc(t_command *cmd, int fildes[2], t_list *split);
+
+int				set_fildes(char **args);
+int				exit_all_fd(int fildes[2]);
+int				close_all_fd(int fildes[2]);
 /*
 **	Command exec
 */

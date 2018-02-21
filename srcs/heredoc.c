@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 00:57:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 01:04:04 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,31 +33,6 @@ static int	get_side(char *command)
 		return (1);
 	else
 		return (2);
-}
-
-static int	set_fildes(char **args)
-{
-	int		fd;
-	int		flags;
-	size_t	length;
-
-	length = ft_tablen(args);
-	if (length == 1)
-		return (0);
-	flags = args[length - 2][0] == '\0' ? O_RDWR | O_APPEND : O_RDWR | O_TRUNC;
-	if ((fd = open(args[length - 1], flags)) == -1)
-	{
-		if (errno == EACCES)
-			return (0);
-		ft_freetab(&args);
-		return (-1);
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		ft_freetab(&args);
-		return (-1);
-	}
-	return (0);
 }
 
 static int	set_inside(t_list *split, char c, char ***args)

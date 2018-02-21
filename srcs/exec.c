@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 01:00:14 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/21 01:04:40 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -88,41 +88,6 @@ static int	get_bin_path(t_command *cmd)
 		return (-1);
 	ft_freetab(&pointer);
 	return (0);
-}
-
-static int	close_all_fd(int fildes[2])
-{
-	int		ret1;
-	int		ret2;
-
-	ret1 = 0;
-	ret2 = 0;
-	if (fildes[0] != -1)
-	{
-		ret1 = close(fildes[0]);
-		fildes[0] = -1;
-	}
-	if (fildes[1] != -1)
-	{
-		ret2 = close(fildes[1]);
-		fildes[1] = -1;
-	}
-	return ((ret1 == -1 || ret2 == -1) ? -1 : 0);
-}
-
-static int	exit_all_fd(int fildes[2])
-{
-	if (fildes[0] != -1)
-	{
-		close(fildes[0]);
-		fildes[0] = -1;
-	}
-	if (fildes[1] != -1)
-	{
-		close(fildes[1]);
-		fildes[1] = -1;
-	}
-	return (-1);
 }
 
 static int	exec_command(t_list *split, t_command *cmd, int fildes[2])
