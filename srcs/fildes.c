@@ -5,15 +5,26 @@
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2018/02/21 01:03:35 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 03:43:15 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Created: 2018/02/22 23:12:54 by legrivel     #+#   ##    ##    #+#       */
+/*   Updated: 2018/02/22 23:52:45 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int		set_stdout_fd(char **args)
+int		get_fd(char *str, int default_fd)
+{
+	char	*pointer;
+
+	pointer = str;
+	str += ft_strlen(str);
+	while (str != pointer && (*str < '0' || *str > '9'))
+		str -= 1;
+	return (str == pointer ? default_fd : ft_atoi(str));
+}
+
+int		set_stdout_fd(char **args, char *previous)
 {
 	int		fd;
 	int		flags;
@@ -30,7 +41,7 @@ int		set_stdout_fd(char **args)
 		ft_freetab(&args);
 		return (-1);
 	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
+	if (dup2(fd, get_fd(previous, STDOUT_FILENO)) == -1)
 	{
 		ft_freetab(&args);
 		return (-1);
@@ -38,21 +49,9 @@ int		set_stdout_fd(char **args)
 	return (0);
 }
 
-void	set_fd(char *str, int *fd)
-{
-	char	*pointer;
-
-	pointer = str;
-	str += (ft_strlen(str) - 1);
-	while (str != pointer && *str > '0' && *str < '9')
-		str -= 1;
-	*fd = str == pointer ? STDIN_FILENO : ft_atoi(str);
-}
-
 int		set_stdin_fd(char **file, char ***args, char *previous)
 {
 	int		fd;
-	int		target;
 
 	if ((fd = open(*file, O_RDONLY)) == -1)
 	{
@@ -60,8 +59,7 @@ int		set_stdin_fd(char **file, char ***args, char *previous)
 		ft_freetab(args);
 		return (-1);
 	}
-	set_fd(previous, &target);
-	if (dup2(fd, target) == -1)
+	if (dup2(fd, get_fd(previous, STDIN_FILENO)) == -1)
 	{
 		close(fd);
 		ft_freetab(&file);

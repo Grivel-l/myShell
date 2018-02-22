@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 21:52:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 23:13:36 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -92,11 +92,17 @@ int				exec_bin(t_command *cmd, int fildes[2], size_t is_last);
 
 int				split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prompt);
 
-void			set_fd(char *str, int *fd);
-int				set_stdout_fd(char **args);
+/*
+**	Fildes
+*/
 int				exit_all_fd(int fildes[2]);
 int				close_all_fd(int fildes[2]);
+int				get_fd(char *str, int default_fd);
+int				set_stdout_fd(char **args, char *previous);
 int				set_stdin_fd(char **file, char ***args, char *previous);
+/*
+**	Fildes
+*/
 /*
 **	Command exec
 */

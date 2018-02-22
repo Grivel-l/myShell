@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 21:59:34 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 00:24:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,39 +35,6 @@ static int	get_side(char *command)
 		return (2);
 }
 
-static int	set_stdout(t_list *split, char c, char ***args)
-{
-	int		fd;
-	char	**pointer;
-
-	if (ft_strsplit_qh(split->content, c, args) == -1)
-		return (-1);
-	pointer = *args;
-	pointer += 1;
-	while (*pointer)
-	{
-		if ((*pointer)[0] != '\0' && (fd = open(*pointer, O_CREAT, 0666)) == -1)
-		{
-			if (errno == EACCES)
-				eacces_error(*pointer, NULL);
-			if (errno != EACCES)
-			{
-				ft_freetab(args);
-				return (-1);
-			}
-		}
-		if ((*pointer)[0] != '\0' && close(fd) == -1)
-		{
-			ft_freetab(args);
-			return (-1);
-		}
-		pointer += 1;
-	}
-	if (set_stdout_fd(*args) == -1)
-		return (-1);
-	return (0);
-}
-
 static char	*get_tmp_file(char *name, size_t i)
 {
 	if (name == NULL || i > 20)
@@ -82,7 +49,6 @@ static char	*get_tmp_file(char *name, size_t i)
 static int	stop_read(char **buffer, char *match)
 {
 	int		fd;
-	int		fd2;
 	char	*tmp_file;
 
 	if ((tmp_file = get_tmp_file(ft_strdup(TMP_FILE), 0)) == NULL)
@@ -104,8 +70,7 @@ static int	stop_read(char **buffer, char *match)
 		return (-1);
 	}
 	free(tmp_file);
-	set_fd(match, &fd2);
-	dup2(fd, fd2);
+	dup2(fd, get_fd(match, STDIN_FILENO));
 	return (2);
 }
 
@@ -179,6 +144,42 @@ static int	update_args(char ***args, char *content, char c)
 	return (0);
 }
 
+static int	set_stdout(t_list *split, char c, char ***args)
+{
+	int		fd;
+	char	**pointer;
+
+	if (ft_strsplit_qh(split->content, c, args) == -1)
+		return (-1);
+	pointer = *args;
+	pointer += 1;
+	while (*pointer)
+	{
+		if ((*pointer)[0] != '\0' && (fd = open(*pointer, O_CREAT, 0666)) == -1)
+		{
+			if (errno == EACCES)
+			{
+				eacces_error(*pointer, NULL);
+				return (1);
+			}
+			if (errno != EACCES)
+			{
+				ft_freetab(args);
+				return (-1);
+			}
+		}
+		if ((*pointer)[0] != '\0' && close(fd) == -1)
+		{
+			ft_freetab(args);
+			return (-1);
+		}
+		if ((*pointer)[0] != '\0' && set_stdout_fd(*args, *(pointer - 1)) == -1)
+			return (-1);
+		pointer += 1;
+	}
+	return (update_args(args, split->content, c));
+}
+
 static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 {
 	char	**tmp;
@@ -217,44 +218,6 @@ static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 	return (update_args(args, split->content, c));
 }
 
-static int	crop_args(t_command *cmd, char **args, char c)
-{
-	char	*str;
-	char	*inside;
-	char	*outside;
-	size_t	length1;
-	size_t	length2;
-
-	inside = ft_strchr(*args, c);
-	outside = ft_strchr(*args, c);
-	if (inside == NULL && outside == NULL)
-		if ((str = ft_strdup(*args)) == NULL)
-			return (-1);
-	if (inside != NULL && outside != NULL)
-	{
-		length1 = ft_strlen(inside);
-		length2 = ft_strlen(outside);
-		length1 = length1 > length2 ? length2 : length1;
-	}
-	if ((inside == NULL && outside != NULL) ||
-			(outside == NULL && inside != NULL))
-		length1 = inside == NULL ? ft_strlen(outside) : ft_strlen(inside);
-	if (!(inside == NULL && outside == NULL))
-	{
-		if ((str = ft_strnew(length1 + 1)) == NULL)
-			return (-1);
-		ft_strncpy(str, *args, length1);
-	}
-	ft_freetab(&(cmd->args));
-	if (ft_strsplit_qh(str, ' ', &(cmd->args)) == -1)
-	{
-		free(str);
-		return (-1);
-	}
-	free(str);
-	return (0);
-}
-
 int			split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prompt)
 {
 	int		ret;
@@ -263,19 +226,14 @@ int			split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prom
 
 	if ((ret = get_side(split->content)) == -1)
 		return (-1);
-	stop = 0;
 	args = NULL;
 	if (ret == 0)
 		return (exec_bin(cmd, fildes, split->next == NULL));
-	else if (ret == 1 && set_stdout(split, '>', &args) == -1)
+	else if (ret == 1 && (stop = set_stdout(split, '>', &args)) == -1)
 		return (-1);
 	else if (ret == 2 && (stop = set_stdin(split, '<', &args, prompt)) == -1)
 		return (-1);
-	if (stop == 0 && crop_args(cmd, args, ret == 1 ? '>' : '<') == -1)
-	{
-		ft_freetab(&args);
-		return (-1);
-	}
-	ft_freetab(&args);
+	ft_freetab(&(cmd->args));
+	cmd->args = args;
 	return (stop == 1 ? 0 : exec_bin(cmd, fildes, split->next == NULL));
 }
