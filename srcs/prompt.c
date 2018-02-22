@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 16:14:07 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 00:55:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -51,7 +51,7 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt)
 	ret = 0;
 	prompt->pos = 0;
 	prompt->line = NULL;
-	ft_putstr("$ ");
+	ft_putstr("\033[01;32m$\033[0m ");
 	while (ret != 1)
 	{
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)

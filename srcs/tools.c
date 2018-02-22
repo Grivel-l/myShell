@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:46:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 03:53:09 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 00:57:20 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -92,7 +92,7 @@ int			clear_all(t_prompt *prompt)
 	if (prompt->quoting || isquoting(prompt->commands))
 		ft_putstr("> ");
 	else
-		ft_putstr("$ ");
+		ft_putstr("\033[01;32m$\033[0m ");
 	prompt->pos = old_pos;
 	return (0);
 }
