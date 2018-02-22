@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 01:03:35 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 02:39:33 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 02:51:41 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,21 +38,24 @@ int		set_stdout_fd(char **args)
 	return (0);
 }
 
+void	set_fd(char *str, int *fd)
+{
+	while (*str != '\0' && !(*str >= '0' && *str <= '9'))
+		str += 1;
+	*fd = *str == '\0' ? STDIN_FILENO : ft_atoi(str);
+}
+
 int		set_stdin_fd(char **file, char ***args)
 {
 	int		fd;
 	int		target;
-	char	*pointer;
 
 	if ((fd = open(*file, O_RDONLY)) == -1)
 	{
 		ft_freetab(args);
 		return (-1);
 	}
-	pointer = *file - 1;
-	while (*pointer != '\0' && *pointer < '0' && *pointer > '9')
-		pointer += 1;
-	target = pointer == '\0' ? STDIN_FILENO : ft_atoi(pointer);
+	set_fd(*(file - 1), &target);
 	if (dup2(fd, target) == -1)
 	{
 		close(fd);

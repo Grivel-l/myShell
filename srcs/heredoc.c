@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 02:35:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 02:54:32 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -83,8 +83,7 @@ static int	check_return(t_prompt *prompt, char **match, char **buffer)
 		ft_putchar('\n');
 		if (ft_strcmp(prompt->line, *(match + 1)) == 0)
 		{
-			fd = ft_atoi(*(match - 1));
-			fd = fd <= -1 ? STDIN_FILENO : fd;
+			set_fd(*(match - 1), &fd);
 			write(fd, *buffer, ft_strlen(*buffer) - ft_strlen(*(match + 1)));
 			return (2);
 		}
