@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 03:06:42 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 03:16:50 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -95,7 +95,7 @@ void			set_fd(char *str, int *fd);
 int				set_stdout_fd(char **args);
 int				exit_all_fd(int fildes[2]);
 int				close_all_fd(int fildes[2]);
-int				set_stdin_fd(char **file, char ***args);
+int				set_stdin_fd(char **file, char ***args, char *previous);
 /*
 **	Command exec
 */

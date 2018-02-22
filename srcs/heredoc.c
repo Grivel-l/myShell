@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 03:07:46 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 03:17:41 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -141,6 +141,7 @@ static int	update_args(char ***args, char *content, char c)
 
 static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 {
+	char	**tmp;
 	char	*buffer;
 	char	**pointer;
 
@@ -151,13 +152,17 @@ static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 	buffer = NULL;
 	while (*pointer)
 	{
-		if ((*pointer)[0] != '\0' && (*(pointer - 1))[0] != '\0' && access(*pointer, F_OK) == -1)
+		if (ft_strsplit_qh(*pointer, ' ', &tmp) == -1)
+			return (-1);
+		if ((*tmp)[0] != '\0' && (*(pointer - 1))[0] != '\0' && access(*tmp, F_OK) == -1)
 		{
+			ft_freetab(&tmp);
 			enoent_error(*pointer, NULL);
 			return (1);
 		}
-		if ((*pointer)[0] != '\0' && (*(pointer - 1))[0] != '\0')
-			if (set_stdin_fd(pointer, args) == -1)
+		ft_freetab(&tmp);
+		if ((*tmp)[0] != '\0' && (*(pointer - 1))[0] != '\0')
+			if (set_stdin_fd(tmp, args, *(pointer - 1)) == -1)
 				return (-1);
 		if ((*pointer)[0] == '\0')
 			if (read_set_stdin(pointer, prompt, &buffer) == -1)
