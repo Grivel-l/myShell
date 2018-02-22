@@ -6,13 +6,12 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/29 18:58:36 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/20 23:31:57 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 03:51:13 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
 static void	forward(char **str, char c)
 {
@@ -42,6 +41,18 @@ static int	push_tab(char ***tab, char **str, int index)
 	return (0);
 }
 
+static int	check_quotes(char c, t_quote *quotes, char sep)
+{
+	if (c == '"' && !quotes->simpleq)
+		quotes->doubleq = !quotes->doubleq;
+	else if (c == '\'' && !quotes->doubleq)
+		quotes->simpleq = !quotes->simpleq;
+	if (c == sep)
+		if (!quotes->doubleq && !quotes->simpleq)
+			return (1);
+	return (0);
+}
+
 static int	split_str(char ***tab, char *str, char c)
 {
 	int		i;
@@ -56,13 +67,8 @@ static int	split_str(char ***tab, char *str, char c)
 	{
 		while (*str)
 		{
-			if (*str == '"' && !quotes.simpleq)
-				quotes.doubleq = !quotes.doubleq;
-			else if (*str == '\'' && !quotes.doubleq)
-				quotes.simpleq = !quotes.simpleq;
-			if (*str == c)
-				if (!quotes.doubleq && !quotes.simpleq)
-					break ;
+			if (check_quotes(*str, &quotes, c) == 1)
+				break ;
 			str += 1;
 			i += 1;
 		}

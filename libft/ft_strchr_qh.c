@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 22:34:31 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/01 22:47:16 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 03:48:38 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,7 +21,7 @@ static void	check_quotes(char c, t_quote *quotes)
 		quotes->simpleq = !quotes->simpleq;
 }
 
-char	*ft_strchr_qh(char *str, char c)
+char		*ft_strchr_qh(char *str, char c)
 {
 	t_quote	quotes;
 
