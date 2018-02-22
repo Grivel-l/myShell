@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 04:22:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 02:35:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -116,6 +116,30 @@ static int	read_set_stdin(char **match, t_prompt *prompt, char **buffer)
 	return (0);
 }
 
+static int	update_args(char ***args, char *content, char c)
+{
+	size_t	i;
+	char	*tmp;
+
+	i = 0;
+	while (content[i] != '\0' && content[i] != c)
+		i += 1;
+	if (content[i] == '\0')
+		return (0);
+	while (content[i] != ' ')
+		i -= 1;
+	while (content[i] == ' ')
+		i -= 1;
+	if ((tmp = ft_strnew(i + 1)) == NULL)
+		return (-1);
+	ft_strncpy(tmp, content, i);
+	ft_freetab(args);
+	if (ft_strsplit_qh(tmp, ' ', args) == -1)
+		return (-1);
+	free(tmp);
+	return (0);
+}
+
 static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 {
 	char	*buffer;
@@ -141,7 +165,7 @@ static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 				return (-1);
 		pointer += 1;
 	}
-	return (0);
+	return (update_args(args, split->content, c));
 }
 
 static int	crop_args(t_command *cmd, char **args, char c)
