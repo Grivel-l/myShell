@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 03:44:41 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 21:59:34 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -68,10 +68,49 @@ static int	set_stdout(t_list *split, char c, char ***args)
 	return (0);
 }
 
-static int	check_return(t_prompt *prompt, char **match, char **buffer)
+static char	*get_tmp_file(char *name, size_t i)
+{
+	if (name == NULL || i > 20)
+		return (NULL);
+	if (access(name, F_OK) == -1)
+		return (name);
+	if (access(name, R_OK | W_OK) == -1)
+		return (get_tmp_file(ft_strrealloc(name, ft_itoa(i + 1)), i));
+	return (name);
+}
+
+static int	stop_read(char **buffer, char *match)
 {
 	int		fd;
+	int		fd2;
+	char	*tmp_file;
 
+	if ((tmp_file = get_tmp_file(ft_strdup(TMP_FILE), 0)) == NULL)
+		return (-1);
+	if ((fd = open(tmp_file, O_CREAT | O_WRONLY | O_TRUNC, 0666)) == -1)
+	{
+		free(tmp_file);
+		return (-1);
+	}
+	write(fd, *buffer, ft_strlen(*buffer) - ft_strlen(match) - 1);
+	if (close(fd) == -1)
+	{
+		free(tmp_file);
+		return (-1);
+	}
+	if ((fd = open(tmp_file, O_RDONLY)) == -1)
+	{
+		free(tmp_file);
+		return (-1);
+	}
+	free(tmp_file);
+	set_fd(match, &fd2);
+	dup2(fd, fd2);
+	return (2);
+}
+
+static int	check_return(t_prompt *prompt, char **match, char **buffer)
+{
 	if (prompt->buffer[0] == 10)
 	{
 		if (*buffer == NULL)
@@ -80,13 +119,11 @@ static int	check_return(t_prompt *prompt, char **match, char **buffer)
 			*buffer = ft_strrealloc(*buffer, prompt->line);
 		if (*buffer == NULL)
 			return (-1);
+		if ((*buffer = ft_strrealloc(*buffer, "\n")) == NULL)
+			return (-1);
 		ft_putchar('\n');
 		if (ft_strcmp(prompt->line, *(match + 1)) == 0)
-		{
-			set_fd(*(match - 1), &fd);
-			write(fd, *buffer, ft_strlen(*buffer) - ft_strlen(*(match + 1)));
-			return (2);
-		}
+			return (stop_read(buffer, *(match + 1)));
 		next_line(&(prompt->line), &(prompt->pos));
 		return (1);
 	}
@@ -106,7 +143,9 @@ static int	read_set_stdin(char **match, t_prompt *prompt, char **buffer)
 			return (-1);
 		ret = check_return(prompt, match, buffer);
 		if (ret == 0 && handle_input(prompt) == -1)
-			return (-1);
+			ret = -1;
+		if (ret == -1)
+			break ;
 	}
 	free(*buffer);
 	if (ret == -1)
@@ -129,6 +168,7 @@ static int	update_args(char ***args, char *content, char c)
 		i -= 1;
 	while (content[i] == ' ')
 		i -= 1;
+	i += 1;
 	if ((tmp = ft_strnew(i + 1)) == NULL)
 		return (-1);
 	ft_strncpy(tmp, content, i);
@@ -157,7 +197,7 @@ static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 		if (*tmp == NULL)
 			ft_freetab(&tmp);
 		if (((tmp == NULL && (*pointer)[0] != '\0') ||
-	(tmp != NULL && (*tmp)[0] != '\0')) && (*(pointer - 1))[0] != '\0')
+					(tmp != NULL && (*tmp)[0] != '\0')) && (*(pointer - 1))[0] != '\0')
 		{
 			if (access(tmp == NULL ? *pointer : *tmp, F_OK) == -1)
 			{

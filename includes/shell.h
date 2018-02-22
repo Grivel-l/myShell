@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 03:16:50 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 21:52:08 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,6 +24,7 @@
 # include <fcntl.h>
 
 # define PL 2
+# define TMP_FILE "/tmp/21sh_tmp"
 
 typedef struct	s_ret
 {
