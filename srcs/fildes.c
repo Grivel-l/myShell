@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 01:03:35 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 02:51:41 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/22 03:06:58 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,9 +40,13 @@ int		set_stdout_fd(char **args)
 
 void	set_fd(char *str, int *fd)
 {
-	while (*str != '\0' && !(*str >= '0' && *str <= '9'))
-		str += 1;
-	*fd = *str == '\0' ? STDIN_FILENO : ft_atoi(str);
+	char	*pointer;
+
+	pointer = str;
+	str += (ft_strlen(str) - 1);
+	while (str != pointer && *str > '0' && *str < '9')
+		str -= 1;
+	*fd = str == pointer ? STDIN_FILENO : ft_atoi(str);
 }
 
 int		set_stdin_fd(char **file, char ***args)
