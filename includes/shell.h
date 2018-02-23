@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/23 02:10:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 00:04:31 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -49,6 +49,7 @@ typedef struct	s_command
 {
 	char		*bin;
 	char		**args;
+	int			fildes[2];
 	char		**environ;
 }				t_command;
 
@@ -90,9 +91,9 @@ int				handle_signals(t_prompt *prompt);
 **	Command exec
 */
 int				treate_command(t_prompt *prompt, t_command *cmd);
-int				exec_bin(t_command *cmd, int fildes[2], size_t is_last);
+int				exec_bin(t_command *cmd, size_t is_last);
 
-int				split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prompt);
+int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt);
 
 /*
 **	Fildes

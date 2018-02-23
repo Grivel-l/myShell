@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/23 01:22:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 00:04:47 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -219,7 +219,7 @@ static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 	return (update_args(args, split->content, c));
 }
 
-int			split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prompt)
+int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt)
 {
 	int		ret;
 	int		stop;
@@ -227,17 +227,17 @@ int			split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prom
 
 	if (ft_strchr(split->content, '>') == NULL &&
 			ft_strchr(split->content, '<') == NULL)
-		return (exec_bin(cmd, fildes, split->next == NULL));
+		return (exec_bin(cmd, split->next == NULL));
 	if ((ret = get_side(split->content)) == -1)
 		return (-1);
 	args = NULL;
 	if (ret == 0)
-		return (exec_bin(cmd, fildes, split->next == NULL));
+		return (exec_bin(cmd, split->next == NULL));
 	else if (ret == 1 && (stop = set_stdout(split, '>', &args)) == -1)
 		return (-1);
 	else if (ret == 2 && (stop = set_stdin(split, '<', &args, prompt)) == -1)
 		return (-1);
 	ft_freetab(&(cmd->args));
 	cmd->args = args;
-	return (stop == 1 ? 0 : exec_bin(cmd, fildes, split->next == NULL));
+	return (stop == 1 ? 0 : exec_bin(cmd, split->next == NULL));
 }
