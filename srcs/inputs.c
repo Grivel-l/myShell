@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 03:38:06 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 02:01:16 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -140,5 +140,7 @@ int		handle_input(t_prompt *prompt)
 		return (handle_ccp(prompt));
 	else if (b[0] == 18 || b[0] == 20 || b[0] == 23 || b[0] == 5 || b[0] == 27)
 		return (handle_movements(prompt));
+	else if (b[0] == 3 || b[0] == 4)
+		return (handle_signals(prompt));
 	return (0);
 }

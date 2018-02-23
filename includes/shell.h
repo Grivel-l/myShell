@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 23:13:36 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 02:10:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -80,6 +80,8 @@ int				handle_movements(t_prompt *prompt);
 
 int				remove_char(char **line, size_t *index);
 int				insert_char(char **line, char c, size_t *index);
+
+int				handle_signals(t_prompt *prompt);
 /*
 **	Termcaps
 */
