@@ -6,38 +6,41 @@
 #    By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2017/12/11 16:25:45 by legrivel     #+#   ##    ##    #+#        #
-#    Updated: 2018/02/23 02:11:05 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/02/23 18:59:48 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
 
 NAME = 21sh
-SRCS = main.c free_alloc.c prompt.c inputs.c line_manipulation.c copy.c \
-	   movements.c commands.c arrows.c tools.c env.c exec.c errors.c \
-	   heredoc.c fildes.c signals.c
-OBJS = $(SRCS:.c=.o)
 SRCS_PATH = ./srcs/
+FILES = main.c free_alloc.c prompt/prompt.c prompt/inputs.c \
+		prompt/line_manipulation.c prompt/copy.c prompt/movements.c \
+		prompt/commands.c prompt/arrows.c prompt/tools.c env.c command/exec.c \
+		errors.c command/heredoc.c command/fildes.c signals.c
+SRCS = $(addprefix $(SRCS_PATH), $(FILES)) 
+OBJS = $(FILES:.c=.o)
 INCS_PATH = ./includes/
 LIB_PATH = ./libft/
 FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address
 COMPILER = clang
 
+.PHONY: all clean fclean re
+
 all: $(NAME)
 
-$(NAME): $(LIB_PATH) $(OBJS)
-	$(COMPILER) $(FLAGS) -lcurses -I $(INCS_PATH) $(OBJS) -o $(NAME) libft/libft.a
-
-$(LIB_PATH): $(LIB_PATH)libft.a
+$(NAME): $(LIB_PATH)libft.a $(OBJS)
+	$(COMPILER) $(FLAGS) -lcurses -I $(INCS_PATH) $(notdir $(OBJS)) -o $(NAME) libft/libft.a
 
 $(LIB_PATH)libft.a:
 	make -C $(LIB_PATH)
 
-%.o: $(SRCS_PATH)%.c
-	$(COMPILER) $(FLAGS) -I $(INCS_PATH) -c $?
+./%.o: $(SRCS)
+	echo $@
+	$(COMPILER) $(FLAGS) -I $(INCS_PATH) -c $(SRCS_PATH)$*.c
 
 clean:
 	make -C $(LIB_PATH) clean
-	rm -f $(OBJS)
+	rm -f $(notdir $(OBJS))
 
 fclean: clean
 	make -C $(LIB_PATH) fclean
