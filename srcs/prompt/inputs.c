@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/23 02:01:16 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 23:30:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -88,6 +88,12 @@ static int	handle_return(t_prompt *prompt)
 		return (next_line(&(prompt->line), &(prompt->pos)));
 	else if (ret == 2)
 		return (1);
+	if (prompt->commands != NULL && prompt->commands->previous != NULL &&
+		ft_strcmp(prompt->commands->previous->content, prompt->line) == 0)
+	{
+		prompt->commands = prompt->commands->previous;
+		return (1);
+	}
 	if ((new = ft_dlstnew(prompt->line)) == NULL)
 		return (-1);
 	if (prompt->commands == NULL)

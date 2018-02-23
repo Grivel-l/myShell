@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/23 02:01:33 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/23 02:21:11 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 23:30:47 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,13 +15,25 @@
 
 static int	handle_sigint(t_prompt *prompt)
 {
+	t_dlist	*previous;
+	if (isquoting(prompt->commands))
+	{
+		previous = prompt->commands->previous;
+		ft_strdel(&(prompt->commands->content));
+		free(prompt->commands);
+		prompt->commands = previous;
+		if (prompt->commands != NULL)
+			prompt->commands->next = NULL;
+	}
 	prompt->line = NULL;
 	return (1);
 }
 
 static int	handle_eof(t_prompt *prompt)
 {
-	return (prompt->line == NULL ? 2 : 0);
+	if (isquoting(prompt->commands))
+		return (1);
+	return (prompt->line == NULL || prompt->line[0] == '\0' ? 2 : 0);
 }
 
 int			handle_signals(t_prompt *prompt)
