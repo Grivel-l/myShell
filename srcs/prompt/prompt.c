@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/23 23:24:32 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 00:46:56 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -58,19 +58,18 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt)
 		if ((ret = handle_input(prompt)) == -1)
 			return (-1);
 	}
-	ft_putchar('\n');
 	if (ret == 2)
 	{
+		ft_putchar('\n');
 		ft_strdel(&(prompt->line));
 		return (0);
 	}
+	while (prompt->pos < ft_strlen(prompt->line))
+		if (right_arrow(prompt) == -1)
+			return (-1);
+	ft_putchar('\n');
 	if (prompt->line == NULL && !isquoting(prompt->commands))
 		return (wait_prompt(environ, cmd_ret, prompt));
-	if (forward_cursor(prompt, ft_strlen(prompt->commands->content) - prompt->pos) == -1)
-	{
-		ft_strdel(&(prompt->line));
-		return (-1);
-	}
 	command.bin = NULL;
 	command.args = NULL;
 	command.environ = environ;
