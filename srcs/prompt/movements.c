@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 22:54:28 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/13 18:01:47 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 23:39:46 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,9 +42,9 @@ static int	right(t_prompt *prompt)
 		return (0);
 	length = prompt->pos;
 	max_length = ft_strlen(prompt->line);
-	while ((prompt->line[length] == ' ' || prompt->line[length] == ';') && length < max_length)
+	while (length < max_length && (prompt->line[length] == ' ' || prompt->line[length] == ';'))
 		length += 1;
-	while (prompt->line[length] != ' ' && prompt->line[length] != ';' && length < max_length)
+	while (length < max_length && prompt->line[length] != ' ' && prompt->line[length] != ';')
 		length += 1;
 	return (forward_cursor(prompt, length - prompt->pos));
 }
