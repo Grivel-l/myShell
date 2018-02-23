@@ -6,7 +6,7 @@
 #    By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2017/12/11 16:25:45 by legrivel     #+#   ##    ##    #+#        #
-#    Updated: 2018/02/23 18:59:48 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/02/23 19:01:13 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -35,7 +35,6 @@ $(LIB_PATH)libft.a:
 	make -C $(LIB_PATH)
 
 ./%.o: $(SRCS)
-	echo $@
 	$(COMPILER) $(FLAGS) -I $(INCS_PATH) -c $(SRCS_PATH)$*.c
 
 clean:
