@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/23 00:38:25 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/23 01:22:43 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -173,7 +173,7 @@ static int	set_stdout(t_list *split, char c, char ***args)
 			ft_freetab(args);
 			return (-1);
 		}
-		if ((*pointer)[0] != '\0' && set_stdout_fd(*args, *(pointer - 1)) == -1)
+		if ((*pointer)[0] != '\0' && set_stdout_fd(*args, **(pointer - 1) == '\0' ? *(pointer - 2) : *(pointer - 1)) == -1)
 			return (-1);
 		pointer += 1;
 	}
@@ -225,6 +225,9 @@ int			split_heredoc(t_command *cmd, int fildes[2], t_list *split, t_prompt *prom
 	int		stop;
 	char	**args;
 
+	if (ft_strchr(split->content, '>') == NULL &&
+			ft_strchr(split->content, '<') == NULL)
+		return (exec_bin(cmd, fildes, split->next == NULL));
 	if ((ret = get_side(split->content)) == -1)
 		return (-1);
 	args = NULL;
