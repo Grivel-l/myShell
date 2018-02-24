@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 03:07:15 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 17:41:38 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -115,8 +115,11 @@ int				set_stdin_fd(char **file, char ***args, char *previous);
 
 void			free_everything(char ***environ, t_prompt *prompt);
 
+int				set_env(t_command *cmd);
 int				unset_env(t_command *cmd);
 char			*get_myenv(char *env, char **environ);
+int				delete_env(char ***environ, int index);
+int				get_env_index(char **environ, char *arg);
 
 void			print_bin(void);
 void			not_found(char *name);

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:15:39 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 02:43:03 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 17:45:14 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,4 +26,31 @@ char			*get_myenv(char *env, char **environ)
 		environ += 1;
 	}
 	return (NULL);
+}
+
+int				set_env(t_command *cmd)
+{
+	int		ret;
+	char	*tmp;
+	int		index;
+
+	if (cmd->args[1] == NULL || cmd->args[2] == NULL)
+		return (0);
+	if ((tmp = ft_strjoin(cmd->args[1], "=")) == NULL)
+		return (-1);
+	if ((tmp = ft_strrealloc(tmp, cmd->args[2])) == NULL)
+		return (-1);
+	if ((index = get_env_index(cmd->environ, cmd->args[1])) == -1)
+		ret = ft_pushstr(&(cmd->environ), tmp);
+	else
+	{
+		if (delete_env(&(cmd->environ), index) == -1)
+		{
+			free(tmp);
+			return (-1);
+		}
+		ret = ft_pushstr(&(cmd->environ), tmp);
+	}
+	free(tmp);
+	return (ret);
 }

@@ -6,14 +6,25 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 02:38:11 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 03:20:26 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 17:42:27 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-static int	get_env_index(char **environ, char *arg)
+static int	copy_env(char ***new, char **pointer, char *env)
+{
+	if ((**new = ft_strdup(env)) == NULL)
+	{
+		ft_freetab(&pointer);
+		return (-1);
+	}
+	*new += 1;
+	return (0);
+}
+
+int			get_env_index(char **environ, char *arg)
 {
 	int		i;
 
@@ -28,18 +39,7 @@ static int	get_env_index(char **environ, char *arg)
 	return (-1);
 }
 
-static int	copy_env(char ***new, char **pointer, char *env)
-{
-	if ((**new = ft_strdup(env)) == NULL)
-	{
-		ft_freetab(&pointer);
-		return (-1);
-	}
-	*new += 1;
-	return (0);
-}
-
-static int	delete_env(char ***environ, int index)
+int			delete_env(char ***environ, int index)
 {
 	int		i;
 	char	**new;

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 03:09:50 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 17:36:15 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -66,10 +66,10 @@ int			exec_builtin(t_command *cmd)
 		return (unset_env(cmd));
 	else if (ft_strcmp(cmd->args[0], "env") == 0)
 		ft_puttab(cmd->environ);
+	else if (ft_strcmp(cmd->args[0], "setenv") == 0)
+		return (set_env(cmd));
 	/*else if (ft_strcmp(cmd->args[0], "exit") == 0)
 		return (exit_builtin(cmd));
-	else if (ft_strcmp(cmd->args[0], "setenv") == 0)
-		return (cd_builtin(cmd));
 	else
 		return (env_builtin(cmd));*/
 	return (0);
