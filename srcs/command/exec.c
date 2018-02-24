@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 16:46:54 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 19:19:19 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -135,8 +135,6 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 		return (-1);
 	if (dup2(STDIN_FILENO, old_fd[0]) == -1)
 		return (-1);
-	if (dup2(STDOUT_FILENO, old_fd[1]) == -1)
-		return (-1);
 	if (ft_strsplit_qh(command, '|', &split_tab) == -1)
 		return (-1);
 	if ((split = ft_tabtolist(split_tab)) == NULL)
@@ -158,9 +156,7 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 	ft_lstfree(&pointer);
 	if (dup2(old_fd[0], STDIN_FILENO) == -1)
 		return (exit_all_fd(cmd->fildes));
-	if (dup2(old_fd[1], STDOUT_FILENO) == -1)
-		return (exit_all_fd(cmd->fildes));
-	return (0);
+	return (close_all_fd(old_fd));
 }
 
 int			exec_bin(t_command *cmd, size_t is_last)
