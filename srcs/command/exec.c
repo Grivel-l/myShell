@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 03:13:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 16:46:54 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -137,7 +137,7 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 		return (-1);
 	if (dup2(STDOUT_FILENO, old_fd[1]) == -1)
 		return (-1);
-	if ((split_tab = ft_strsplit(command, '|')) == NULL)
+	if (ft_strsplit_qh(command, '|', &split_tab) == -1)
 		return (-1);
 	if ((split = ft_tabtolist(split_tab)) == NULL)
 	{

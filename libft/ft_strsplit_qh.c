@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/29 18:58:36 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 16:41:54 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 16:45:42 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -87,7 +87,7 @@ int			ft_strsplit_qh(char *str, char c, char ***tab)
 		return (0);
 	if ((ret = split_str(tab, str, c)) == -1)
 	{
-		ft_freetab(*tab);
+		ft_freetab(tab);
 		return (-1);
 	}
 	return (ret);
