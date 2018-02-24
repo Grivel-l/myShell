@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 02:38:11 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 03:10:24 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 03:20:26 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -75,7 +75,6 @@ int			unset_env(t_command *cmd)
 		return (0);
 	while (*args)
 	{
-		printf("Deleting %s\n", *args);
 		index = get_env_index(cmd->environ, *args);
 		if (index != -1 && delete_env(&(cmd->environ), index) == -1)
 			return (-1);

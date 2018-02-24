@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 03:08:13 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 03:19:45 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -44,10 +44,10 @@ int		main(int argc, char **argv, char **environ)
 	if (wait_prompt(ret, &prompt, &cmd) == -1)
 	{
 		reset_term(term);
-		free_everything(&environ, &prompt);
+		free_everything(&(cmd.environ), &prompt);
 		return (-1);
 	}
 	reset_term(term);
-	free_everything(&environ, &prompt);
+	free_everything(&(cmd.environ), &prompt);
 	return (0);
 }
