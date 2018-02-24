@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 00:46:56 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 03:12:00 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,10 +42,9 @@ int				set_canonical(void)
 	return (0);
 }
 
-int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt)
+int				wait_prompt(t_ret cmd_ret, t_prompt *prompt, t_command *cmd)
 {
 	int			ret;
-	t_command	command;
 
 	ret = 0;
 	prompt->pos = 0;
@@ -64,20 +63,22 @@ int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt)
 		ft_strdel(&(prompt->line));
 		return (0);
 	}
+	if (prompt->line == NULL && !isquoting(prompt->commands))
+	{
+		ft_putchar('\n');
+		return (wait_prompt(cmd_ret, prompt, cmd));
+	}
 	while (prompt->pos < ft_strlen(prompt->line))
 		if (right_arrow(prompt) == -1)
 			return (-1);
 	ft_putchar('\n');
-	if (prompt->line == NULL && !isquoting(prompt->commands))
-		return (wait_prompt(environ, cmd_ret, prompt));
-	command.bin = NULL;
-	command.args = NULL;
-	command.environ = environ;
-	if (prompt->line != NULL && treate_command(prompt, &command) == -1)
+	cmd->bin = NULL;
+	cmd->args = NULL;
+	if (prompt->line != NULL && treate_command(prompt, cmd) == -1)
 	{
 		ft_strdel(&(prompt->line));
 		return (-1);
 	}
 	ft_strdel(&(prompt->line));
-	return (wait_prompt(environ, cmd_ret, prompt));
+	return (wait_prompt(cmd_ret, prompt, cmd));
 }

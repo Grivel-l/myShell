@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/21 03:48:00 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 03:08:13 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,6 +16,7 @@
 int		main(int argc, char **argv, char **environ)
 {
 	t_ret			ret;
+	t_command		cmd;
 	struct termios	term;
 	t_prompt		prompt;
 
@@ -39,7 +40,8 @@ int		main(int argc, char **argv, char **environ)
 		free_everything(&environ, NULL);
 		return (-1);
 	}
-	if (wait_prompt(environ, ret, &prompt) == -1)
+	cmd.environ = environ;
+	if (wait_prompt(ret, &prompt, &cmd) == -1)
 	{
 		reset_term(term);
 		free_everything(&environ, &prompt);

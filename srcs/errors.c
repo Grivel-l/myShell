@@ -6,16 +6,20 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/28 02:59:08 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/16 21:45:17 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 01:52:01 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "shell.h"
 
-static void	print_bin(void)
+void		env_enoent(char *command, char *env)
 {
-	ft_putstr_fd("21sh: ", 2);
+	print_bin();
+	ft_putstr_fd(command, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(env, 2);
+	ft_putstr_fd(" not set\n", 2);
 }
 
 void		eacces_error(char *path, char *extra)

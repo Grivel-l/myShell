@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 00:04:31 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 03:07:15 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -55,7 +55,7 @@ typedef struct	s_command
 
 int				set_canonical(void);
 void			reset_term(struct termios term);
-int				wait_prompt(char **environ, t_ret cmd_ret, t_prompt *prompt);
+int				wait_prompt(t_ret cmd_ret, t_prompt *prompt, t_command *cmd);
 
 /*
 **	Termcaps
@@ -95,6 +95,9 @@ int				exec_bin(t_command *cmd, size_t is_last);
 
 int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt);
 
+int				exec_builtin(t_command *cmd);
+int				check_builtins(t_command *cmd);
+
 /*
 **	Fildes
 */
@@ -112,9 +115,13 @@ int				set_stdin_fd(char **file, char ***args, char *previous);
 
 void			free_everything(char ***environ, t_prompt *prompt);
 
+int				unset_env(t_command *cmd);
 char			*get_myenv(char *env, char **environ);
 
+void			print_bin(void);
 void			not_found(char *name);
+void			not_dir(char *path, char *extra);
+void			env_enoent(char *command, char *env);
 void			eacces_error(char *name, char *extra);
 void			enoent_error(char *path, char *extra);
 

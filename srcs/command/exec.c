@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 00:05:31 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 03:13:08 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -75,10 +75,15 @@ static int	check_paths(char **paths, t_command *cmd)
 
 static int	get_bin_path(t_command *cmd)
 {
+	int		ret;
 	char	*path;
 	char	**paths;
 	char	**pointer;
 
+	if ((ret = check_builtins(cmd)) == -1)
+		return (-1);
+	if (ret == 1)
+		return (2);
 	if ((path = get_myenv("PATH", cmd->environ)) == NULL)
 		return (1);
 	if ((paths = ft_strsplit(path, ':')) == NULL)
@@ -106,7 +111,7 @@ static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)
 		ft_freetab(&(cmd->args));
 		return (path_missing());
 	}
-	if (cmd->bin == NULL)
+	if (ret != 2 && cmd->bin == NULL)
 		not_found(cmd->args[0]);
 	else
 		ret = split_heredoc(cmd, split, prompt);
@@ -164,6 +169,8 @@ int			exec_bin(t_command *cmd, size_t is_last)
 	pid_t	pid;
 	size_t	is_first;
 
+	if (cmd->bin == NULL)
+		return (exec_builtin(cmd));
 	is_first = cmd->fildes[0] == -1 || cmd->fildes[1] == -1;
 	if (is_first && pipe(cmd->fildes) == -1)
 		return (-1);
