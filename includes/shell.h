@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 21:26:19 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/25 00:44:46 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -22,6 +22,7 @@
 # include <term.h>
 # include <errno.h>
 # include <fcntl.h>
+# include <signal.h>
 
 # define PL 2
 # define TMP_FILE "/tmp/21sh_tmp"
@@ -49,7 +50,9 @@ typedef struct	s_command
 
 int				set_canonical(void);
 void			reset_term(struct termios term);
-int				wait_prompt(t_prompt *prompt, t_command *cmd);
+int				valid_command(t_prompt *prompt);
+int				set_options(struct termios term, int options);
+int				wait_prompt(t_prompt *prompt, t_command *cmd, struct termios term);
 
 /*
 **	Termcaps
@@ -69,14 +72,13 @@ int				rewind_cursor(t_prompt *prompt, size_t length);
 int				forward_cursor(t_prompt *prompt, size_t length);
 
 int				handle_ccp(t_prompt *prompt);
-int				handle_input(t_prompt *prompt);
 int				handle_arrows(t_prompt *prompt);
 int				handle_movements(t_prompt *prompt);
+int				handle_input(t_prompt *prompt);
+int				handle_signals(t_prompt *prompt);
 
 int				remove_char(char **line, size_t *index);
 int				insert_char(char **line, char c, size_t *index);
-
-int				handle_signals(t_prompt *prompt);
 /*
 **	Termcaps
 */

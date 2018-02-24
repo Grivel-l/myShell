@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/23 23:30:06 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/25 00:34:47 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -137,16 +137,16 @@ int			next_line(char **line, size_t *pos)
 
 int		handle_input(t_prompt *prompt)
 {
-	char	b[1];
+	char	c;
 
-	b[0] = prompt->buffer[0];
-	if ((b[0] >= 32 && b[0] <= 127) || b[0] == 10)
+	c = prompt->buffer[0];
+	if ((c >= 32 && c <= 127) || c == 10)
 		return (handle_basics(prompt));
-	else if (b[0] == 6 || b[0] == 7 || b[0] == 8)
+	else if (c == 6 || c == 7 || c == 8)
 		return (handle_ccp(prompt));
-	else if (b[0] == 18 || b[0] == 20 || b[0] == 23 || b[0] == 5 || b[0] == 27)
+	else if (c == 18 || c == 20 || c == 23 || c == 5 || c == 27)
 		return (handle_movements(prompt));
-	else if (b[0] == 3 || b[0] == 4)
+	else if (c == 3 || c == 4)
 		return (handle_signals(prompt));
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2017/12/11 16:25:45 by legrivel     #+#   ##    ##    #+#        #
-#    Updated: 2018/02/24 02:43:27 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/02/24 21:52:16 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -18,7 +18,7 @@ INCS_PATH = ./includes/
 LIB_PATH = ./libft/
 OBJS_PATH = ./objs/
 SUBDIRS = prompt command env
-SRCS = main.c free_alloc.c prompt/prompt.c prompt/inputs.c errorsyo.c \
+SRCS = main.c free_alloc.c prompt/prompt.c prompt/inputs.c errors2.c \
 		prompt/line_manipulation.c prompt/copy.c prompt/movements.c \
 		prompt/commands.c prompt/arrows.c prompt/tools.c command/exec.c \
 		errors.c command/heredoc.c command/fildes.c signals.c \

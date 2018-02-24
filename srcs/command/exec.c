@@ -6,12 +6,19 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 21:34:28 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/25 00:30:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
+
+pid_t	g_pid;
+
+static void	kill_process(int sig)
+{
+	kill(g_pid, sig);
+}
 
 static int	path_missing(void)
 {
@@ -159,7 +166,6 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 
 int			exec_bin(t_command *cmd, size_t is_last)
 {
-	pid_t	pid;
 	size_t	is_first;
 
 	if (cmd->bin == NULL)
@@ -167,9 +173,9 @@ int			exec_bin(t_command *cmd, size_t is_last)
 	is_first = cmd->fildes[0] == -1 || cmd->fildes[1] == -1;
 	if (is_first && pipe(cmd->fildes) == -1)
 		return (-1);
-	if ((pid = fork()) == -1)
+	if ((g_pid = fork()) == -1)
 		return (-1);
-	if (pid == 0)
+	if (g_pid == 0)
 	{
 		if (is_first && !is_last && dup2(cmd->fildes[1], STDOUT_FILENO) == -1)
 			return (-1);
@@ -182,9 +188,11 @@ int			exec_bin(t_command *cmd, size_t is_last)
 	}
 	if (is_last)
 	{
+		if (signal(SIGINT, kill_process) == SIG_ERR)
+			return (-1);
 		if (close_all_fd(cmd->fildes) == -1)
 			return (-1);
-		if (waitpid(pid, &(cmd->cmd_ret), 0) == -1)
+		if (waitpid(g_pid, &(cmd->cmd_ret), 0) == -1)
 			return (-1);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 21:08:17 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/25 00:44:11 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,7 +34,6 @@ int				set_canonical(void)
 		ret = -1;
 	if (ret == -1 || ret == 0)
 		return (-1);
-	term.c_lflag &= ~(ICANON | ECHO | ISIG);
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	if (put_cap("im") == -1)
@@ -42,7 +41,7 @@ int				set_canonical(void)
 	return (0);
 }
 
-int				wait_prompt(t_prompt *prompt, t_command *cmd)
+int				wait_prompt(t_prompt *prompt, t_command *cmd, struct termios term)
 {
 	int			ret;
 
@@ -50,6 +49,7 @@ int				wait_prompt(t_prompt *prompt, t_command *cmd)
 	prompt->pos = 0;
 	prompt->line = NULL;
 	ft_putstr("\033[01;32m$\033[0m ");
+	set_options(term, ICANON | ECHO | ISIG);
 	while (ret != 1 && ret != 2)
 	{
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
@@ -66,7 +66,7 @@ int				wait_prompt(t_prompt *prompt, t_command *cmd)
 	if (prompt->line == NULL && !isquoting(prompt->commands))
 	{
 		ft_putchar('\n');
-		return (wait_prompt(prompt, cmd));
+		return (wait_prompt(prompt, cmd, term));
 	}
 	while (prompt->pos < ft_strlen(prompt->line))
 		if (right_arrow(prompt) == -1)
@@ -74,11 +74,12 @@ int				wait_prompt(t_prompt *prompt, t_command *cmd)
 	ft_putchar('\n');
 	cmd->bin = NULL;
 	cmd->args = NULL;
+	set_options(term, ICANON | ECHO);
 	if (prompt->line != NULL && treate_command(prompt, cmd) == -1)
 	{
 		ft_strdel(&(prompt->line));
 		return (-1);
 	}
 	ft_strdel(&(prompt->line));
-	return (wait_prompt(prompt, cmd));
+	return (wait_prompt(prompt, cmd, term));
 }

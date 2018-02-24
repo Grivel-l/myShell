@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/23 02:01:33 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 00:46:19 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/25 00:44:58 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,6 +34,14 @@ static int	handle_eof(t_prompt *prompt)
 	if (isquoting(prompt->commands))
 		return (1);
 	return (prompt->line == NULL || prompt->line[0] == '\0' ? 2 : 0);
+}
+
+int			set_options(struct termios term, int options)
+{
+	term.c_lflag &= ~(options);
+	if (tcsetattr(0, TCSANOW, &term) == -1)
+		return (-1);
+	return (0);
 }
 
 int			handle_signals(t_prompt *prompt)
