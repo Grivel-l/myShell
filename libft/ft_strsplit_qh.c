@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/29 18:58:36 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/22 03:51:13 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 16:41:54 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,18 +19,22 @@ static void	forward(char **str, char c)
 		*str += 1;
 }
 
-static int	push_tab(char ***tab, char **str, int index)
+static int	push_tab(char ***tab, char **str, int index, char c)
 {
 	char	*tmp;
-	int		quoted;
+	char	*tmp2;
 
-	quoted = **str == '\'' || **str == '"' ? 1 : 0;
-	if ((tmp = malloc(quoted ? index - 1 : index + 1)) == NULL)
+	if ((tmp = malloc(index + 1)) == NULL)
 		return (-1);
-	ft_strncpy(tmp, quoted ? *str + 1 : *str, quoted ? index - 2 : index);
-	tmp[quoted ? index - 2 : index] = '\0';
-	if (ft_trim(&tmp) == -1)
+	ft_strncpy(tmp, *str, index);
+	tmp[index] = '\0';
+	tmp2 = tmp;
+	if ((tmp = ft_strtrim(tmp)) == NULL)
+	{
+		free(tmp2);
 		return (-1);
+	}
+	free(tmp2);
 	if (ft_pushstr(tab, tmp) == -1)
 	{
 		free(tmp);
@@ -38,18 +42,7 @@ static int	push_tab(char ***tab, char **str, int index)
 	}
 	free(tmp);
 	*str = *str + index;
-	return (0);
-}
-
-static int	check_quotes(char c, t_quote *quotes, char sep)
-{
-	if (c == '"' && !quotes->simpleq)
-		quotes->doubleq = !quotes->doubleq;
-	else if (c == '\'' && !quotes->doubleq)
-		quotes->simpleq = !quotes->simpleq;
-	if (c == sep)
-		if (!quotes->doubleq && !quotes->simpleq)
-			return (1);
+	forward(str, c);
 	return (0);
 }
 
@@ -63,20 +56,20 @@ static int	split_str(char ***tab, char *str, char c)
 	pointer = str;
 	quotes.simpleq = 0;
 	quotes.doubleq = 0;
-	if (*str != c)
+	while (*str)
 	{
-		while (*str)
-		{
-			if (check_quotes(*str, &quotes, c) == 1)
+		if (*str == '"')
+			quotes.doubleq = !quotes.doubleq;
+		else if (*str == '\'')
+			quotes.simpleq = !quotes.simpleq;
+		if (*str == c)
+			if (!quotes.doubleq && !quotes.simpleq)
 				break ;
-			str += 1;
-			i += 1;
-		}
+		str += 1;
+		i += 1;
 	}
-	if (push_tab(tab, &pointer, i) == -1)
+	if (push_tab(tab, &pointer, i, c) == -1)
 		return (-1);
-	if (str == pointer)
-		pointer += 1;
 	if (*pointer == '\0')
 		return ((quotes.doubleq || quotes.simpleq));
 	return (split_str(tab, pointer, c));
@@ -94,7 +87,7 @@ int			ft_strsplit_qh(char *str, char c, char ***tab)
 		return (0);
 	if ((ret = split_str(tab, str, c)) == -1)
 	{
-		ft_freetab(tab);
+		ft_freetab(*tab);
 		return (-1);
 	}
 	return (ret);
