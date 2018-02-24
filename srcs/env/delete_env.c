@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 02:38:11 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 17:42:27 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 21:17:53 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -70,9 +70,11 @@ int			unset_env(t_command *cmd)
 	int		index;
 	char	**args;
 
+	cmd->cmd_ret = 1;
 	args = cmd->args + 1;
 	if (*args == NULL)
 		return (0);
+	cmd->cmd_ret = 0;
 	while (*args)
 	{
 		index = get_env_index(cmd->environ, *args);

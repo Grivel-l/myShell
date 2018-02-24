@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 17:41:38 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 21:26:19 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,14 +26,6 @@
 # define PL 2
 # define TMP_FILE "/tmp/21sh_tmp"
 
-typedef struct	s_ret
-{
-	int			ret;
-	int			stop;
-	int			builtin;
-	int			cmd_ret;
-}				t_ret;
-
 typedef struct	s_prompt
 {
 	size_t		pos;
@@ -49,13 +41,15 @@ typedef struct	s_command
 {
 	char		*bin;
 	char		**args;
+	size_t		exited;
+	int			cmd_ret;
 	int			fildes[2];
 	char		**environ;
 }				t_command;
 
 int				set_canonical(void);
 void			reset_term(struct termios term);
-int				wait_prompt(t_ret cmd_ret, t_prompt *prompt, t_command *cmd);
+int				wait_prompt(t_prompt *prompt, t_command *cmd);
 
 /*
 **	Termcaps

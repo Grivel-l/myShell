@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 17:47:36 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 21:29:27 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,13 +18,14 @@ static int	cd_builtin(t_command *cmd)
 	char		*dir;
 	struct stat	infos;
 
+	cmd->cmd_ret = 1;
 	dir = cmd->args[1] == NULL ? get_myenv("HOME", cmd->environ) : cmd->args[1];
 	if (dir == NULL)
 	{
 		env_enoent("cd", "HOME");
 		return (0);
 	}
-	if (chdir(dir) == -1)
+	if ((cmd->cmd_ret = chdir(dir)) == -1)
 	{
 		if (access(dir, F_OK) == -1)
 			enoent_error(dir, "cd: ");
@@ -53,7 +54,14 @@ static int	echo_builtin(t_command *cmd)
 		pointer += 1;
 	}
 	ft_putchar('\n');
+	cmd->cmd_ret = 0;
 	return (0);
+}
+
+static int	exit_builtin(t_command *cmd)
+{
+	cmd->exited = 1;
+	return (-1);
 }
 
 int			exec_builtin(t_command *cmd)
@@ -65,13 +73,14 @@ int			exec_builtin(t_command *cmd)
 	else if (ft_strcmp(cmd->args[0], "unsetenv") == 0)
 		return (unset_env(cmd));
 	else if (ft_strcmp(cmd->args[0], "env") == 0)
+	{
+		cmd->cmd_ret = 0;
 		ft_puttab(cmd->environ);
+	}
 	else if (ft_strcmp(cmd->args[0], "setenv") == 0)
 		return (set_env(cmd));
-	/*else if (ft_strcmp(cmd->args[0], "exit") == 0)
+	else if (ft_strcmp(cmd->args[0], "exit") == 0)
 		return (exit_builtin(cmd));
-	else
-		return (env_builtin(cmd));*/
 	return (0);
 }
 

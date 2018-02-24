@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 03:12:00 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 21:08:17 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,7 +42,7 @@ int				set_canonical(void)
 	return (0);
 }
 
-int				wait_prompt(t_ret cmd_ret, t_prompt *prompt, t_command *cmd)
+int				wait_prompt(t_prompt *prompt, t_command *cmd)
 {
 	int			ret;
 
@@ -66,7 +66,7 @@ int				wait_prompt(t_ret cmd_ret, t_prompt *prompt, t_command *cmd)
 	if (prompt->line == NULL && !isquoting(prompt->commands))
 	{
 		ft_putchar('\n');
-		return (wait_prompt(cmd_ret, prompt, cmd));
+		return (wait_prompt(prompt, cmd));
 	}
 	while (prompt->pos < ft_strlen(prompt->line))
 		if (right_arrow(prompt) == -1)
@@ -80,5 +80,5 @@ int				wait_prompt(t_ret cmd_ret, t_prompt *prompt, t_command *cmd)
 		return (-1);
 	}
 	ft_strdel(&(prompt->line));
-	return (wait_prompt(cmd_ret, prompt, cmd));
+	return (wait_prompt(prompt, cmd));
 }

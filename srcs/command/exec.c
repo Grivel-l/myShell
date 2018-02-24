@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 19:19:19 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/24 21:34:28 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -116,9 +116,6 @@ static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)
 	else
 		ret = split_heredoc(cmd, split, prompt);
 	ft_strdel(&(cmd->bin));
-	ft_freetab(&(cmd->args));
-	if (ret == -1)
-		printf("%s for %s\n", strerror(errno), split->content);
 	return (ret);
 }
 
@@ -151,6 +148,7 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 			ft_lstfree(&pointer);
 			return (exit_all_fd(cmd->fildes));
 		}
+		ft_freetab(&(cmd->args));
 		split = split->next;
 	}
 	ft_lstfree(&pointer);
@@ -161,7 +159,6 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 
 int			exec_bin(t_command *cmd, size_t is_last)
 {
-	int		ret;
 	pid_t	pid;
 	size_t	is_first;
 
@@ -187,7 +184,7 @@ int			exec_bin(t_command *cmd, size_t is_last)
 	{
 		if (close_all_fd(cmd->fildes) == -1)
 			return (-1);
-		if (waitpid(pid, &ret, 0) == -1)
+		if (waitpid(pid, &(cmd->cmd_ret), 0) == -1)
 			return (-1);
 	}
 	return (0);
