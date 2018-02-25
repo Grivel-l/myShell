@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/25 00:44:11 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/25 01:41:29 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,6 +15,7 @@
 
 void			reset_term(struct termios term)
 {
+	put_cap("ei");
 	tcsetattr(0, TCSANOW, &term);
 }
 
