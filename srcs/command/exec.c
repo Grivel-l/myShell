@@ -222,6 +222,7 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 		}
 		commands = commands->next;
 	}
+	ft_lstfree(&pointer);
 	prompt->commands = prompt->commands->next;
 	return (0);
 }

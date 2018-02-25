@@ -48,20 +48,18 @@ int				wait_prompt(t_prompt *prompt, t_command *cmd, struct termios term)
 
 	ret = 0;
 	prompt->pos = 0;
-	prompt->line = NULL;
 	ft_putstr("\033[01;32m$\033[0m ");
 	set_options(term, ICANON | ECHO | ISIG);
 	while (ret != 1 && ret != 2)
 	{
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
-			ret = -1;
+			return (-1);
 		if ((ret = handle_input(prompt)) == -1)
 			return (-1);
 	}
 	if (ret == 2)
 	{
 		ft_putchar('\n');
-		ft_strdel(&(prompt->line));
 		return (0);
 	}
 	if (prompt->line == NULL && !isquoting(prompt->commands))
@@ -77,10 +75,7 @@ int				wait_prompt(t_prompt *prompt, t_command *cmd, struct termios term)
 	cmd->args = NULL;
 	set_options(term, ICANON | ECHO);
 	if (prompt->line != NULL && treate_command(prompt, cmd) == -1)
-	{
-		ft_strdel(&(prompt->line));
 		return (-1);
-	}
 	ft_strdel(&(prompt->line));
 	return (wait_prompt(prompt, cmd, term));
 }

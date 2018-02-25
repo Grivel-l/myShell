@@ -34,6 +34,7 @@ int		main(int argc, char **argv, char **environ)
 	cmd.environ = environ;
 	prompt.extra = 0;
 	prompt.quoting = 0;
+	prompt.line = NULL;
 	prompt.commands = NULL;
 	prompt.copy_buffer = NULL;
 	if (set_canonical() == -1)
@@ -44,7 +45,10 @@ int		main(int argc, char **argv, char **environ)
 	}
 	if (wait_prompt(&prompt, &cmd, term) == -1)
 	{
-		exit_status = cmd.args[1] == NULL ? WEXITSTATUS(cmd.cmd_ret) : ft_atoi(cmd.args[1]);
+		if (cmd.args != NULL)
+			exit_status = cmd.args[1] == NULL ? WEXITSTATUS(cmd.cmd_ret) : ft_atoi(cmd.args[1]);
+		else
+			exit_status = WEXITSTATUS(cmd.cmd_ret);
 		reset_term(term);
 		free_everything(&cmd, &prompt);
 		if (cmd.exited)

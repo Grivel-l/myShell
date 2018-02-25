@@ -15,6 +15,8 @@
 
 void	ft_dlstfree(t_dlist **list)
 {
+	t_dlist	*next;
+
 	while (*list != NULL && (*list)->previous != NULL)
 		*list = (*list)->previous;
 	while (*list != NULL)
@@ -26,7 +28,10 @@ void	ft_dlstfree(t_dlist **list)
 			*list = NULL;
 		}
 		else
-			*list = (*list)->next;
+		{
+			next = (*list)->next;
+			free(*list);
+			*list = next;
+		}
 	}
-	*list = NULL;
 }
