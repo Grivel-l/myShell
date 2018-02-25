@@ -109,7 +109,7 @@ int				set_stdin_fd(char **file, char ***args, char *previous);
 **	Command exec
 */
 
-void			free_everything(char ***environ, t_prompt *prompt);
+void			free_everything(t_command *cmd, t_prompt *prompt);
 
 int				set_env(t_command *cmd);
 int				unset_env(t_command *cmd);

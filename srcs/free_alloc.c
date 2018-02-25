@@ -13,14 +13,16 @@
 
 #include "shell.h"
 
-void		free_everything(char ***environ, t_prompt *prompt)
+void		free_everything(t_command *cmd, t_prompt *prompt)
 {
-	if (environ != NULL)
-		ft_freetab(environ);
 	if (prompt != NULL)
 	{
 		ft_strdel(&(prompt->line));
 		ft_strdel(&(prompt->copy_buffer));
 		ft_dlstfree(&(prompt->commands));
 	}
+	ft_strdel(&(cmd->bin));
+	ft_freetab(&(cmd->args));
+	ft_freetab(&(cmd->environ));
+	close_all_fd(cmd->fildes);
 }

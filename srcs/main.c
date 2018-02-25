@@ -18,6 +18,7 @@ int		main(int argc, char **argv, char **environ)
 	t_command		cmd;
 	t_prompt		prompt;
 	struct termios	term;
+	int				exit_status;
 
 	(void)argv;
 	if (argc != 1)
@@ -26,8 +27,11 @@ int		main(int argc, char **argv, char **environ)
 		return (1);
 	if (tcgetattr(0, &term) == -1)
 		return (1);
+	cmd.bin = NULL;
 	cmd.exited = 0;
 	cmd.cmd_ret = 0;
+	cmd.args = NULL;
+	cmd.environ = environ;
 	prompt.extra = 0;
 	prompt.quoting = 0;
 	prompt.commands = NULL;
@@ -35,24 +39,19 @@ int		main(int argc, char **argv, char **environ)
 	if (set_canonical() == -1)
 	{
 		reset_term(term);
-		free_everything(&environ, NULL);
+		free_everything(&cmd, NULL);
 		return (1);
 	}
-	cmd.environ = environ;
 	if (wait_prompt(&prompt, &cmd, term) == -1)
 	{
+		exit_status = cmd.args[1] == NULL ? WEXITSTATUS(cmd.cmd_ret) : ft_atoi(cmd.args[1]);
 		reset_term(term);
-		free_everything(&(cmd.environ), &prompt);
+		free_everything(&cmd, &prompt);
 		if (cmd.exited)
-		{
-			if (cmd.args[1] == NULL)
-				exit(WEXITSTATUS(cmd.cmd_ret));
-			else
-				exit(ft_atoi(cmd.args[1]));
-		}
+			exit(exit_status);
 		return (1);
 	}
 	reset_term(term);
-	free_everything(&(cmd.environ), &prompt);
+	free_everything(&cmd, &prompt);
 	return (0);
 }
