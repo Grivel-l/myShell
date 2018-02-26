@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/25 00:30:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/26 15:24:01 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,12 +38,14 @@ static int	check_bin(char *path, char **bin, char **error)
 		return (-1);
 	if (ret == -1)
 	{
-		*error = "Permission denied";
+		ft_strdel(error);
+		if ((*error = ft_strdup(path)) == NULL)
+			return (-1);
 		return (0);
 	}
 	if ((*bin = ft_strdup(path)) == NULL)
 		return (-1);
-	*error = NULL;
+	ft_strdel(error);
 	return (1);
 }
 
@@ -75,7 +77,11 @@ static int	check_paths(char **paths, t_command *cmd)
 		paths += 1;
 	}
 	if (error != NULL)
-		ft_putstr_fd(error, 2);
+	{
+		eacces_error(error, NULL);
+		ft_strdel(&error);
+		return (2);
+	}
 	ft_strdel(&error);
 	return (0);
 }
@@ -96,10 +102,10 @@ static int	get_bin_path(t_command *cmd)
 	if ((paths = ft_strsplit(path, ':')) == NULL)
 		return (-1);
 	pointer = paths;
-	if (check_paths(paths, cmd) == -1)
+	if ((ret = check_paths(paths, cmd)) == -1)
 		return (-1);
 	ft_freetab(&pointer);
-	return (0);
+	return (ret);
 }
 
 static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)

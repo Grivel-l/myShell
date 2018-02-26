@@ -6,13 +6,12 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/30 00:05:41 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/30 00:25:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/26 14:58:50 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
 t_list	*ft_tabtolist(char **tab)
 {
