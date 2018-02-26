@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/25 01:41:29 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/26 15:41:47 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,13 +19,13 @@ void			reset_term(struct termios term)
 	tcsetattr(0, TCSANOW, &term);
 }
 
-int				set_canonical(void)
+int				set_canonical(char **environ)
 {
 	int				ret;
 	char			*name;
 	struct termios	term;
 
-	if ((name = getenv("TERM")) == NULL)
+	if ((name = get_myenv("TERM", environ)) == NULL)
 	{
 		ft_putstr_fd("$TERM is missing", 2);
 		return (-1);
