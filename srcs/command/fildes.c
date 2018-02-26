@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/22 23:12:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/23 01:18:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/26 18:58:13 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -46,6 +46,8 @@ int		set_stdout_fd(char **args, char *previous)
 		ft_freetab(&args);
 		return (-1);
 	}
+	if (close(fd) == -1)
+		return (-1);
 	return (0);
 }
 
@@ -66,6 +68,8 @@ int		set_stdin_fd(char **file, char ***args, char *previous)
 		ft_freetab(args);
 		return (-1);
 	}
+	if (close(fd) == -1)
+		return (-1);
 	return (0);
 }
 

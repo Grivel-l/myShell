@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/26 15:24:01 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/26 19:07:45 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,12 +18,6 @@ pid_t	g_pid;
 static void	kill_process(int sig)
 {
 	kill(g_pid, sig);
-}
-
-static int	path_missing(void)
-{
-	ft_putstr_fd("$PATH missing", 2);
-	return (-1);
 }
 
 static int	check_bin(char *path, char **bin, char **error)
@@ -121,8 +115,9 @@ static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)
 	}
 	if (ret == 1)
 	{
+		env_enoent(cmd->args[0], "PATH");
 		ft_freetab(&(cmd->args));
-		return (path_missing());
+		return (0);
 	}
 	if (ret != 2 && cmd->bin == NULL)
 		not_found(cmd->args[0]);
@@ -136,15 +131,10 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 {
 	t_list	*split;
 	t_list	*pointer;
-	int		old_fd[2];
 	char	**split_tab;
 
 	cmd->fildes[0] = -1;
 	cmd->fildes[1] = -1;
-	if (pipe(old_fd) == -1)
-		return (-1);
-	if (dup2(STDIN_FILENO, old_fd[0]) == -1)
-		return (-1);
 	if (ft_strsplit_qh(command, '|', &split_tab) == -1)
 		return (-1);
 	if ((split = ft_tabtolist(split_tab)) == NULL)
@@ -165,9 +155,7 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 		split = split->next;
 	}
 	ft_lstfree(&pointer);
-	if (dup2(old_fd[0], STDIN_FILENO) == -1)
-		return (exit_all_fd(cmd->fildes));
-	return (close_all_fd(old_fd));
+	return (0);
 }
 
 int			exec_bin(t_command *cmd, size_t is_last)
@@ -206,10 +194,17 @@ int			exec_bin(t_command *cmd, size_t is_last)
 
 int			treate_command(t_prompt *prompt, t_command *cmd)
 {
+	int		fd[2];
 	char	**split_tab;
 	t_list	*pointer;
 	t_list	*commands;
 
+	if (pipe(fd) == -1)
+		return (-1);
+	if (dup2(STDIN_FILENO, fd[0]) == -1)
+		return (-1);
+	if (dup2(STDOUT_FILENO, fd[1]) == -1)
+		return (-1);
 	if (ft_strsplit_qh(prompt->commands->content, ';', &split_tab) == -1)
 		return (-1);
 	if ((commands = ft_tabtolist(split_tab)) == NULL)
@@ -230,6 +225,10 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 	}
 	ft_lstfree(&pointer);
 	prompt->commands = prompt->commands->next;
-	return (0);
+	if (dup2(fd[0], STDIN_FILENO) == -1)
+		return (-1);
+	if (dup2(fd[1], STDOUT_FILENO) == -1)
+		return (-1);
+	return (close_all_fd(fd));
 }
 

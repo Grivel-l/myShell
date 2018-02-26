@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 00:04:47 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/26 19:07:44 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -70,7 +70,10 @@ static int	stop_read(char **buffer, char *match)
 		return (-1);
 	}
 	free(tmp_file);
-	dup2(fd, get_fd(match, STDIN_FILENO));
+	if (dup2(fd, get_fd(match, STDIN_FILENO)) == -1)
+		return (-1);
+	if (close(fd) == -1)
+		return (-1);
 	return (2);
 }
 
@@ -149,7 +152,7 @@ static int	set_stdout(t_list *split, char c, char ***args)
 	int		fd;
 	char	**pointer;
 
-	if (ft_strsplit_qh(split->content, c, args) == -1)
+	if (ft_strsplit_qhv(split->content, c, args) == -1)
 		return (-1);
 	pointer = *args;
 	pointer += 1;
@@ -187,7 +190,7 @@ static int	set_stdin(t_list *split, char c, char ***args, t_prompt *prompt)
 	char	*buffer;
 	char	**pointer;
 
-	if (ft_strsplit_qh(split->content, c, args) == -1)
+	if (ft_strsplit_qhv(split->content, c, args) == -1)
 		return (-1);
 	pointer = *args;
 	pointer += 1;

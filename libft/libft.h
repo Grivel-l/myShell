@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 19:15:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/20 22:55:30 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/26 17:23:36 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -151,6 +151,7 @@ void					ft_freetab(char ***tab);
 char					**ft_tabdup(char **tab);
 int						ft_pushstr(char ***tab, char *str);
 int						ft_strsplit_qh(char *str, char c, char ***tab);
+int						ft_strsplit_qhv(char *str, char c, char ***tab);
 /*
 ** Tab functions
 */
