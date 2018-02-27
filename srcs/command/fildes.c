@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/22 23:12:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 04:51:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 05:18:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -107,37 +107,26 @@ int		set_stdin_fd(char **file, char ***args, char *previous)
 	return (0);
 }
 
-int		close_all_fd(int fildes[2])
+static int	close_fd(int fd[2])
 {
-	int		ret1;
+	int		ret;
 	int		ret2;
 
-	ret1 = 0;
+	ret = 0;
 	ret2 = 0;
-	if (fildes[0] != -1)
-	{
-		ret1 = close(fildes[0]);
-		fildes[0] = -1;
-	}
-	if (fildes[1] != -1)
-	{
-		ret2 = close(fildes[1]);
-		fildes[1] = -1;
-	}
-	return ((ret1 == -1 || ret2 == -1) ? -1 : 0);
+	if (fd[0] != -1)
+		ret = close(fd[0]);
+	if (fd[1] != -1)
+		ret2 = close(fd[1]);
+	return ((ret == -1 || ret2 == -1) ? -1 : 0);
 }
 
-int		exit_all_fd(int fildes[2])
+int		close_all_fd(int fd[2], int fd2[2])
 {
-	if (fildes[0] != -1)
-	{
-		close(fildes[0]);
-		fildes[0] = -1;
-	}
-	if (fildes[1] != -1)
-	{
-		close(fildes[1]);
-		fildes[1] = -1;
-	}
-	return (-1);
+	int		ret;
+	int		ret2;
+
+	ret = close_fd(fd);
+	ret2 = close_fd(fd2);
+	return ((ret == -1 || ret2 == -1) ? -1 : 0);
 }

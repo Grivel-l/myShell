@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 05:10:28 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 05:21:55 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -153,7 +153,7 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 		if (exec_command(split, cmd, prompt, index) == -1)
 		{
 			ft_lstfree(&pointer);
-			return (exit_all_fd(cmd->fd));
+			return (-1);
 		}
 		ft_freetab(&(cmd->args));
 		split = split->next;
@@ -171,22 +171,18 @@ int			exec_bin(t_command *cmd, size_t is_last, size_t index)
 	{
 		if (configure_fd(cmd, index, is_last) == -1)
 			return (-1);
-		if (close_all_fd(cmd->fd2) == -1)
-			return (-1);
-		if (close_all_fd(cmd->fd) == -1)
+		if (close_all_fd(cmd->fd, cmd->fd2) == -1)
 			return (-1);
 		if (cmd->bin == NULL)
 			return (exec_builtin(cmd));
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);
 	}
-	if (cmd->bin != NULL && is_last)
+	if (is_last)
 	{
 		if (signal(SIGINT, kill_process) == SIG_ERR)
 			return (-1);
-		if (close_all_fd(cmd->fd) == -1)
-			return (-1);
-		if (close_all_fd(cmd->fd2) == -1)
+		if (close_all_fd(cmd->fd, cmd->fd2) == -1)
 			return (-1);
 		if (waitpid(g_pid, &(cmd->cmd_ret), 0) == -1)
 			return (-1);
