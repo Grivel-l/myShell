@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 04:12:59 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 05:53:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -230,17 +230,17 @@ int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t inde
 
 	if (ft_strchr(split->content, '>') == NULL &&
 			ft_strchr(split->content, '<') == NULL)
-		return (exec_bin(cmd, split->next == NULL, index));
+		return (exec_bin(cmd, index, split));
 	if ((ret = get_side(split->content)) == -1)
 		return (-1);
 	args = NULL;
 	if (ret == 0)
-		return (exec_bin(cmd, split->next == NULL, index));
+		return (exec_bin(cmd, index, split));
 	else if (ret == 1 && (stop = set_stdout(split, '>', &args)) == -1)
 		return (-1);
 	else if (ret == 2 && (stop = set_stdin(split, '<', &args, prompt)) == -1)
 		return (-1);
 	ft_freetab(&(cmd->args));
 	cmd->args = args;
-	return (stop == 1 ? 0 : exec_bin(cmd, split->next == NULL, index));
+	return (stop == 1 ? 0 : exec_bin(cmd, index, split));
 }

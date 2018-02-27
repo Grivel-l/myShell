@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 05:21:55 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 05:54:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -163,22 +163,22 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 	return (0);
 }
 
-int			exec_bin(t_command *cmd, size_t is_last, size_t index)
+int			exec_bin(t_command *cmd, size_t index, t_list *split)
 {
 	if ((g_pid = fork()) == -1)
 		return (-1);
 	if (g_pid == 0)
 	{
-		if (configure_fd(cmd, index, is_last) == -1)
+		if (configure_fd(cmd, index, split->next == NULL) == -1)
 			return (-1);
 		if (close_all_fd(cmd->fd, cmd->fd2) == -1)
 			return (-1);
 		if (cmd->bin == NULL)
-			return (exec_builtin(cmd));
+			return (exec_builtin(cmd, split->content));
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);
 	}
-	if (is_last)
+	if (split->next == NULL)
 	{
 		if (signal(SIGINT, kill_process) == SIG_ERR)
 			return (-1);

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 05:09:55 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 06:33:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,19 +42,43 @@ static int	cd_builtin(t_command *cmd)
 	return (0);
 }
 
-static int	echo_builtin(t_command *cmd)
+static int	print_char(t_quote *quotes, char c)
 {
-	char	**pointer;
-	
-	pointer = cmd->args;
-	pointer += 1;
-	while (*pointer)
+	if ((c == '<' || c == '>') && !quotes->doubleq && !quotes->simpleq)
 	{
-		ft_putstr(*pointer);
-		pointer += 1;
+		ft_putchar('\n');
+		return (1);
+	}
+	if (c == '\'' && !quotes->doubleq)
+		quotes->simpleq = !quotes->simpleq;
+	else if (c == '"' && !quotes->simpleq)
+		quotes->doubleq = !quotes->doubleq;
+	else
+		ft_putchar(c);
+	return (0);
+}
+
+static int	echo_builtin(t_command *cmd, char *full_cmd)
+{
+	t_quote	quotes;
+
+	cmd->cmd_ret = 0;
+	quotes.simpleq = 0;
+	quotes.doubleq = 0;
+	while (*full_cmd != '\0' && *full_cmd != ' ')
+		full_cmd += 1;
+	full_cmd += 1;
+	while (*full_cmd != '\0')
+	{
+		if (print_char(&quotes, *full_cmd) == 1)
+			return (0);
+		while (*(full_cmd + 1) != '\0' && *(full_cmd + 1) == ' ')
+			full_cmd += 1;
+		if (*full_cmd == ' ')
+			ft_putchar(' ');
+		full_cmd += 1;
 	}
 	ft_putchar('\n');
-	cmd->cmd_ret = 0;
 	return (0);
 }
 
@@ -64,15 +88,15 @@ static int	exit_builtin(t_command *cmd)
 	return (-1);
 }
 
-int			exec_builtin(t_command *cmd)
+int			exec_builtin(t_command *cmd, char *full_cmd)
 {
 	int		ret;
 
 	ret = 0;
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
-		ret =cd_builtin(cmd);
+		ret = cd_builtin(cmd);
 	else if (ft_strcmp(cmd->args[0], "echo") == 0)
-		ret = echo_builtin(cmd);
+		ret = echo_builtin(cmd, full_cmd);
 	else if (ft_strcmp(cmd->args[0], "unsetenv") == 0)
 		ret = unset_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "env") == 0)
