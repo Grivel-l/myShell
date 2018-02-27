@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/26 19:07:45 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 04:51:27 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -102,7 +102,7 @@ static int	get_bin_path(t_command *cmd)
 	return (ret);
 }
 
-static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)
+static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt, size_t index)
 {
 	int		ret;
 
@@ -122,7 +122,7 @@ static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)
 	if (ret != 2 && cmd->bin == NULL)
 		not_found(cmd->args[0]);
 	else
-		ret = split_heredoc(cmd, split, prompt);
+		ret = split_heredoc(cmd, split, prompt, index);
 	ft_strdel(&(cmd->bin));
 	return (ret);
 }
@@ -132,9 +132,12 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 	t_list	*split;
 	t_list	*pointer;
 	char	**split_tab;
+	size_t	index;
 
-	cmd->fildes[0] = -1;
-	cmd->fildes[1] = -1;
+	if (pipe(cmd->fd) == -1)
+		return (-1);
+	if (pipe(cmd->fd2) == -1)
+		return (-1);
 	if (ft_strsplit_qh(command, '|', &split_tab) == -1)
 		return (-1);
 	if ((split = ft_tabtolist(split_tab)) == NULL)
@@ -142,40 +145,37 @@ static int	split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 		ft_freetab(&split_tab);
 		return (-1);
 	}
+	index = 0;
 	pointer = split;
 	ft_freetab(&split_tab);
 	while (split != NULL)
 	{
-		if (exec_command(split, cmd, prompt) == -1)
+		if (exec_command(split, cmd, prompt, index) == -1)
 		{
 			ft_lstfree(&pointer);
-			return (exit_all_fd(cmd->fildes));
+			return (exit_all_fd(cmd->fd));
 		}
 		ft_freetab(&(cmd->args));
 		split = split->next;
+		index += 1;
 	}
 	ft_lstfree(&pointer);
 	return (0);
 }
 
-int			exec_bin(t_command *cmd, size_t is_last)
+int			exec_bin(t_command *cmd, size_t is_last, size_t index)
 {
-	size_t	is_first;
-
 	if (cmd->bin == NULL)
 		return (exec_builtin(cmd));
-	is_first = cmd->fildes[0] == -1 || cmd->fildes[1] == -1;
-	if (is_first && pipe(cmd->fildes) == -1)
-		return (-1);
 	if ((g_pid = fork()) == -1)
 		return (-1);
 	if (g_pid == 0)
 	{
-		if (is_first && !is_last && dup2(cmd->fildes[1], STDOUT_FILENO) == -1)
+		if (configure_fd(cmd, index, is_last) == -1)
 			return (-1);
-		if (!is_first && is_last && dup2(cmd->fildes[0], STDIN_FILENO) == -1)
+		if (close_all_fd(cmd->fd2) == -1)
 			return (-1);
-		if (close_all_fd(cmd->fildes) == -1)
+		if (close_all_fd(cmd->fd) == -1)
 			return (-1);
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);
@@ -184,7 +184,9 @@ int			exec_bin(t_command *cmd, size_t is_last)
 	{
 		if (signal(SIGINT, kill_process) == SIG_ERR)
 			return (-1);
-		if (close_all_fd(cmd->fildes) == -1)
+		if (close_all_fd(cmd->fd) == -1)
+			return (-1);
+		if (close_all_fd(cmd->fd2) == -1)
 			return (-1);
 		if (waitpid(g_pid, &(cmd->cmd_ret), 0) == -1)
 			return (-1);
@@ -194,17 +196,10 @@ int			exec_bin(t_command *cmd, size_t is_last)
 
 int			treate_command(t_prompt *prompt, t_command *cmd)
 {
-	int		fd[2];
 	char	**split_tab;
 	t_list	*pointer;
 	t_list	*commands;
 
-	if (pipe(fd) == -1)
-		return (-1);
-	if (dup2(STDIN_FILENO, fd[0]) == -1)
-		return (-1);
-	if (dup2(STDOUT_FILENO, fd[1]) == -1)
-		return (-1);
 	if (ft_strsplit_qh(prompt->commands->content, ';', &split_tab) == -1)
 		return (-1);
 	if ((commands = ft_tabtolist(split_tab)) == NULL)
@@ -225,10 +220,6 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 	}
 	ft_lstfree(&pointer);
 	prompt->commands = prompt->commands->next;
-	if (dup2(fd[0], STDIN_FILENO) == -1)
-		return (-1);
-	if (dup2(fd[1], STDOUT_FILENO) == -1)
-		return (-1);
-	return (close_all_fd(fd));
+	return (0);
 }
 

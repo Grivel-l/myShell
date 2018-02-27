@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/26 15:41:11 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 04:13:15 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -44,7 +44,8 @@ typedef struct	s_command
 	char		**args;
 	size_t		exited;
 	int			cmd_ret;
-	int			fildes[2];
+	int			fd[2];
+	int			fd2[2];
 	char		**environ;
 }				t_command;
 
@@ -87,9 +88,9 @@ int				insert_char(char **line, char c, size_t *index);
 **	Command exec
 */
 int				treate_command(t_prompt *prompt, t_command *cmd);
-int				exec_bin(t_command *cmd, size_t is_last);
+int				exec_bin(t_command *cmd, size_t is_last, size_t index);
 
-int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt);
+int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t index);
 
 int				exec_builtin(t_command *cmd);
 int				check_builtins(t_command *cmd);
@@ -102,6 +103,7 @@ int				close_all_fd(int fildes[2]);
 int				get_fd(char *str, int default_fd);
 int				set_stdout_fd(char **args, char *previous);
 int				set_stdin_fd(char **file, char ***args, char *previous);
+int				configure_fd(t_command *cmd, size_t index, size_t is_last);
 /*
 **	Fildes
 */

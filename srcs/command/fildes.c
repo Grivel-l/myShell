@@ -6,12 +6,46 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/22 23:12:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/26 18:58:13 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 04:51:08 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
+
+#define READ_END 0
+#define WRITE_END 1
+
+static int	set_even(t_command *cmd, size_t is_last)
+{
+	if (dup2(cmd->fd2[READ_END], STDIN_FILENO) == -1)
+		return (-1);
+	if (!is_last)
+		if (dup2(cmd->fd[WRITE_END], STDOUT_FILENO) == -1)
+			return (-1);
+	return (0);
+}
+
+static int	set_odd(t_command *cmd, size_t is_last)
+{
+	if (dup2(cmd->fd[READ_END], STDIN_FILENO) == -1)
+		return (-1);
+	if (!is_last)
+		if (dup2(cmd->fd2[WRITE_END], STDOUT_FILENO) == -1)
+			return (-1);
+	return (0);
+}
+
+int		configure_fd(t_command *cmd, size_t index, size_t is_last)
+{
+	if (index == 0 && !is_last)
+		return (dup2(cmd->fd[WRITE_END], STDOUT_FILENO));
+	else if (index != 0 && index % 2 == 0)
+		return (set_even(cmd, is_last));
+	else if (index != 0 && index % 2 != 0)
+		return (set_odd(cmd, is_last));
+	return (0);
+}
 
 int		get_fd(char *str, int default_fd)
 {
