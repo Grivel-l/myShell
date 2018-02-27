@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 21:29:27 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 05:09:55 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -66,21 +66,26 @@ static int	exit_builtin(t_command *cmd)
 
 int			exec_builtin(t_command *cmd)
 {
+	int		ret;
+
+	ret = 0;
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
-		return (cd_builtin(cmd));
+		ret =cd_builtin(cmd);
 	else if (ft_strcmp(cmd->args[0], "echo") == 0)
-		return (echo_builtin(cmd));
+		ret = echo_builtin(cmd);
 	else if (ft_strcmp(cmd->args[0], "unsetenv") == 0)
-		return (unset_env(cmd));
+		ret = unset_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "env") == 0)
 	{
 		cmd->cmd_ret = 0;
 		ft_puttab(cmd->environ);
 	}
 	else if (ft_strcmp(cmd->args[0], "setenv") == 0)
-		return (set_env(cmd));
+		ret = set_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "exit") == 0)
-		return (exit_builtin(cmd));
+		ret = exit_builtin(cmd);
+	close(STDOUT_FILENO);
+	close(STDIN_FILENO);
 	return (0);
 }
 
