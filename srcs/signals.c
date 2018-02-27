@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/23 02:01:33 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 08:58:32 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/28 00:45:20 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -25,7 +25,9 @@ static int	handle_sigint(t_prompt *prompt)
 		if (prompt->commands != NULL)
 			prompt->commands->next = NULL;
 	}
-	prompt->line = NULL;
+	if (goto_end(prompt) == -1)
+		return (-1);
+	ft_strdel(&(prompt->line));
 	return (1);
 }
 

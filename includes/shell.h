@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 08:58:13 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/28 00:45:04 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -61,6 +61,7 @@ int				wait_prompt(t_prompt *prompt, t_command *cmd, struct termios term);
 **	Termcaps
 */
 int				put_cap(char *cap);
+int				goto_end(t_prompt *prompt);
 int				clear_all(t_prompt *prompt);
 int				write_line(t_prompt *prompt);
 int				next_line(char **line, size_t *pos);

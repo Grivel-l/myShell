@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 22:59:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 08:39:36 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/28 00:45:40 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -67,9 +67,8 @@ int				wait_prompt(t_prompt *prompt, t_command *cmd, struct termios term)
 		ft_putchar('\n');
 		return (wait_prompt(prompt, cmd, term));
 	}
-	while (prompt->pos < ft_strlen(prompt->line))
-		if (right_arrow(prompt) == -1)
-			return (-1);
+	if (goto_end(prompt) == -1)
+		return (-1);
 	ft_putchar('\n');
 	cmd->bin = NULL;
 	cmd->args = NULL;
