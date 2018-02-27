@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 07:27:23 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 08:58:13 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -95,7 +95,7 @@ int				exec_bin(t_command *cmd, size_t index, t_list *split);
 int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t index);
 
 int				check_builtins(t_command *cmd);
-int				exec_builtin(t_command *cmd, char *full_cmd);
+int				exec_builtin(t_command *cmd, char *full_cmd, size_t index, size_t is_last);
 
 /*
 **	Fildes

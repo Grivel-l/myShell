@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 07:17:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 08:57:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -106,11 +106,15 @@ static int	exit_builtin(t_command *cmd)
 	return (-1);
 }
 
-int			exec_builtin(t_command *cmd, char *full_cmd)
+int			exec_builtin(t_command *cmd, char *full_cmd, size_t index, size_t is_last)
 {
 	int		ret;
 
 	ret = 0;
+	if (configure_fd(cmd, index, is_last) == -1)
+		return (-1);
+	if (close_all_fd(cmd->fd, cmd->fd2) == -1)
+		return (-1);
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
 		ret = cd_builtin(cmd);
 	else if (ft_strcmp(cmd->args[0], "echo") == 0)
