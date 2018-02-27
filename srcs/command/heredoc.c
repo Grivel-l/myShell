@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 05:53:06 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 06:46:44 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,8 +18,8 @@ static int	get_side(char *command)
 	char	*inside;
 	char	*outside;
 
-	inside = ft_strrchr(command, '>');
-	outside = ft_strrchr(command, '<');
+	inside = ft_strrchr_qh(command, '>');
+	outside = ft_strrchr_qh(command, '<');
 	if (inside != NULL && outside != NULL)
 	{
 		if (ft_strlen(inside) < ft_strlen(outside))
@@ -228,9 +228,6 @@ int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t inde
 	int		stop;
 	char	**args;
 
-	if (ft_strchr(split->content, '>') == NULL &&
-			ft_strchr(split->content, '<') == NULL)
-		return (exec_bin(cmd, index, split));
 	if ((ret = get_side(split->content)) == -1)
 		return (-1);
 	args = NULL;
