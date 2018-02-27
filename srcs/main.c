@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 09:03:24 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 09:15:03 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -50,7 +50,7 @@ int		main(int argc, char **argv, char **environ)
 	if (wait_prompt(&prompt, &cmd, term) == -1)
 	{
 		if (cmd.args != NULL)
-			exit_status = cmd.args[1] == NULL ? WEXITSTATUS(cmd.cmd_ret) : ft_atoi(cmd.args[1]);
+			exit_status = cmd.args[1] == NULL ? cmd.cmd_ret : ft_atoi(cmd.args[1]);
 		else
 			exit_status = cmd.cmd_ret;
 		reset_term(term);
