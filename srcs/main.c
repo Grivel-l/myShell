@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/26 15:41:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 05:26:40 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -32,6 +32,10 @@ int		main(int argc, char **argv, char **environ)
 	cmd.cmd_ret = 0;
 	cmd.args = NULL;
 	cmd.environ = environ;
+	cmd.fd[0] = -1;
+	cmd.fd[1] = -1;
+	cmd.fd2[0] = -1;
+	cmd.fd2[1] = -1;
 	prompt.extra = 0;
 	prompt.quoting = 0;
 	prompt.line = NULL;
