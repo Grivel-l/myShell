@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 08:56:51 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 09:03:55 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -186,6 +186,7 @@ int			exec_bin(t_command *cmd, size_t index, t_list *split)
 			return (-1);
 		if (waitpid(g_pid, &(cmd->cmd_ret), 0) == -1)
 			return (-1);
+		cmd->cmd_ret = WEXITSTATUS(cmd->cmd_ret);
 	}
 	return (0);
 }

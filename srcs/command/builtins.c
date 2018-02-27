@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 08:57:48 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 09:03:41 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,15 +18,16 @@ static int	cd_builtin(t_command *cmd)
 	char		*dir;
 	struct stat	infos;
 
-	cmd->cmd_ret = 1;
+	cmd->cmd_ret = 0;
 	dir = cmd->args[1] == NULL ? get_myenv("HOME", cmd->environ) : cmd->args[1];
 	if (dir == NULL)
 	{
 		env_enoent("cd", "HOME");
 		return (0);
 	}
-	if ((cmd->cmd_ret = chdir(dir)) == -1)
+	if (chdir(dir) == -1)
 	{
+		cmd->cmd_ret = 1;
 		if (access(dir, F_OK) == -1)
 			enoent_error(dir, "cd: ");
 		else
