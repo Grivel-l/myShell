@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 06:33:48 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 07:17:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,27 +42,39 @@ static int	cd_builtin(t_command *cmd)
 	return (0);
 }
 
-static int	print_char(t_quote *quotes, char c)
+static int	print_char(t_quote *quotes, char **str, t_command *cmd)
 {
-	if ((c == '<' || c == '>') && !quotes->doubleq && !quotes->simpleq)
+	char	*tmp;
+
+	if (**str == '$' && *((*str) + 1) == '?')
 	{
+		if ((tmp = ft_itoa(cmd->cmd_ret)) == NULL)
+			return (-1);
+		ft_putstr(tmp);
+		free(tmp);
+		*str += 1;
+		return (0);
+	}
+	if ((**str == '<' || **str == '>') && !quotes->doubleq && !quotes->simpleq)
+	{
+		cmd->cmd_ret = 0;
 		ft_putchar('\n');
 		return (1);
 	}
-	if (c == '\'' && !quotes->doubleq)
+	if (**str == '\'' && !quotes->doubleq)
 		quotes->simpleq = !quotes->simpleq;
-	else if (c == '"' && !quotes->simpleq)
+	else if (**str == '"' && !quotes->simpleq)
 		quotes->doubleq = !quotes->doubleq;
 	else
-		ft_putchar(c);
+		ft_putchar(**str);
 	return (0);
 }
 
 static int	echo_builtin(t_command *cmd, char *full_cmd)
 {
+	int		ret;
 	t_quote	quotes;
 
-	cmd->cmd_ret = 0;
 	quotes.simpleq = 0;
 	quotes.doubleq = 0;
 	while (*full_cmd != '\0' && *full_cmd != ' ')
@@ -70,7 +82,12 @@ static int	echo_builtin(t_command *cmd, char *full_cmd)
 	full_cmd += 1;
 	while (*full_cmd != '\0')
 	{
-		if (print_char(&quotes, *full_cmd) == 1)
+		if ((ret = print_char(&quotes, &full_cmd, cmd)) == -1)
+		{
+			cmd->cmd_ret = 1;
+			return (-1);
+		}
+		if (ret == 1)
 			return (0);
 		while (*(full_cmd + 1) != '\0' && *(full_cmd + 1) == ' ')
 			full_cmd += 1;
@@ -79,6 +96,7 @@ static int	echo_builtin(t_command *cmd, char *full_cmd)
 		full_cmd += 1;
 	}
 	ft_putchar('\n');
+	cmd->cmd_ret = 0;
 	return (0);
 }
 
