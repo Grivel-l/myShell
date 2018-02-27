@@ -6,15 +6,12 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/22 23:12:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 05:25:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 07:26:55 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-#define READ_END 0
-#define WRITE_END 1
 
 static int	set_even(t_command *cmd, size_t is_last)
 {
@@ -107,7 +104,7 @@ int		set_stdin_fd(char **file, char ***args, char *previous)
 	return (0);
 }
 
-static int	close_fd(int fd[2])
+int		close_fd(int fd[2])
 {
 	int		ret;
 	int		ret2;

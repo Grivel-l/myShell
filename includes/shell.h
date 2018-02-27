@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 05:54:19 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 07:27:23 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -25,6 +25,8 @@
 # include <signal.h>
 
 # define PL 2
+# define READ_END 0
+# define WRITE_END 1
 # define TMP_FILE "/tmp/21sh_tmp"
 
 typedef struct	s_prompt
@@ -98,6 +100,7 @@ int				exec_builtin(t_command *cmd, char *full_cmd);
 /*
 **	Fildes
 */
+int				close_fd(int fd[2]);
 int				close_all_fd(int fd[2], int fd2[2]);
 int				get_fd(char *str, int default_fd);
 int				set_stdout_fd(char **args, char *previous);

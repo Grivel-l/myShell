@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 06:46:44 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/27 08:22:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -77,10 +77,40 @@ static int	stop_read(char **buffer, char *match)
 	return (2);
 }
 
+static int	is_last_double(char **pointer)
+{
+	char	**tmp;
+
+	while (*pointer != NULL)
+	{
+		if (ft_strsplit_qh(*pointer, ' ', &tmp) == -1)
+			return (-1);
+		if (*tmp == NULL)
+			ft_freetab(&tmp);
+		if ((tmp == NULL && (*pointer)[0] == '\0') ||
+				(tmp != NULL && (*tmp)[0] == '\0'))
+		{
+			ft_freetab(&tmp);
+			return (0);
+		}
+		ft_freetab(&tmp);
+		pointer += 1;
+	}
+	return (1);
+}
+
 static int	check_return(t_prompt *prompt, char **match, char **buffer)
 {
 	if (prompt->buffer[0] == 10)
 	{
+		if (!is_last_double(match + 1))
+		{
+			ft_putchar('\n');
+			if (ft_strcmp(prompt->line, *(match + 1)) == 0)
+				return (2);
+			next_line(&(prompt->line), &(prompt->pos));
+			return (1);
+		}
 		if (*buffer == NULL)
 			*buffer = ft_strdup(prompt->line);
 		else
