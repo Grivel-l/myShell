@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/28 00:40:29 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/28 02:52:12 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -107,26 +107,25 @@ int			right_arrow(t_prompt *prompt)
 			return (put_cap("do"));
 		return (put_cap("nd"));
 	}
-	sleep(1);
 	return (0);
 }
 
 int			handle_arrows(t_prompt *prompt)
 {
-	char	buffer[1];
+	char	c;
 
-	buffer[0] = prompt->buffer[2];
-	if (buffer[0] == 68)
+	c = prompt->buffer[2];
+	if (c == 68)
 		return (left_arrow(prompt));
-	else if (buffer[0] == 67)
+	else if (c == 67)
 		return (right_arrow(prompt));
-	else if (buffer[0] == 70 && prompt->line != NULL)
+	else if (c == 70 && prompt->line != NULL)
 		return (forward_cursor(prompt, to_line_end_length(prompt)));
-	else if (buffer[0] == 72 && prompt->line != NULL)
+	else if (c == 72 && prompt->line != NULL)
 		return (rewind_cursor(prompt, to_line_start_length(prompt)));
-	else if (buffer[0] == 65)
+	else if (c == 65)
 		return (previous_command(prompt));
-	else if (buffer[0] == 66)
+	else if (c == 66)
 		return (next_command(prompt));
 	return (0);
 }
