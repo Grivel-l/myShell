@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/28 01:41:52 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/28 02:21:03 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,7 +20,6 @@
 # include <sys/stat.h>
 # include <termios.h>
 # include <term.h>
-# include <errno.h>
 # include <fcntl.h>
 # include <signal.h>
 
@@ -130,5 +129,6 @@ void			not_dir(char *path, char *extra);
 void			env_enoent(char *command, char *env);
 void			eacces_error(char *name, char *extra);
 void			enoent_error(char *path, char *extra);
+int				syntax_error(t_prompt *prompt, char c);
 
 #endif
