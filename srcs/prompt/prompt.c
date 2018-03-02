@@ -54,7 +54,7 @@ int				wait_prompt(t_prompt *prompt, t_command *cmd, struct termios term)
 	{
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
 			return (-1);
-		if ((ret = handle_input(prompt)) == -1)
+		if ((ret = handle_input(prompt, cmd->environ)) == -1)
 			return (-1);
 	}
 	if (ret == 2)

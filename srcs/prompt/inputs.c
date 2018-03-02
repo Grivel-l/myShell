@@ -135,7 +135,7 @@ int			next_line(char **line, size_t *pos)
 	return (0);
 }
 
-int		handle_input(t_prompt *prompt)
+int		handle_input(t_prompt *prompt, char **environ)
 {
 	char	c;
 
@@ -148,5 +148,7 @@ int		handle_input(t_prompt *prompt)
 		return (handle_movements(prompt));
 	else if (c == 3 || c == 4)
 		return (handle_signals(prompt));
+	else if (c == 9)
+		return (handle_tab(prompt, environ));
 	return (0);
 }

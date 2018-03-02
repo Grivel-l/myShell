@@ -77,9 +77,10 @@ int				forward_cursor(t_prompt *prompt, size_t length);
 
 int				handle_ccp(t_prompt *prompt);
 int				handle_arrows(t_prompt *prompt);
-int				handle_movements(t_prompt *prompt);
-int				handle_input(t_prompt *prompt);
 int				handle_signals(t_prompt *prompt);
+int				handle_movements(t_prompt *prompt);
+int				handle_tab(t_prompt *prompt, char **environ);
+int				handle_input(t_prompt *prompt, char **environ);
 
 int				remove_char(char **line, size_t *index);
 int				insert_char(char **line, char c, size_t *index);

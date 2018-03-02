@@ -23,7 +23,7 @@ SRCS = main.c free_alloc.c prompt/prompt.c prompt/inputs.c errors2.c \
 		prompt/commands.c prompt/arrows.c prompt/tools.c command/exec.c \
 		errors.c command/heredoc.c command/fildes.c signals.c \
 		command/builtins.c env/env_manipulations.c env/delete_env.c \
-		command/syntax.c
+		command/syntax.c prompt/completion.c
 OBJS = $(addprefix $(OBJS_PATH), $(SRCS:.c=.o))
 HEADERS = shell.h
 FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address
