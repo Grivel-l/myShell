@@ -41,12 +41,72 @@ static int	complete_cmd(t_prompt *prompt, t_list *files, char *content)
 	return (0);
 }
 
-static int	print_match(t_list *files, char *content, size_t *index)
+static void	free_printed(t_list *printed)
 {
+	t_list	*next;
+
+	while (printed != NULL)
+	{
+		next = printed->next;
+		free(printed);
+		printed = next;
+	}
+}
+
+static int	half_complete(t_prompt *prompt, t_list *printed, size_t index)
+{
+	char	c;
+	t_list	*pointer;
+
+	pointer = printed;
+	while (printed != NULL)
+	{
+		if (index >= ft_strlen(printed->content))
+		{
+			free_printed(pointer);
+			return (0);
+		}
+		c = ((char *)printed->content)[index];
+		printed = printed->next;
+		if (printed != NULL &&
+	(index >= ft_strlen(printed->content) || ((char *)(printed->content))[index] != c))
+		{
+			free_printed(pointer);
+			return (0);
+		}
+	}
+	if (insert_char(&(prompt->line), c, &(prompt->pos)) == -1)
+	{
+		free_printed(pointer);
+		return (-1);
+	}
+	return (half_complete(prompt, pointer, index + 1));
+}
+
+static int	print_match(t_list *files, char *content, size_t *index, t_list **match)
+{
+	t_list	*last;
+	t_list	*pointer;
+
+	pointer = *match;
+	while (*match != NULL)
+		*match = (*match)->next;
 	while (files != NULL)
 	{
 		if (ft_strncmp(content, files->content, ft_strlen(content)) == 0)
 		{
+			if ((*match = malloc(sizeof(t_list))) == NULL)
+			{
+				ft_lstfree(&pointer);
+				return (-1);
+			}
+			(*match)->content = files->content;
+			(*match)->next = NULL;
+			if (pointer != NULL)
+				last->next = *match;
+			else
+				pointer = *match;
+			last = *match;
 			if (*index > 0)
 				ft_putstr("    ");
 			ft_putstr(files->content);
@@ -54,6 +114,7 @@ static int	print_match(t_list *files, char *content, size_t *index)
 		}
 		files = files->next;
 	}
+	*match = pointer;
 	return (0);
 }
 
@@ -75,18 +136,20 @@ static int	complete_bin_matched(t_prompt *prompt, char **paths, size_t match)
 {
 	size_t	index;
 	t_list	*files;
+	t_list	*printed;
 	char 	**pointer;
 
 	if (match > 1)
 		ft_putchar('\n');
 	index = 0;
+	printed = NULL;
 	pointer = paths;
 	while (*paths != NULL)
 	{
 		if ((files = ft_readdir(*paths, 1)) == NULL)
 			return (-1);
 		if (match > 1)
-			if (print_match(files, prompt->line, &index) == -1)
+			if (print_match(files, prompt->line, &index, &printed) == -1)
 				return (-1);
 		ft_lstfree(&files);
 		if (match == 1)
@@ -98,13 +161,15 @@ static int	complete_bin_matched(t_prompt *prompt, char **paths, size_t match)
 		}
 		paths += 1;
 	}
-	ft_freetab(&pointer);
 	if (match > 1)
 	{
+		if (half_complete(prompt, printed, ft_strlen(prompt->line)) == -1)
+			return (-1);
 		ft_putchar('\n');
 		ft_putstr("\033[01;32m$\033[0m ");
 		ft_putstr(prompt->line);
 	}
+	ft_freetab(&pointer);
 	return (0);
 }
 
@@ -138,17 +203,21 @@ static int	complete_arg(t_prompt *prompt)
 	size_t	index;
 	size_t	match;
 	t_list	*files;
+	t_list	*printed;
 	char	*content;
 
-	index = 0;
-	content = ft_strrchr(prompt->line, ' ') + 1;
 	if ((files = ft_readdir(".", 1)) == NULL)
 		return (-1);
+	index = 0;
+	printed = NULL;
+	content = ft_strrchr(prompt->line, ' ') + 1;
 	match = get_match_nbr(files, content);
 	if (match > 1)
 	{
 		ft_putchar('\n');
-		if (print_match(files, content, &index) == -1)
+		if (print_match(files, content, &index, &printed) == -1)
+			return (-1);
+		if (half_complete(prompt, printed, ft_strlen(content)) == -1)
 			return (-1);
 		ft_putchar('\n');
 		ft_putstr("\033[01;32m$\033[0m ");
