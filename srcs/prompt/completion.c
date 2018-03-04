@@ -13,6 +13,17 @@
 
 #include "shell.h"
 
+static int	complete_line_cmd(t_prompt *prompt, char *content)
+{
+	free(prompt->line);
+	if ((prompt->line = ft_strdup(content)) == NULL)
+		return (-1);
+	if (clear_all(prompt) == -1)
+		return (-1);
+	prompt->pos = ft_strlen(prompt->line);
+	return (write_line(prompt));
+}
+
 static int	complete_cmd(t_prompt *prompt, t_list *files, char *content)
 {
 	char	*line;
@@ -22,6 +33,8 @@ static int	complete_cmd(t_prompt *prompt, t_list *files, char *content)
 	{
 		if (ft_strncmp(content, files->content, ft_strlen(content)) == 0)
 		{
+			if (ft_strchr(prompt->line, ' ') == NULL)
+				return (complete_line_cmd(prompt, files->content));
 			length = ft_strlen(prompt->line) -
 		ft_strlen(ft_strrchr(prompt->line, ' ')) + 1;
 			if ((line = malloc(length + 1 + ft_strlen(files->content))) == NULL)
@@ -75,6 +88,8 @@ static int	half_complete(t_prompt *prompt, t_list *printed, size_t index)
 			return (0);
 		}
 	}
+	if (c == '\0')
+		return (0);
 	if (insert_char(&(prompt->line), c, &(prompt->pos)) == -1)
 	{
 		free_printed(pointer);
@@ -88,6 +103,7 @@ static int	print_match(t_list *files, char *content, size_t *index, t_list **mat
 	t_list	*last;
 	t_list	*pointer;
 
+	last = NULL;
 	pointer = *match;
 	while (*match != NULL)
 		*match = (*match)->next;
@@ -102,9 +118,9 @@ static int	print_match(t_list *files, char *content, size_t *index, t_list **mat
 			}
 			(*match)->content = files->content;
 			(*match)->next = NULL;
-			if (pointer != NULL)
+			if (last != NULL)
 				last->next = *match;
-			else
+			if (pointer != NULL)
 				pointer = *match;
 			last = *match;
 			if (*index > 0)
@@ -151,14 +167,10 @@ static int	complete_bin_matched(t_prompt *prompt, char **paths, size_t match)
 		if (match > 1)
 			if (print_match(files, prompt->line, &index, &printed) == -1)
 				return (-1);
-		ft_lstfree(&files);
 		if (match == 1)
-		{
 			if (complete_cmd(prompt, files, prompt->line) == -1)
 				return (-1);
-			ft_lstfree(&files);
-			break ;
-		}
+		ft_lstfree(&files);
 		paths += 1;
 	}
 	if (match > 1)
