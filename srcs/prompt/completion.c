@@ -120,7 +120,7 @@ static int	print_match(t_list *files, char *content, size_t *index, t_list **mat
 			(*match)->next = NULL;
 			if (last != NULL)
 				last->next = *match;
-			if (pointer != NULL)
+			if (pointer == NULL)
 				pointer = *match;
 			last = *match;
 			if (*index > 0)
