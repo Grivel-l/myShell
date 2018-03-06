@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/06 02:39:11 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/06 03:07:22 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -27,7 +27,7 @@ static char	*get_tmp_file(char *name, size_t i)
 	return (name);
 }
 
-static int	stop_read(char **buffer, char *match)
+static int	stop_read(char **buffer, char *match, char *before)
 {
 	int		fd;
 	char	*tmp_file;
@@ -51,7 +51,7 @@ static int	stop_read(char **buffer, char *match)
 		return (-1);
 	}
 	free(tmp_file);
-	if (dup2(fd, get_fd(match, STDIN_FILENO)) == -1)
+	if (dup2(fd, get_output_fd(before, STDIN_FILENO)) == -1)
 		return (-1);
 	if (close(fd) == -1)
 		return (-1);
@@ -80,7 +80,7 @@ static int	stop_read(char **buffer, char *match)
 	return (1);
 }*/
 
-static int	check_return(t_prompt *prompt, char *match, char **buffer)
+static int	check_return(t_prompt *prompt, char *match, char **buffer, char *before)
 {
 	if (prompt->buffer[0] == 10)
 	{
@@ -102,14 +102,14 @@ static int	check_return(t_prompt *prompt, char *match, char **buffer)
 			return (-1);
 		ft_putchar('\n');
 		if (ft_strcmp(prompt->line, match) == 0)
-			return (stop_read(buffer, match));
+			return (stop_read(buffer, match, before));
 		next_line(&(prompt->line), &(prompt->pos));
 		return (1);
 	}
 	return (0);
 }
 
-int			read_set_stdin(char *match, t_prompt *prompt, char **environ)
+int			read_set_stdin(char *match, t_prompt *prompt, char **environ, char *before)
 {
 	int		ret;
 	char	*buffer;
@@ -122,7 +122,7 @@ int			read_set_stdin(char *match, t_prompt *prompt, char **environ)
 	{
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
 			return (-1);
-		ret = check_return(prompt, match, &buffer);
+		ret = check_return(prompt, match, &buffer, before);
 		if (ret == 0 && handle_input(prompt, environ) == -1)
 			ret = -1;
 		if (ret == -1)

@@ -6,21 +6,12 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/05 13:56:00 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/06 02:38:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/06 03:06:29 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-static size_t	get_output_fd(char *str, size_t default_fd)
-{
-	while (*str >= 48 && *str <= 57)
-		str -= 1;
-	if (*str == ' ')
-		str += 1;
-	return (*str < 48 || *str > 57 ? default_fd : ft_atoi(str));
-}
 
 static char		*get_after(char *pointer)
 {
@@ -50,6 +41,15 @@ static int		get_input_fd(char *str, int flags)
 	fd = open(file, O_CREAT | O_RDWR | flags, 0666);
 	free(file);
 	return (fd);
+}
+
+size_t	get_output_fd(char *str, size_t default_fd)
+{
+	while (*str >= 48 && *str <= 57)
+		str -= 1;
+	if (*str == ' ')
+		str += 1;
+	return (*str < 48 || *str > 57 ? default_fd : ft_atoi(str));
 }
 
 int		smp_out(char *before, char *after)
@@ -93,12 +93,11 @@ int		smp_in(char *before, char *after)
 
 int		dbl_in(t_prompt *prompt, char **environ, char *before, char *after)
 {
-	(void)before;
 	char	*match;
 
 	if ((match = get_after(after)) == NULL)
 		return (-1);
-	if (read_set_stdin(match, prompt, environ) == -1)
+	if (read_set_stdin(match, prompt, environ, before) == -1)
 		return (-1);
 	free(match);
 	return (0);
