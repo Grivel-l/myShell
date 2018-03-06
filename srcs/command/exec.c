@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/06 18:34:45 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/06 19:36:20 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -203,12 +203,6 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 		return (-1);
 	if (pipe(fd2) == -1)
 		return (-1);
-	if (dup2(STDIN_FILENO, fd[0]) == -1)
-		return (-1);
-	if (dup2(STDOUT_FILENO, fd[1]) == -1)
-		return (-1);
-	if (dup2(2, fd2[1]) == -1)
-		return (-1);
 	if (ft_strsplit_qh(prompt->commands->content, ';', &split_tab) == -1)
 		return (-1);
 	if ((commands = ft_tabtolist(split_tab)) == NULL)
@@ -220,19 +214,25 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 	pointer = commands;
 	while (commands != NULL)
 	{
+		if (dup2(STDIN_FILENO, fd[0]) == -1)
+			return (-1);
+		if (dup2(STDOUT_FILENO, fd[1]) == -1)
+			return (-1);
+		if (dup2(2, fd2[1]) == -1)
+			return (-1);
 		if (split_pipe(commands->content, cmd, prompt) == -1)
 		{
 			ft_lstfree(&pointer);
 			return (-1);
 		}
+		if (dup2(fd[0], STDIN_FILENO) == -1)
+			return (-1);
+		if (dup2(fd[1], STDOUT_FILENO) == -1)
+			return (-1);
+		if (dup2(fd2[1], 2) == -1)
+			return (-1);
 		commands = commands->next;
 	}
-	if (dup2(fd[0], STDIN_FILENO) == -1)
-		return (-1);
-	if (dup2(fd[1], STDOUT_FILENO) == -1)
-		return (-1);
-	if (dup2(fd2[1], 2) == -1)
-		return (-1);
 	ft_lstfree(&pointer);
 	prompt->commands = prompt->commands->next;
 	close_fd(fd2);
