@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/06 01:39:42 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/06 18:34:45 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -194,15 +194,20 @@ int			exec_bin(t_command *cmd, size_t index, t_list *split)
 int			treate_command(t_prompt *prompt, t_command *cmd)
 {
 	int		fd[2];
+	int		fd2[2];
 	char	**split_tab;
 	t_list	*pointer;
 	t_list	*commands;
 
 	if (pipe(fd) == -1)
 		return (-1);
+	if (pipe(fd2) == -1)
+		return (-1);
 	if (dup2(STDIN_FILENO, fd[0]) == -1)
 		return (-1);
 	if (dup2(STDOUT_FILENO, fd[1]) == -1)
+		return (-1);
+	if (dup2(2, fd2[1]) == -1)
 		return (-1);
 	if (ft_strsplit_qh(prompt->commands->content, ';', &split_tab) == -1)
 		return (-1);
@@ -226,8 +231,11 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 		return (-1);
 	if (dup2(fd[1], STDOUT_FILENO) == -1)
 		return (-1);
+	if (dup2(fd2[1], 2) == -1)
+		return (-1);
 	ft_lstfree(&pointer);
 	prompt->commands = prompt->commands->next;
+	close_fd(fd2);
 	return (close_fd(fd));
 }
 
