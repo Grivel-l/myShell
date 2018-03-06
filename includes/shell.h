@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/28 02:33:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/06 01:10:57 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -94,7 +94,18 @@ int				insert_char(char **line, char c, size_t *index);
 int				treate_command(t_prompt *prompt, t_command *cmd);
 int				exec_bin(t_command *cmd, size_t index, t_list *split);
 
+/*
+**	Heredocs
+*/
+int				smp_in(char *before, char *after);
+int				smp_out(char *before, char *after);
+int				dbl_out(char *before, char *after);
+int				read_set_stdin(char *match, t_prompt *prompt, char **environ);
+int				dbl_in(t_prompt *prompt, char **environ, char *before, char *after);
 int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t index);
+/*
+**	Heredocs
+*/
 
 int				check_syntax(t_prompt *prompt);
 
