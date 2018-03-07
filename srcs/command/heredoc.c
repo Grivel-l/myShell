@@ -63,28 +63,6 @@ static int	stop_read(char **buffer, char *match, char *before)
 	return (2);
 }
 
-/*static int	is_last_double(char **pointer)
-{
-	char	**tmp;
-
-	while (*pointer != NULL)
-	{
-		if (ft_strsplit_qh(*pointer, ' ', &tmp) == -1)
-			return (-1);
-		if (*tmp == NULL)
-			ft_freetab(&tmp);
-		if ((tmp == NULL && (*pointer)[0] == '\0') ||
-				(tmp != NULL && (*tmp)[0] == '\0'))
-		{
-			ft_freetab(&tmp);
-			return (0);
-		}
-		ft_freetab(&tmp);
-		pointer += 1;
-	}
-	return (1);
-}*/
-
 static int	check_return(t_prompt *prompt, char *after, char **buffer, char *before)
 {
 	char	*match;
