@@ -24,6 +24,31 @@ static int	complete_line_cmd(t_prompt *prompt, char *content)
 	return (write_line(prompt));
 }
 
+static int	is_dir(char *file)
+{
+	struct stat	stats;
+
+	if (access(file, F_OK) == -1)
+		return (0);
+	if (stat(file, &stats) == -1)
+		return (-1);
+	return (S_ISDIR(stats.st_mode));
+}
+
+static int	check_dir(char *content, t_prompt *prompt)
+{
+	int		dir;
+
+	if ((dir = is_dir(ft_strrchr(prompt->line, ' ') + 1)) == -1)
+		return (-1);
+	if (dir)
+	{
+		if (content[ft_strlen(content) - 1] != '/')
+			return (ft_addchar(&(prompt->line), '/'));
+	}
+	return (0);
+}
+
 static int	complete_cmd(t_prompt *prompt, t_list *files, char *content)
 {
 	char	*line;
@@ -35,8 +60,10 @@ static int	complete_cmd(t_prompt *prompt, t_list *files, char *content)
 		{
 			if (ft_strchr(prompt->line, ' ') == NULL)
 				return (complete_line_cmd(prompt, files->content));
-			length = ft_strlen(prompt->line) -
-		ft_strlen(ft_strrchr(prompt->line, ' ')) + 1;
+			if (ft_strrchr(ft_strrchr(prompt->line, ' '), '/') == NULL)
+				length = ft_strlen(prompt->line) - ft_strlen(ft_strrchr(prompt->line, ' ')) + 1;
+			else
+				length = ft_strlen(prompt->line) - ft_strlen(ft_strrchr(ft_strrchr(prompt->line, ' '), '/')) + 1;
 			if ((line = malloc(length + 1 + ft_strlen(files->content))) == NULL)
 				return (-1);
 			ft_strncpy(line, prompt->line, length);
@@ -45,6 +72,8 @@ static int	complete_cmd(t_prompt *prompt, t_list *files, char *content)
 			if ((prompt->line = ft_strrealloc(line, files->content)) == NULL)
 				return (-1);
 			if (clear_all(prompt) == -1)
+				return (-1);
+			if (check_dir(files->content, prompt) == -1)
 				return (-1);
 			prompt->pos = ft_strlen(prompt->line);
 			return (write_line(prompt));
@@ -210,7 +239,7 @@ static int	complete_bin(t_prompt *prompt, char **environ)
 	return (complete_bin_matched(prompt, paths, match));
 }
 
-static int	complete_arg(t_prompt *prompt)
+static int	complete_arg(t_prompt *prompt, char *path)
 {
 	size_t	index;
 	size_t	match;
@@ -218,11 +247,12 @@ static int	complete_arg(t_prompt *prompt)
 	t_list	*printed;
 	char	*content;
 
-	if ((files = ft_readdir(".", 1)) == NULL)
+	if ((files = ft_readdir(path, 1)) == NULL)
 		return (-1);
 	index = 0;
 	printed = NULL;
 	content = ft_strrchr(prompt->line, ' ') + 1;
+	content = ft_strrchr(content, '/') == NULL ? content : ft_strrchr(content, '/') + 1;
 	match = get_match_nbr(files, content);
 	if (match > 1)
 	{
@@ -236,18 +266,40 @@ static int	complete_arg(t_prompt *prompt)
 		ft_putstr(prompt->line);
 	}
 	else
+	{
 		if (complete_cmd(prompt, files, content) == -1)
 			return (-1);
+	}
 	ft_lstfree(&files);
 	return (0);
 }
 
 int			handle_tab(t_prompt *prompt, char **environ)
 {
+	size_t	i;
+	int		ret;
+	int		dir;
+	char	*path;
+
 	if (prompt->line == NULL || prompt->quoting || isquoting(prompt->commands))
 		return (0);
 	else if (ft_strchr(prompt->line, ' ') == NULL)
 		return (complete_bin(prompt, environ));
 	else
-		return (complete_arg(prompt));
+	{
+		if ((path = ft_strdup(ft_strrchr(prompt->line, ' ') + 1)) == NULL)
+			return (-1);
+		if (ft_strrchr(path, '/') != NULL)
+		{
+			i = ft_strlen(path);
+			while (path[i] != '/')
+				i -= 1;
+			path[i + 1] = '\0';
+		}
+		if ((dir = is_dir(path)) == -1)
+			return (-1);
+		ret = complete_arg(prompt, dir && path[ft_strlen(path) - 1] == '/' ? path : ".");
+		free(path);
+		return (ret);
+	}
 }
