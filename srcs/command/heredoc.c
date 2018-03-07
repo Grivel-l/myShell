@@ -33,13 +33,18 @@ static int	stop_read(char **buffer, char *match, char *before)
 	char	*tmp_file;
 
 	if ((tmp_file = get_tmp_file(ft_strdup(TMP_FILE), 0)) == NULL)
+	{
+		free(match);
 		return (-1);
+	}
 	if ((fd = open(tmp_file, O_CREAT | O_WRONLY | O_TRUNC, 0666)) == -1)
 	{
+		free(match);
 		free(tmp_file);
 		return (-1);
 	}
 	write(fd, *buffer, ft_strlen(*buffer) - ft_strlen(match) - 1);
+	free(match);
 	if (close(fd) == -1)
 	{
 		free(tmp_file);
@@ -80,40 +85,58 @@ static int	stop_read(char **buffer, char *match, char *before)
 	return (1);
 }*/
 
-static int	check_return(t_prompt *prompt, char *match, char **buffer, char *before)
+static int	check_return(t_prompt *prompt, char *after, char **buffer, char *before)
 {
+	char	*match;
+
 	if (prompt->buffer[0] == 10)
 	{
-		/*if (!is_last_double(match + 1))
+		if ((match = get_after(after)) == NULL)
+			return (-1);
+		if (ft_strstr(after, "<<") != NULL)
 		{
 			ft_putchar('\n');
-			if (ft_strcmp(prompt->line, *(match + 1)) == 0)
+			if (ft_strcmp(prompt->line, match) == 0)
+			{
+				free(match);
 				return (2);
+			}
+			free(match);
 			next_line(&(prompt->line), &(prompt->pos));
 			return (1);
-		}*/
+		}
 		if (*buffer == NULL)
 			*buffer = ft_strdup(prompt->line);
 		else
 			*buffer = ft_strrealloc(*buffer, prompt->line);
 		if (*buffer == NULL)
+		{
+			free(match);
 			return (-1);
+		}
 		if ((*buffer = ft_strrealloc(*buffer, "\n")) == NULL)
+		{
+			free(match);
 			return (-1);
+		}
 		ft_putchar('\n');
 		if (ft_strcmp(prompt->line, match) == 0)
 			return (stop_read(buffer, match, before));
+		free(match);
 		next_line(&(prompt->line), &(prompt->pos));
 		return (1);
 	}
 	return (0);
 }
 
-int			read_set_stdin(char *match, t_prompt *prompt, char **environ, char *before)
+int			read_set_stdin(char *after, t_prompt *prompt, char **environ, char *before)
 {
 	int		ret;
+	char	*match;
 	char	*buffer;
 
+	if ((match = get_after(after)) == NULL)
+		return (-1);
 	next_line(&(prompt->line), &(prompt->pos));
 	ret = 0;
 	buffer = NULL;
@@ -121,13 +144,17 @@ int			read_set_stdin(char *match, t_prompt *prompt, char **environ, char *before
 	while (ret != 2)
 	{
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
+		{
+			free(match);
 			return (-1);
-		ret = check_return(prompt, match, &buffer, before);
+		}
+		ret = check_return(prompt, after, &buffer, before);
 		if (ret == 0 && handle_input(prompt, environ) == -1)
 			ret = -1;
 		if (ret == -1)
 			break ;
 	}
+	free(match);
 	free(buffer);
 	if (ret == -1)
 		return (-1);

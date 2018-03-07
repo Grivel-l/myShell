@@ -13,7 +13,7 @@
 
 #include "shell.h"
 
-static char		*get_after(char *pointer)
+char			*get_after(char *pointer)
 {
 	char	*str;
 
@@ -93,12 +93,5 @@ int		smp_in(char *before, char *after)
 
 int		dbl_in(t_prompt *prompt, char **environ, char *before, char *after)
 {
-	char	*match;
-
-	if ((match = get_after(after)) == NULL)
-		return (-1);
-	if (read_set_stdin(match, prompt, environ, before) == -1)
-		return (-1);
-	free(match);
-	return (0);
+	return (read_set_stdin(after, prompt, environ, before));
 }

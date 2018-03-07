@@ -97,6 +97,7 @@ int				exec_bin(t_command *cmd, size_t index, t_list *split);
 /*
 **	Heredocs
 */
+char			*get_after(char *pointer);
 int				smp_in(char *before, char *after);
 int				smp_out(char *before, char *after);
 int				dbl_out(char *before, char *after);
