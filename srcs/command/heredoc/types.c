@@ -38,6 +38,28 @@ static int		get_input_fd(char *str, int flags)
 
 	if ((file = get_after(str)) == NULL)
 		return (-1);
+	if (file[0] == '&')
+	{
+		if (ft_strcmp(&(file[1]), "-") == 0)
+		{
+			free(file);
+			return (-2);
+		}
+		fd = 1;
+		while (file[fd] >= 48 && file[fd] <= 57 && file[fd] != '\0')
+			fd += 1;
+		if (file[fd] != '\0')
+		{
+			ft_putstr_fd("21sh: ", 2);
+			ft_putstr_fd(&(file[1]), 2);
+			ft_putstr_fd(": ambiguous redirect\n", 2);
+			free(file);
+			return (-3);
+		}
+		fd = ft_atoi(&(file[1]));
+		free(file);
+		return (fd);
+	}
 	fd = open(file, O_CREAT | O_RDWR | flags, 0666);
 	free(file);
 	return (fd);
@@ -60,6 +82,10 @@ int		smp_out(char *before, char *after)
 	if ((input = get_input_fd(after, O_TRUNC)) == -1)
 		return (-1);
 	output = get_output_fd(before, STDOUT_FILENO);
+	if (input == -3)
+		return (0);
+	else if (input == -2)
+		return (close(output));
 	if (dup2(input, output) == -1)
 		return (-1);
 	return (close(input));
@@ -80,12 +106,16 @@ int		dbl_out(char *before, char *after)
 
 int		smp_in(char *before, char *after)
 {
-	int		input;
-	size_t	output;
+	size_t	input;
+	int		output;
 
 	if ((output = get_input_fd(after, 0)) == -1)
 		return (-1);
 	input = get_output_fd(before, STDIN_FILENO);
+	if (output == -3)
+		return (0);
+	else if (output == -2)
+		return (close(input));
 	if (dup2(output, input) == -1)
 		return (-1);
 	return (close(output));
