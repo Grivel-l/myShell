@@ -107,11 +107,43 @@ static int	exit_builtin(t_command *cmd)
 	return (-1);
 }
 
+static void	crop_cmd(char *cmd)
+{
+	t_quote	quotes;
+	char	*pointer;
+
+	pointer = cmd;
+	quotes.simpleq = 0;
+	quotes.doubleq = 0;
+	while (*cmd != '\0')
+	{
+		if (*cmd == '\'' && !quotes.doubleq)
+			quotes.simpleq = !quotes.simpleq;
+		else if (*cmd == '"' && !quotes.simpleq)
+			quotes.doubleq = !quotes.doubleq;
+		if (!quotes.doubleq && !quotes.simpleq && (*cmd == '>' || *cmd == '<'))
+		{
+			*cmd = '\0';
+			cmd -= 1;
+			if (ft_strchr(pointer, ' ') != ft_strrchr(pointer, ' '))
+				while (*cmd != ' ')
+					cmd -= 1;
+			while (*cmd == ' ')
+				cmd -= 1;
+			cmd += 1;
+			*cmd = '\0';
+			break ;
+		}
+		cmd += 1;
+	}
+}
+
 int			exec_builtin(t_command *cmd, char *full_cmd, size_t index, size_t is_last)
 {
 	int		ret;
 
 	ret = 0;
+	crop_cmd(full_cmd);
 	if (configure_fd(cmd, index, is_last) == -1)
 		return (-1);
 	if (close_all_fd(cmd->fd, cmd->fd2) == -1)
