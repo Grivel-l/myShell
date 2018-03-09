@@ -50,9 +50,7 @@ static int		get_input_fd(char *str, int flags)
 			fd += 1;
 		if (file[fd] != '\0')
 		{
-			ft_putstr_fd("21sh: ", 2);
-			ft_putstr_fd(&(file[1]), 2);
-			ft_putstr_fd(": ambiguous redirect\n", 2);
+			generic_error(&(file[1]), "ambiguous redirect");
 			free(file);
 			return (-3);
 		}

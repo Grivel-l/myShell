@@ -32,3 +32,12 @@ int			syntax_error(t_prompt *prompt, char c)
 	ft_putchar_fd('\n', 2);
 	return (1);
 }
+
+void		generic_error(char *name, char *message)
+{
+	print_bin();
+	ft_putstr_fd(name, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(message, 2);
+	ft_putchar_fd('\n', 2);
+}

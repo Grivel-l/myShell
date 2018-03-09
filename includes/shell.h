@@ -132,12 +132,21 @@ int				configure_fd(t_command *cmd, size_t index, size_t is_last);
 
 void			free_everything(t_command *cmd, t_prompt *prompt);
 
+/*
+** ENV
+*/
 int				set_env(t_command *cmd);
 int				unset_env(t_command *cmd);
 char			*get_myenv(char *env, char **environ);
 int				delete_env(char ***environ, int index);
 int				get_env_index(char **environ, char *arg);
+/*
+** ENV
+*/
 
+/*
+** Errors
+*/
 void			print_bin(void);
 void			not_found(char *name);
 void			not_dir(char *path, char *extra);
@@ -145,5 +154,9 @@ void			env_enoent(char *command, char *env);
 void			eacces_error(char *name, char *extra);
 void			enoent_error(char *path, char *extra);
 int				syntax_error(t_prompt *prompt, char c);
+void			generic_error(char *name, char *message);
+/*
+** Errors
+*/
 
 #endif
