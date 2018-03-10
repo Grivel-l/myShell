@@ -38,14 +38,6 @@ static int	handle_eof(t_prompt *prompt)
 	return (prompt->line == NULL || prompt->line[0] == '\0' ? 2 : 0);
 }
 
-int			set_options(struct termios term, int options)
-{
-	term.c_lflag &= ~(options);
-	if (tcsetattr(0, TCSANOW, &term) == -1)
-		return (-1);
-	return (0);
-}
-
 int			handle_signals(t_prompt *prompt)
 {
 	if (prompt->buffer[0] == 3)
