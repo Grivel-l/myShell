@@ -58,6 +58,14 @@ static int		get_input_fd(char *str, int flags)
 		free(file);
 		return (fd);
 	}
+	if (access(file, W_OK | R_OK) == -1)
+	{
+		if (errno == EACCES)
+		{
+			eacces_error(file, NULL);	
+			return (-3);
+		}
+	}
 	fd = open(file, O_CREAT | O_RDWR | flags, 0666);
 	free(file);
 	return (fd);
