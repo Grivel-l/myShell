@@ -27,37 +27,35 @@ static char	*get_tmp_file(char *name, size_t i)
 	return (name);
 }
 
+static int	quit(char *str1, char *str2, int fd)
+{
+	if (str1 != NULL)
+		free(str1);
+	if (str2 != NULL)
+		free(str2);
+	if (fd != -1)
+		close(fd);
+	return (-1);
+}
+
 static int	stop_read(char **buffer, char *match, char *before)
 {
 	int		fd;
 	char	*tmp_file;
 
 	if ((tmp_file = get_tmp_file(ft_strdup(TMP_FILE), 0)) == NULL)
-	{
-		free(match);
-		return (-1);
-	}
+		return (quit(match, NULL, -1));
 	if ((fd = open(tmp_file, O_CREAT | O_WRONLY | O_TRUNC, 0666)) == -1)
-	{
-		free(match);
-		free(tmp_file);
-		return (-1);
-	}
+		return (quit(match, tmp_file, -1));
 	write(fd, *buffer, ft_strlen(*buffer) - ft_strlen(match) - 1);
 	free(match);
 	if (close(fd) == -1)
-	{
-		free(tmp_file);
-		return (-1);
-	}
+		return (quit(NULL, tmp_file, -1));
 	if ((fd = open(tmp_file, O_RDONLY)) == -1)
-	{
-		free(tmp_file);
-		return (-1);
-	}
+		return (quit(NULL, tmp_file, -1));
 	free(tmp_file);
 	if (dup2(fd, get_output_fd(before, STDIN_FILENO)) == -1)
-		return (-1);
+		return (quit(NULL, NULL, fd));
 	if (close(fd) == -1)
 		return (-1);
 	return (2);
