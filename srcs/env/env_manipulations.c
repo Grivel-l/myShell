@@ -28,11 +28,32 @@ char			*get_myenv(char *env, char **environ)
 	return (NULL);
 }
 
+int				add_env(char *env, char ***environ)
+{
+	int		index;
+	char	*pointer;
+
+	pointer = env;
+	while (*pointer != '=')
+		pointer += 1;
+	*pointer = '\0';
+	if ((index = get_env_index(*environ, env)) == -1)
+	{
+		*pointer = '=';
+		return (ft_pushstr(environ, env));
+	}
+	else
+	{
+		if (delete_env(environ, index) == -1)
+			return (-1);
+		*pointer = '=';
+		return (ft_pushstr(environ, env));
+	}
+}
+
 int				set_env(t_command *cmd)
 {
-	int		ret;
 	char	*tmp;
-	int		index;
 
 	cmd->cmd_ret = 1;
 	if (cmd->args[1] == NULL || cmd->args[2] == NULL)
@@ -42,17 +63,11 @@ int				set_env(t_command *cmd)
 	if ((tmp = ft_strrealloc(tmp, cmd->args[2])) == NULL)
 		return (-1);
 	cmd->cmd_ret = 0;
-	if ((index = get_env_index(cmd->environ, cmd->args[1])) == -1)
-		ret = ft_pushstr(&(cmd->environ), tmp);
-	else
+	if (add_env(tmp, &(cmd->environ)) == -1)
 	{
-		if (delete_env(&(cmd->environ), index) == -1)
-		{
-			free(tmp);
-			return (-1);
-		}
-		ret = ft_pushstr(&(cmd->environ), tmp);
+		free(tmp);
+		return (-1);
 	}
 	free(tmp);
-	return (ret);
+	return (0);
 }

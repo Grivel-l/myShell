@@ -17,13 +17,14 @@ HEADERS = shell.h
 INCS_PATH = ./includes/
 LIB_PATH = ./libft/
 OBJS_PATH = ./objs/
-SUBDIRS = prompt command env command/heredoc
+SUBDIRS = prompt command env command/heredoc command/builtins
 SRCS = main.c free_alloc.c prompt/prompt.c prompt/inputs.c errors2.c \
 		prompt/line_manipulation.c prompt/copy.c prompt/movements.c \
 		prompt/commands.c prompt/arrows.c prompt/tools.c command/exec.c \
 		errors.c command/heredoc/heredoc.c command/fildes.c signals.c \
-		command/builtins.c env/env_manipulations.c env/delete_env.c \
-		command/syntax.c prompt/completion.c command/heredoc/types.c
+		command/builtins/builtins.c env/env_manipulations.c env/delete_env.c \
+		command/syntax.c prompt/completion.c command/heredoc/types.c \
+		command/builtins/chdir.c
 OBJS = $(addprefix $(OBJS_PATH), $(SRCS:.c=.o))
 HEADERS = shell.h
 FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address

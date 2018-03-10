@@ -13,36 +13,6 @@
 
 #include "shell.h"
 
-static int	cd_builtin(t_command *cmd)
-{
-	char		*dir;
-	struct stat	infos;
-
-	cmd->cmd_ret = 0;
-	dir = cmd->args[1] == NULL ? get_myenv("HOME", cmd->environ) : cmd->args[1];
-	if (dir == NULL)
-	{
-		env_enoent("cd", "HOME");
-		return (0);
-	}
-	if (chdir(dir) == -1)
-	{
-		cmd->cmd_ret = 1;
-		if (access(dir, F_OK) == -1)
-			enoent_error(dir, "cd: ");
-		else
-		{
-			if (stat(dir, &infos) == -1)
-				return (-1);
-			if (S_ISDIR(infos.st_mode))
-				eacces_error(dir, "cd: ");
-			else
-				not_dir(dir, "cd: ");
-		}
-	}
-	return (0);
-}
-
 static int	print_char(t_quote *quotes, char **str, t_command *cmd)
 {
 	char	*tmp;

@@ -126,6 +126,15 @@ int				configure_fd(t_command *cmd, size_t index, size_t is_last);
 /*
 **	Fildes
 */
+
+/*
+**	Builtins
+*/
+int				cd_builtin(t_command *cmd);
+/*
+**	Builtins
+*/
+
 /*
 **	Command exec
 */
@@ -137,6 +146,7 @@ void			free_everything(t_command *cmd, t_prompt *prompt);
 */
 int				set_env(t_command *cmd);
 int				unset_env(t_command *cmd);
+int				add_env(char *env, char ***environ);
 char			*get_myenv(char *env, char **environ);
 int				delete_env(char ***environ, int index);
 int				get_env_index(char **environ, char *arg);
