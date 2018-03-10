@@ -204,16 +204,4 @@ int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t inde
 	if (update_args(split->content, &(cmd->args)) == -1)
 		return (-1);
 	return (exec_bin(cmd, index, split));
-	/*if ((ret = get_side(split->content)) == -1)
-		return (-1);
-	args = NULL;
-	if (ret == 0)
-		return (exec_bin(cmd, index, split));
-	else if (ret == 1 && (stop = set_stdout(split, '>', &args)) == -1)
-		return (-1);
-	else if (ret == 2 && (stop = set_stdin(split, '<', &args, prompt, cmd->environ)) == -1)
-		return (-1);
-	ft_freetab(&(cmd->args));
-	cmd->args = args;
-	return (stop == 1 ? 0 : exec_bin(cmd, index, split));*/
 }
