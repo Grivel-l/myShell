@@ -29,6 +29,8 @@ static int	set_heredoc(char *line, size_t *heredoc,
 		*heredoc = 1;
 		if (*(line + 1) != '<' && *(line + 1) != '>')
 			return (0);
+		if ((*(line + 1) == '<' || *(line + 1) == '>') && *(line + 2) == '&')
+			return (syntax_error(prompt, *(line + 2)));
 		if (*(line + 2) == '<' || *(line + 2) == '>')
 			return (syntax_error(prompt, *(line + 2)));
 	}
