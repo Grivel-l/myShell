@@ -13,7 +13,14 @@
 
 #include "libft.h"
 
-t_list	*ft_readdir(char *filename, size_t get_hidden)
+static void	*quit(t_list *start, DIR *dir)
+{
+	ft_lstfree(&start);
+	closedir(dir);
+	return (NULL);
+}
+
+t_list		*ft_readdir(char *filename, size_t get_hidden)
 {
 	DIR				*dir;
 	t_list			*list;
@@ -35,9 +42,14 @@ t_list	*ft_readdir(char *filename, size_t get_hidden)
 			else
 				ft_lstappend(&list,
 					ft_lstnew(dir_content->d_name, dir_content->d_reclen));
+			if (list == NULL)
+				return (quit(start, dir));
 		}
 	}
 	if (closedir(dir) == -1)
+	{
+		ft_lstfree(&start);
 		return (NULL);
+	}
 	return (start == NULL ? ft_lstnew("", 0) : start);
 }
