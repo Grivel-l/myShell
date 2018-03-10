@@ -81,7 +81,7 @@ int		smp_out(char *before, char *after)
 		return (-1);
 	output = get_output_fd(before, STDOUT_FILENO);
 	if (input == -3)
-		return (0);
+		return (-2);
 	else if (input == -2)
 		return (close(output));
 	if (dup2(input, output) == -1)
@@ -111,7 +111,7 @@ int		smp_in(char *before, char *after)
 		return (-1);
 	input = get_output_fd(before, STDIN_FILENO);
 	if (output == -3)
-		return (0);
+		return (-2);
 	else if (output == -2)
 		return (close(input));
 	if (dup2(output, input) == -1)

@@ -190,14 +190,17 @@ static int	check_type(t_prompt *prompt, char **environ, char *pointer)
 int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t index)
 {
 	size_t	i;
+	int		ret;
 	char	*pointer;
 
 	i = 0;
 	pointer = split->content;
 	while (*pointer)
 	{
-		if (check_type(prompt, cmd->environ, pointer) == -1)
+		if ((ret = check_type(prompt, cmd->environ, pointer)) == -1)
 			return (-1);
+		if (ret == -2)
+			return (0);
 		i += 1;
 		pointer += 1;
 	}
