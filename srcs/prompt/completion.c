@@ -192,16 +192,23 @@ static int	complete_bin_matched(t_prompt *prompt, char **paths, size_t match)
 	while (*paths != NULL)
 	{
 		if ((files = ft_readdir(*paths, 1)) == NULL)
-			return (-1);
+			break ;
 		if (match > 1)
 			if (print_match(files, prompt->line, &index, &printed) == -1)
-				return (-1);
+				break ;
 		if (match == 1)
 			if (complete_cmd(prompt, files, prompt->line) == -1)
-				return (-1);
+				break ;
 		ft_lstfree(&files);
 		paths += 1;
 	}
+	if (*paths != NULL)
+	{
+		ft_lstfree(&files);
+		ft_freetab(&pointer);
+		return (-1);
+	}
+	ft_freetab(&pointer);
 	if (match > 1)
 	{
 		if (half_complete(prompt, printed, ft_strlen(prompt->line)) == -1)
@@ -210,7 +217,6 @@ static int	complete_bin_matched(t_prompt *prompt, char **paths, size_t match)
 		ft_putstr("\033[01;32m$\033[0m ");
 		ft_putstr(prompt->line);
 	}
-	ft_freetab(&pointer);
 	return (0);
 }
 
@@ -258,9 +264,15 @@ static int	complete_arg(t_prompt *prompt, char *path)
 	{
 		ft_putchar('\n');
 		if (print_match(files, content, &index, &printed) == -1)
+		{
+			ft_lstfree(&files);
 			return (-1);
+		}
 		if (half_complete(prompt, printed, ft_strlen(content)) == -1)
+		{
+			ft_lstfree(&files);
 			return (-1);
+		}
 		ft_putchar('\n');
 		ft_putstr("\033[01;32m$\033[0m ");
 		ft_putstr(prompt->line);
@@ -268,7 +280,10 @@ static int	complete_arg(t_prompt *prompt, char *path)
 	else
 	{
 		if (complete_cmd(prompt, files, content) == -1)
+		{
+			ft_lstfree(&files);
 			return (-1);
+		}
 	}
 	ft_lstfree(&files);
 	return (0);
@@ -297,7 +312,10 @@ int			handle_tab(t_prompt *prompt, char **environ)
 			path[i + 1] = '\0';
 		}
 		if ((dir = is_dir(path)) == -1)
+		{
+			free(path);
 			return (-1);
+		}
 		ret = complete_arg(prompt, dir && path[ft_strlen(path) - 1] == '/' ? path : ".");
 		free(path);
 		return (ret);
