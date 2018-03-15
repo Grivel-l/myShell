@@ -153,19 +153,26 @@ static int	update_args(char *str, char ***args)
 	}
 	if (*str == '\0')
 		return (0);
-	while (*str != ' ')
+	while (*str != ' ' && i >= 1)
 	{
 		i -= 1;
 		str -= 1;
 	}
-	while (*str == ' ')
+	while (*str == ' ' && i >= 1)
 	{
 		i -= 1;
 		str -= 1;
+	}
+	ft_freetab(args);
+	if (i == 0)
+	{
+		while (*str != '>' && *str != '<')
+			str += 1;
+		*str = '\0';
+		return (ft_pushstr(args, pointer));
 	}
 	c = pointer[i + 1];
 	pointer[i + 1] = '\0';
-	ft_freetab(args);
 	if (ft_strsplit_qh(pointer, ' ', args) == -1)
 		return (-1);
 	pointer[i + 1] = c;

@@ -43,8 +43,26 @@ static int	check_bin(char *path, char **bin, char **error)
 	return (1);
 }
 
+static char	update_bin(char *bin)
+{
+	char	c;
+
+	while (*bin != '\0')
+	{
+		if (*bin == '>' || *bin == '<')
+		{
+			c = *bin;
+			*bin = '\0';
+			return (c);
+		}
+		bin += 1;
+	}
+	return (0);
+}
+
 static int	check_paths(char **paths, t_command *cmd)
 {
+	char	c;
 	int		ret;
 	char	*tmp;
 	char	*error;
@@ -52,6 +70,7 @@ static int	check_paths(char **paths, t_command *cmd)
 	ret = 0;
 	tmp = NULL;
 	error = NULL;
+	c = update_bin(cmd->args[0]);
 	while (*paths)
 	{
 		if ((tmp = ft_strjoin(*paths, "/")) == NULL)
@@ -67,7 +86,11 @@ static int	check_paths(char **paths, t_command *cmd)
 		}
 		ft_strdel(&tmp);
 		if (ret == 1)
+		{
+			if (c != 0)
+				cmd->args[0][ft_strlen(cmd->args[0])] = c;
 			return (0);
+		}
 		paths += 1;
 	}
 	if (error != NULL)
@@ -77,6 +100,8 @@ static int	check_paths(char **paths, t_command *cmd)
 		return (2);
 	}
 	ft_strdel(&error);
+	if (c != 0)
+		cmd->args[0][ft_strlen(cmd->args[0])] = c;
 	return (0);
 }
 
@@ -218,7 +243,7 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 			return (-1);
 		if (dup2(STDOUT_FILENO, fd[1]) == -1)
 			return (-1);
-		if (dup2(2, fd2[1]) == -1)
+		if (dup2(STDERR_FILENO, fd2[1]) == -1)
 			return (-1);
 		if (split_pipe(commands->content, cmd, prompt) == -1)
 		{
@@ -229,13 +254,17 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 			return (-1);
 		if (dup2(fd[1], STDOUT_FILENO) == -1)
 			return (-1);
-		if (dup2(fd2[1], 2) == -1)
+		if (dup2(fd2[1], STDERR_FILENO) == -1)
 			return (-1);
 		commands = commands->next;
 	}
 	ft_lstfree(&pointer);
 	prompt->commands = prompt->commands->next;
-	close_fd(fd2);
+	if (close_fd(fd2) == -1)
+	{
+		close_fd(fd);
+		return (-1);
+	}
 	return (close_fd(fd));
 }
 
