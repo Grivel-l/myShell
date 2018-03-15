@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/06 03:06:15 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/15 22:14:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
+# include <sys/syslimits.h>
 # include <termios.h>
 # include <term.h>
 # include <errno.h>
