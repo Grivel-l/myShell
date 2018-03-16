@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 16:38:44 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/17 00:07:25 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -222,6 +222,8 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 	t_list	*pointer;
 	t_list	*commands;
 
+	if (replace_env(&(prompt->commands->content), cmd->environ) == -1)
+		return (-1);
 	if (pipe(fd) == -1)
 		return (-1);
 	if (pipe(fd2) == -1)

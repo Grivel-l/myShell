@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 20:46:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 23:25:19 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -152,6 +152,7 @@ int				add_env(char *env, char ***environ);
 char			*get_myenv(char *env, char **environ);
 int				delete_env(char ***environ, int index);
 int				get_env_index(char **environ, char *arg);
+int				replace_env(char **line, char **environ);
 /*
 ** ENV
 */

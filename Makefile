@@ -6,7 +6,7 @@
 #    By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2017/12/11 16:25:45 by legrivel     #+#   ##    ##    #+#        #
-#    Updated: 2018/03/15 17:49:11 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/03/16 23:00:31 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -24,7 +24,7 @@ SRCS = main.c free_alloc.c prompt/prompt.c prompt/inputs.c errors2.c \
 		errors.c command/heredoc/heredoc.c command/fildes.c specials.c \
 		command/builtins/builtins.c env/env_manipulations.c env/delete_env.c \
 		command/syntax.c prompt/completion.c command/heredoc/types.c \
-		command/builtins/chdir.c prompt/term.c
+		command/builtins/chdir.c prompt/term.c env/replace.c
 OBJS = $(addprefix $(OBJS_PATH), $(SRCS:.c=.o))
 FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address
 COMPILER = clang
