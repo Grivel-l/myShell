@@ -6,14 +6,34 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/22 23:12:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 16:40:30 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 20:46:24 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int		configure_fd(t_command *cmd, size_t is_last)
+static int	exit_fd(int fd[2])
+{
+	close_fd(fd);
+	return (-1);
+}
+
+int			configure_builtin_fd(t_command *cmd, int tmp[2])
+{
+	if (pipe(tmp) == -1)
+		return (-1);
+	if (dup2(STDOUT_FILENO, tmp[WRITE_END]) == -1)
+		return (exit_fd(tmp));
+	if (dup2(cmd->fd[WRITE_END], STDOUT_FILENO) == -1)
+		return (exit_fd(tmp));
+	if (close(cmd->fd[WRITE_END]) == -1)
+		return (exit_fd(tmp));
+	cmd->tmp_fd = cmd->fd[READ_END];
+	return (0);
+}
+
+int			configure_fd(t_command *cmd, size_t is_last)
 {
 	if (dup2(cmd->tmp_fd, STDIN_FILENO) == -1)
 		return (-1);
@@ -25,7 +45,7 @@ int		configure_fd(t_command *cmd, size_t is_last)
 	return (0);
 }
 
-int		get_fd(char *str, int default_fd)
+int			get_fd(char *str, int default_fd)
 {
 	char	*pointer;
 
@@ -36,7 +56,7 @@ int		get_fd(char *str, int default_fd)
 	return (str == pointer ? default_fd : ft_atoi(str));
 }
 
-int		set_stdout_fd(char **args, char *previous)
+int			set_stdout_fd(char **args, char *previous)
 {
 	int		fd;
 	int		flags;
@@ -63,7 +83,7 @@ int		set_stdout_fd(char **args, char *previous)
 	return (0);
 }
 
-int		set_stdin_fd(char **file, char ***args, char *previous)
+int			set_stdin_fd(char **file, char ***args, char *previous)
 {
 	int		fd;
 
@@ -85,7 +105,7 @@ int		set_stdin_fd(char **file, char ***args, char *previous)
 	return (0);
 }
 
-int		close_fd(int fd[2])
+int			close_fd(int fd[2])
 {
 	int		ret;
 	int		ret2;
@@ -101,7 +121,7 @@ int		close_fd(int fd[2])
 	return ((ret == -1 || ret2 == -1) ? -1 : 0);
 }
 
-int		close_all_fd(int fd[2], int fd2[2])
+int			close_all_fd(int fd[2], int fd2[2])
 {
 	int		ret;
 	int		ret2;

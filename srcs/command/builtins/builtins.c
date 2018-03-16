@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 17:07:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 20:46:13 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -112,13 +112,13 @@ static void	crop_cmd(char *cmd)
 int			exec_builtin(t_command *cmd, char *full_cmd, size_t is_last)
 {
 	int		ret;
+	int		fd[2];
 
 	ret = 0;
 	crop_cmd(full_cmd);
-	if (configure_fd(cmd, is_last) == -1)
-		return (-1);
-	close(cmd->fd[WRITE_END]);
-	cmd->tmp_fd = cmd->fd[READ_END];
+	if (!is_last)
+		if (configure_builtin_fd(cmd, fd) == -1)
+			return (-1);
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
 		ret = cd_builtin(cmd);
 	else if (ft_strcmp(cmd->args[0], "echo") == 0)
@@ -134,7 +134,10 @@ int			exec_builtin(t_command *cmd, char *full_cmd, size_t is_last)
 		ret = set_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "exit") == 0)
 		ret = exit_builtin(cmd);
-	return (0);
+	if (!is_last)
+		if (dup2(fd[WRITE_END], STDOUT_FILENO) == -1)
+			return (-1);
+	return (ret);
 }
 
 int			check_builtins(t_command *cmd)
