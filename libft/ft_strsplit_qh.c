@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/29 18:58:36 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 06:03:02 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 21:02:16 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -60,9 +60,9 @@ static int	split_str(char ***tab, char *str, char c)
 	quotes.doubleq = 0;
 	while (*str)
 	{
-		if (*str == '"')
+		if (*str == '"' && !quotes.simpleq)
 			quotes.doubleq = !quotes.doubleq;
-		else if (*str == '\'')
+		else if (*str == '\'' && !quotes.doubleq)
 			quotes.simpleq = !quotes.simpleq;
 		if (*str == c)
 			if (!quotes.doubleq && !quotes.simpleq)

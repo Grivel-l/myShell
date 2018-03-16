@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 18:02:51 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/11 18:56:17 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 21:11:58 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,6 +17,8 @@ size_t	ft_tablen(char **tab)
 {
 	size_t	i;
 
+	if (tab == NULL)
+		return (0);
 	i = 0;
 	while (tab[i])
 		i += 1;

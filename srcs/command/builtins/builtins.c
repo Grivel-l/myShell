@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 20:46:13 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 20:54:59 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -92,7 +92,7 @@ static void	crop_cmd(char *cmd)
 			quotes.simpleq = !quotes.simpleq;
 		else if (*cmd == '"' && !quotes.simpleq)
 			quotes.doubleq = !quotes.doubleq;
-		if (!quotes.doubleq && !quotes.simpleq && (*cmd == '>' || *cmd == '<'))
+		if (!quotes.doubleq && !quotes.simpleq && (*cmd == '>' || *cmd == '<' || *cmd == '|'))
 		{
 			*cmd = '\0';
 			cmd -= 1;
