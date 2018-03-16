@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 17:00:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 17:07:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -37,10 +37,7 @@ static int	print_char(t_quote *quotes, char **str, t_command *cmd)
 	else if (**str == '"' && !quotes->simpleq)
 		quotes->doubleq = !quotes->doubleq;
 	else
-	{
 		ft_putchar(**str);
-		dprintf(2, "HelloWolrd\n");
-	}
 	return (0);
 }
 
@@ -53,7 +50,8 @@ static int	echo_builtin(t_command *cmd, char *full_cmd)
 	quotes.doubleq = 0;
 	while (*full_cmd != '\0' && *full_cmd != ' ')
 		full_cmd += 1;
-	full_cmd += 1;
+	if (*full_cmd != '\0')
+		full_cmd += 1;
 	while (*full_cmd != '\0')
 	{
 		if ((ret = print_char(&quotes, &full_cmd, cmd)) == -1)
@@ -141,12 +139,10 @@ int			exec_builtin(t_command *cmd, char *full_cmd, size_t is_last)
 
 int			check_builtins(t_command *cmd)
 {
-	if (ft_strcmp(cmd->args[0], "cd") == 0 ||
+	return (ft_strcmp(cmd->args[0], "cd") == 0 ||
 		ft_strcmp(cmd->args[0], "env") == 0 ||
 		ft_strcmp(cmd->args[0], "echo") == 0 ||
 		ft_strcmp(cmd->args[0], "exit") == 0 ||
 		ft_strcmp(cmd->args[0], "setenv") == 0 ||
-		ft_strcmp(cmd->args[0], "unsetenv") == 0)
-		return (1);
-	return (0);
+		ft_strcmp(cmd->args[0], "unsetenv") == 0);
 }
