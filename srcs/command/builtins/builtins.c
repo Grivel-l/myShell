@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 09:03:41 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 17:00:08 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -37,7 +37,10 @@ static int	print_char(t_quote *quotes, char **str, t_command *cmd)
 	else if (**str == '"' && !quotes->simpleq)
 		quotes->doubleq = !quotes->doubleq;
 	else
+	{
 		ft_putchar(**str);
+		dprintf(2, "HelloWolrd\n");
+	}
 	return (0);
 }
 
@@ -108,16 +111,16 @@ static void	crop_cmd(char *cmd)
 	}
 }
 
-int			exec_builtin(t_command *cmd, char *full_cmd, size_t index, size_t is_last)
+int			exec_builtin(t_command *cmd, char *full_cmd, size_t is_last)
 {
 	int		ret;
 
 	ret = 0;
 	crop_cmd(full_cmd);
-	if (configure_fd(cmd, index, is_last) == -1)
+	if (configure_fd(cmd, is_last) == -1)
 		return (-1);
-	if (close_all_fd(cmd->fd, cmd->fd2) == -1)
-		return (-1);
+	close(cmd->fd[WRITE_END]);
+	cmd->tmp_fd = cmd->fd[READ_END];
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
 		ret = cd_builtin(cmd);
 	else if (ft_strcmp(cmd->args[0], "echo") == 0)
@@ -133,8 +136,6 @@ int			exec_builtin(t_command *cmd, char *full_cmd, size_t index, size_t is_last)
 		ret = set_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "exit") == 0)
 		ret = exit_builtin(cmd);
-	close(STDOUT_FILENO);
-	close(STDIN_FILENO);
 	return (0);
 }
 

@@ -6,41 +6,22 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/22 23:12:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/27 07:26:55 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 16:40:30 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-static int	set_even(t_command *cmd, size_t is_last)
+int		configure_fd(t_command *cmd, size_t is_last)
 {
-	if (dup2(cmd->fd2[READ_END], STDIN_FILENO) == -1)
+	if (dup2(cmd->tmp_fd, STDIN_FILENO) == -1)
 		return (-1);
 	if (!is_last)
 		if (dup2(cmd->fd[WRITE_END], STDOUT_FILENO) == -1)
 			return (-1);
-	return (0);
-}
-
-static int	set_odd(t_command *cmd, size_t is_last)
-{
-	if (dup2(cmd->fd[READ_END], STDIN_FILENO) == -1)
+	if (close(cmd->fd[READ_END]) == -1)
 		return (-1);
-	if (!is_last)
-		if (dup2(cmd->fd2[WRITE_END], STDOUT_FILENO) == -1)
-			return (-1);
-	return (0);
-}
-
-int		configure_fd(t_command *cmd, size_t index, size_t is_last)
-{
-	if (index == 0 && !is_last)
-		return (dup2(cmd->fd[WRITE_END], STDOUT_FILENO));
-	else if (index != 0 && index % 2 == 0)
-		return (set_even(cmd, is_last));
-	else if (index != 0 && index % 2 != 0)
-		return (set_odd(cmd, is_last));
 	return (0);
 }
 

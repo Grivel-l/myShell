@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/15 22:14:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 16:40:17 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,7 +48,7 @@ typedef struct	s_command
 	size_t		exited;
 	int			cmd_ret;
 	int			fd[2];
-	int			fd2[2];
+	size_t		tmp_fd;
 	char		**environ;
 }				t_command;
 
@@ -92,8 +92,8 @@ int				insert_char(char **line, char c, size_t *index);
 /*
 **	Command exec
 */
+int				exec_bin(t_command *cmd, t_list *split);
 int				treate_command(t_prompt *prompt, t_command *cmd);
-int				exec_bin(t_command *cmd, size_t index, t_list *split);
 
 /*
 **	Heredocs
@@ -105,7 +105,7 @@ int				dbl_out(char *before, char *after);
 size_t			get_output_fd(char *str, size_t default_fd);
 int				dbl_in(t_prompt *prompt, char **environ, char *before, char *after);
 int				read_set_stdin(char *match, t_prompt *prompt, char **environ, char *before);
-int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t index);
+int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt);
 /*
 **	Heredocs
 */
@@ -113,7 +113,7 @@ int				split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t ind
 int				check_syntax(t_prompt *prompt);
 
 int				check_builtins(t_command *cmd);
-int				exec_builtin(t_command *cmd, char *full_cmd, size_t index, size_t is_last);
+int				exec_builtin(t_command *cmd, char *full_cmd, size_t is_last);
 
 /*
 **	Fildes
@@ -123,7 +123,7 @@ int				close_all_fd(int fd[2], int fd2[2]);
 int				get_fd(char *str, int default_fd);
 int				set_stdout_fd(char **args, char *previous);
 int				set_stdin_fd(char **file, char ***args, char *previous);
-int				configure_fd(t_command *cmd, size_t index, size_t is_last);
+int				configure_fd(t_command *cmd, size_t is_last);
 /*
 **	Fildes
 */

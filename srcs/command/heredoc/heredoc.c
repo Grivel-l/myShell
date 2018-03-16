@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/06 03:07:22 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 16:39:20 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -192,7 +192,7 @@ static int	check_type(t_prompt *prompt, char **environ, char *pointer)
 	return (0);
 }
 
-int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t index)
+int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt)
 {
 	size_t	i;
 	int		ret;
@@ -211,5 +211,5 @@ int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt, size_t inde
 	}
 	if (update_args(split->content, &(cmd->args)) == -1)
 		return (-1);
-	return (exec_bin(cmd, index, split));
+	return (exec_bin(cmd, split));
 }
