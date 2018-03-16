@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/28 01:41:04 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/28 02:22:09 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 22:38:43 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -49,7 +49,7 @@ static int	set_pipe(char *line, size_t *pipe, t_quote quotes, t_prompt *prompt)
 		else
 			return (syntax_error(prompt, '|'));
 	}
-	else
+	else if (*line != ' ')
 		*pipe = 0;
 	return (0);
 }
@@ -95,6 +95,6 @@ int		check_syntax(t_prompt *prompt)
 		line += 1;
 	}
 	if (heredoc == 1 || pipe == 1)
-		return (syntax_error(prompt, 0));
+		return (syntax_error(prompt, pipe ? '|' : 0));
 	return (0);
 }
