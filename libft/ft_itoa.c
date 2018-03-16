@@ -6,28 +6,12 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/11/26 01:54:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2017/11/26 01:54:19 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/16 22:10:34 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "libft.h"
-
-static int	ft_abs(int n)
-{
-	return (n >= 0 ? n : n * -1);
-}
-
-static char	*zero(void)
-{
-	char	*str;
-
-	if ((str = malloc(2)) == NULL)
-		return (NULL);
-	str[0] = '0';
-	str[1] = '\0';
-	return (str);
-}
 
 char		*ft_itoa(int n)
 {
@@ -37,7 +21,7 @@ char		*ft_itoa(int n)
 	int		n_copy;
 
 	if (n == 0)
-		return (zero());
+		return (ft_strdup("0"));
 	i = 0;
 	n_copy = n;
 	while (n_copy != 0)
@@ -51,7 +35,7 @@ char		*ft_itoa(int n)
 	str[length--] = '\0';
 	while (n != 0)
 	{
-		str[length--] = ft_abs(n % 10) + 48;
+		str[length--] = ((n % 10) >= 0 ? n % 10 : n % 10 * -1) + 48;
 		n /= 10;
 	}
 	str[length] = length == 0 ? '-' : str[length];
