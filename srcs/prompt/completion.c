@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/05 12:10:20 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/05 12:10:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/18 00:14:26 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -296,7 +296,7 @@ int			handle_tab(t_prompt *prompt, char **environ)
 	int		dir;
 	char	*path;
 
-	if (prompt->line == NULL || prompt->quoting || isquoting(prompt->commands))
+	if (prompt->line == NULL || prompt->quoting || isquoting(prompt->commands) || prompt->line[prompt->pos] != '\0')
 		return (0);
 	else if (ft_strchr(prompt->line, ' ') == NULL)
 		return (complete_bin(prompt, environ));
