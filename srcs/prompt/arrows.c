@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/17 22:38:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/17 23:17:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -51,31 +51,11 @@ static int	next_command(t_prompt *prompt)
 	return (0);
 }
 
-static int	end_of_line(t_prompt *prompt)
-{
-	size_t	i;
-
-	i = prompt->pos - 1;
-	while (i > 0 && prompt->commands->content[i] != '\n')
-	{
-		i -= 1;
-		if (put_cap("nd") == -1)
-			return (-1);
-	}
-	if (i == 0)
-	{
-		while (i <= PL)
-		{
-			i += 1;
-			if (put_cap("nd") == -1)
-				return (-1);
-		}
-	}
-	return (0);
-}
-
 int			left_arrow(t_prompt *prompt)
 {
+	int		col;
+	size_t	to_start;
+
 	if (prompt->pos > 0)
 	{
 		prompt->pos -= 1;
@@ -86,7 +66,11 @@ int			left_arrow(t_prompt *prompt)
 			{
 				if (put_cap("up") == -1)
 					return (-1);
-				return (end_of_line(prompt));
+				if ((col = tgetnum("co")) == -1)
+					return (-1);
+				to_start = to_line_start_length(prompt, col);
+				prompt->pos -= to_start;
+				return (forward_cursor(prompt, to_start));
 			}
 		}
 		return (put_cap("le"));
@@ -104,7 +88,7 @@ int			right_arrow(t_prompt *prompt)
 		prompt->pos += 1;
 		if ((col = tgetnum("co")) == -1)
 			return (-1);
-		start = to_line_start_length(prompt);
+		start = to_line_start_length(prompt, col);
 		if (prompt->pos == start)
 			start += PL;
 		if (prompt->line[prompt->pos - 1] == '\n' || start == (size_t)col)
@@ -117,6 +101,7 @@ int			right_arrow(t_prompt *prompt)
 int			handle_arrows(t_prompt *prompt)
 {
 	char	c;
+	int		col;
 
 	c = prompt->buffer[2];
 	if (c == 68)
@@ -126,7 +111,11 @@ int			handle_arrows(t_prompt *prompt)
 	else if (c == 70 && prompt->line != NULL)
 		return (forward_cursor(prompt, to_line_end_length(prompt)));
 	else if (c == 72 && prompt->line != NULL)
-		return (rewind_cursor(prompt, to_line_start_length(prompt)));
+	{
+		if ((col = tgetnum("co")) == -1)
+			return (-1);
+		return (rewind_cursor(prompt, to_line_start_length(prompt, col)));
+	}
 	else if (c == 65)
 		return (previous_command(prompt));
 	else if (c == 66)

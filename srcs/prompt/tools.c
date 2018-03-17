@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:46:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/28 00:46:37 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/17 23:15:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -55,7 +55,7 @@ static size_t	to_start_length(t_prompt *prompt)
 	return (length);
 }
 
-size_t		to_line_start_length(t_prompt *prompt)
+size_t		to_line_start_length(t_prompt *prompt, size_t col)
 {
 	size_t	pos;
 
@@ -66,6 +66,10 @@ size_t		to_line_start_length(t_prompt *prompt)
 		pos -= 1;
 	if (pos < prompt->pos && prompt->line[pos] == '\n')
 		pos += 1;
+	if (pos == 0)
+		prompt->extra = PL;
+	while (prompt->pos - pos > col)
+		pos += col;
 	return (prompt->pos - pos);
 }
 

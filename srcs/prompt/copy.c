@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/12 18:37:05 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/17 23:15:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -72,6 +72,12 @@ int			forward_cursor(t_prompt *prompt, size_t length)
 		if (right_arrow(prompt) == -1)
 			return (-1);
 		length -= 1;
+	}
+	while (prompt->extra > 0)
+	{
+		if (put_cap("nd") == -1)
+			return (-1);
+		prompt->extra -= 1;
 	}
 	return (0);
 }
