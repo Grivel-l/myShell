@@ -1,9 +1,10 @@
 #include "shell.h"
 
-void			reset_term(struct termios term)
+int				reset_term(struct termios term)
 {
-	put_cap("ei");
-	tcsetattr(0, TCSANOW, &term);
+	if (put_cap("ei") == -1)
+		return (-1);
+	return (tcsetattr(0, TCSANOW, &term));
 }
 
 int				set_canonical(char **environ)

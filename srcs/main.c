@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 16:34:00 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/18 00:17:22 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -57,7 +57,6 @@ int		main(int argc, char **argv, char **environ)
 			exit(exit_status);
 		return (1);
 	}
-	reset_term(term);
 	free_everything(&cmd, &prompt);
-	return (0);
+	return (reset_term(term) == -1 ? 1 : 0);
 }
