@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/16 22:59:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/17 00:55:05 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/17 01:10:25 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -57,15 +57,23 @@ static int		check_env(char **line, char *str, char **environ)
 {
 	size_t	i;
 	size_t	length;
+	char	**pointer;
 
-	length = ft_strlen(str);
+	length = 0;
+	while (str[length] && str[length] != ' ')
+		length += 1;
+	pointer = environ;
 	while (*environ != NULL)
 	{
 		i = get_length(*environ);
 		while (i > 0)
 		{
 			if (length == i && ft_strncmp(str, *environ, i) == 0)
-				return (replace(line, *environ, str, i));
+			{
+				if (replace(line, *environ, str, i) == -1)
+					return (-1);
+				return (replace_env(line, pointer));
+			}
 			else
 				i -= 1;
 		}
@@ -74,7 +82,9 @@ static int		check_env(char **line, char *str, char **environ)
 	i = 0;
 	while (str[i] && str[i] != ' ')
 		i += 1;
-	return (replace(line, "", str, i));
+	if (replace(line, "", str, i) == -1)
+		return (-1);
+	return (replace_env(line, pointer));
 }
 
 int				replace_env(char **line, char **environ)
