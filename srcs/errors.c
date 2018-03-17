@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/28 02:59:08 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 01:52:01 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/17 01:31:12 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,8 +16,11 @@
 void		env_enoent(char *command, char *env)
 {
 	print_bin();
-	ft_putstr_fd(command, 2);
-	ft_putstr_fd(": ", 2);
+	if (command != NULL)
+	{
+		ft_putstr_fd(command, 2);
+		ft_putstr_fd(": ", 2);
+	}
 	ft_putstr_fd(env, 2);
 	ft_putstr_fd(" not set\n", 2);
 }

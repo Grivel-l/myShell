@@ -14,7 +14,7 @@ int				set_canonical(char **environ)
 
 	if ((name = get_myenv("TERM", environ)) == NULL)
 	{
-		ft_putstr_fd("$TERM is missing", 2);
+		env_enoent(NULL, "$TERM");
 		return (-1);
 	}
 	ret = tgetent(NULL, name);
