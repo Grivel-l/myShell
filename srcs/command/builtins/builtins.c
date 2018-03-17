@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 20:54:59 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/17 01:16:50 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,11 +48,13 @@ static int	echo_builtin(t_command *cmd, char *full_cmd)
 
 	quotes.simpleq = 0;
 	quotes.doubleq = 0;
-	while (*full_cmd != '\0' && *full_cmd != ' ')
+	while (*full_cmd && *full_cmd != ' ')
 		full_cmd += 1;
 	if (*full_cmd != '\0')
 		full_cmd += 1;
-	while (*full_cmd != '\0')
+	while (*full_cmd == ' ')
+		full_cmd += 1;
+	while (*full_cmd)
 	{
 		if ((ret = print_char(&quotes, &full_cmd, cmd)) == -1)
 		{
