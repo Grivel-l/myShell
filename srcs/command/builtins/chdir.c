@@ -53,6 +53,7 @@ static int	update_pwd(char *pwd, char ***environ)
 		free(env);
 		return (-1);
 	}
+	free(env);
 	return (create_pwd(environ));
 }
 
