@@ -102,6 +102,7 @@ static int	handle_return(t_prompt *prompt)
 	{
 		new->previous = prompt->commands->previous;
 		new->previous->next = new;
+		free(prompt->commands->content);
 		free(prompt->commands);
 		prompt->commands = new;
 	}
