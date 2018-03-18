@@ -6,48 +6,28 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/11/26 01:54:21 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2017/11/26 01:54:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/18 01:58:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	*void_str(void)
-{
-	char	*str;
-
-	if ((str = malloc(1)) == NULL)
-		return (NULL);
-	str[0] = '\0';
-	return (str);
-}
-
-char		*ft_strtrim(char const *s)
+char		*ft_strtrim(char *s)
 {
 	size_t	i;
-	size_t	j;
-	size_t	k;
 	char	*str;
-	size_t	length;
 
-	i = 0;
-	while (s != NULL && (s[i] == ' ' || (s[i] == '\t' || s[i] == '\n')))
-		i += 1;
-	length = s != NULL ? ft_strlen(s) : 0;
-	if (length == 0 || length - i == 0)
-		return (void_str());
-	j = length - 1;
-	while (s != NULL && (s[j] == ' ' || (s[j] == '\t' || s[j] == '\n')))
-		j -= 1;
-	j += 1;
-	if (j != length)
-		j -= i;
-	if ((s == NULL) || ((str = malloc(j + 1)) == NULL))
+	while ((*s == ' ' || *s == '\t') && *s != '\0')
+		s += 1;
+	if (*s == '\0')
+		return (ft_strnew(1));
+	i = ft_strlen(s) - 1;
+	while (s[i] == ' ' || s[i] == '\t')
+		i -= 1;
+	if ((str = malloc(i + 2)) == NULL)
 		return (NULL);
-	k = 0;
-	while (k < j)
-		str[k++] = s[i++];
-	str[k] = '\0';
+	ft_strncpy(str, s, i + 1);
+	str[i + 1] = '\0';
 	return (str);
 }

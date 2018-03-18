@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/29 18:58:36 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 21:02:16 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/18 01:57:56 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,7 +26,7 @@ static int	push_tab(char ***tab, char **str, int index, char c)
 	size_t	quoted;
 
 	quoted = **str == '\'' || **str == '"' ? 1 : 0;
-	if ((tmp = malloc(quoted ? index + 1 : index - 1)) == NULL)
+	if ((tmp = malloc((quoted ? index - 2 : index) + 1)) == NULL)
 		return (-1);
 	ft_strncpy(tmp, quoted ? *str + 1 : *str, quoted ? index - 2 : index);
 	tmp[quoted ? index - 2 : index] = '\0';
