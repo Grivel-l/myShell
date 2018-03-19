@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 16:39:20 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/19 19:11:43 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -192,17 +192,31 @@ static int	check_type(t_prompt *prompt, char **environ, char *pointer)
 	return (0);
 }
 
+static void	check_quotes(t_quote *quotes, char c)
+{
+	if (c == '"' && !quotes->simpleq)
+		quotes->doubleq = !quotes->doubleq;
+	else if (c == '\'' && !quotes->doubleq)
+		quotes->simpleq = !quotes->simpleq;
+}
+
 int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt)
 {
-	size_t	i;
-	int		ret;
-	char	*pointer;
+	size_t		i;
+	int			ret;
+	char		*pointer;
+	t_quote	quotes;
 
 	i = 0;
+	quotes.simpleq = 0;
+	quotes.doubleq = 0;
 	pointer = split->content;
 	while (*pointer)
 	{
-		if ((ret = check_type(prompt, cmd->environ, pointer)) == -1)
+		ret = 0;
+		check_quotes(&quotes, *pointer);
+		if (!quotes.simpleq && !quotes.doubleq &&
+				(ret = check_type(prompt, cmd->environ, pointer)) == -1)
 			return (-1);
 		if (ret == -2)
 			return (0);
