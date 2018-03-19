@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/18 02:59:22 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/19 17:16:43 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,6 +23,7 @@ static int	previous_command(t_prompt *prompt)
 			return (-1);
 		if (prompt->commands->previous != NULL)
 			prompt->commands = prompt->commands->previous;
+		ft_strdel(&(prompt->line));
 		if ((prompt->line = ft_strdup(prompt->commands->content)) == NULL)
 			return (-1);
 		prompt->pos = ft_strlen(prompt->line);
@@ -33,7 +34,7 @@ static int	previous_command(t_prompt *prompt)
 
 static int	next_command(t_prompt *prompt)
 {
-	if (prompt->commands != NULL)
+	if (prompt->commands != NULL && prompt->commands->content[0] != '\0')
 	{
 		if (isquoting(prompt->commands))
 			return (0);
@@ -42,6 +43,7 @@ static int	next_command(t_prompt *prompt)
 		if (prompt->commands->next != NULL)
 		{
 			prompt->commands = prompt->commands->next;
+			ft_strdel(&(prompt->line));
 			if ((prompt->line = ft_strdup(prompt->commands->content)) == NULL)
 				return (-1);
 			prompt->pos = ft_strlen(prompt->line);

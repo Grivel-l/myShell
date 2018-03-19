@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/17 23:15:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/19 17:12:04 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -99,6 +99,8 @@ static int	paste(t_prompt *prompt)
 	if (prompt->copy_buffer == NULL)
 		return (0);
 	if ((copy = ft_strdup(prompt->copy_buffer)) == NULL)
+		return (-1);
+	if (prompt->line == NULL && (prompt->line = ft_strnew(1)) == NULL)
 		return (-1);
 	if (ret == 0 && cut(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer)) == -1)
 		ret = -1;
