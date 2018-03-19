@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/19 19:11:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/19 23:35:03 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -69,6 +69,9 @@ static int	check_return(t_prompt *prompt, char *after, char **buffer, char *befo
 	{
 		if ((match = get_after(after)) == NULL)
 			return (-1);
+		if (prompt->line == NULL)
+			if ((prompt->line = ft_strdup("")) == NULL)
+				return (-1);
 		if (ft_strstr(after, "<<") != NULL)
 		{
 			ft_putchar('\n');
