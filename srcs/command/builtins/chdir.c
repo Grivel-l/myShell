@@ -19,20 +19,15 @@ static int	check_errors(t_command *cmd, char *dir)
 	return (0);
 }
 
-static char	*get_pwd(void)
-{
-	char	pwd[PATH_MAX];
-
-	return (getcwd(pwd, PATH_MAX));
-}
-
 static int	create_pwd(char ***environ)
 {
 	char	*pwd;
+	char	*tmp;
 
-	if ((pwd = get_pwd()) == NULL)
+	if ((tmp = getcwd(NULL, 0)) == NULL)
 		return (-1);
-	pwd = ft_strjoin("PWD=", pwd); 
+	pwd = ft_strjoin("PWD=", tmp);
+	free(tmp);
 	if (pwd == NULL || add_env(pwd, environ) == -1)
 	{
 		ft_strdel(&pwd);
