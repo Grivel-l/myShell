@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/19 23:35:03 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 00:16:01 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,17 +38,18 @@ static int	quit(char *str1, char *str2, int fd)
 	return (-1);
 }
 
-static int	stop_read(char **buffer, char *match, char *before)
+static int	stop_read(char **buffer, char **match, char *before)
 {
 	int		fd;
 	char	*tmp_file;
 
 	if ((tmp_file = get_tmp_file(ft_strdup(TMP_FILE), 0)) == NULL)
-		return (quit(match, NULL, -1));
+		return (quit(*match, NULL, -1));
 	if ((fd = open(tmp_file, O_CREAT | O_WRONLY | O_TRUNC, 0666)) == -1)
-		return (quit(match, tmp_file, -1));
-	write(fd, *buffer, ft_strlen(*buffer) - ft_strlen(match) - 1);
-	free(match);
+		return (quit(*match, tmp_file, -1));
+	if (*buffer != NULL)
+		write(fd, *buffer, ft_strlen(*buffer) - ft_strlen(*match) - 1);
+	ft_strdel(match);
 	if (close(fd) == -1)
 		return (quit(NULL, tmp_file, -1));
 	if ((fd = open(tmp_file, O_RDONLY)) == -1)
@@ -100,7 +101,7 @@ static int	check_return(t_prompt *prompt, char *after, char **buffer, char *befo
 		}
 		ft_putchar('\n');
 		if (ft_strcmp(prompt->line, match) == 0)
-			return (stop_read(buffer, match, before));
+			return (stop_read(buffer, &match, before));
 		free(match);
 		next_line(&(prompt->line), &(prompt->pos));
 		return (1);
@@ -128,13 +129,20 @@ int			read_set_stdin(char *after, t_prompt *prompt, char **environ, char *before
 			return (-1);
 		}
 		ret = check_return(prompt, after, &buffer, before);
-		if (ret == 0 && handle_input(prompt, environ) == -1)
-			ret = -1;
-		if (ret == -1)
-			break ;
+		if (ret == 0)
+		{
+		   if ((ret = handle_input(prompt, environ)) == -1)
+			   break ;
+		   if (ret == 2 || ret == 1)
+		   {
+				if (stop_read(&buffer, &match, before) == -1)
+					return (-1);
+				break ;
+		   }
+		}
 	}
-	free(match);
-	free(buffer);
+	ft_strdel(&match);
+	ft_strdel(&buffer);
 	if (ret == -1)
 		return (-1);
 	prompt->quoting = 0;
