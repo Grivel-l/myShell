@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/17 00:07:25 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/19 18:53:03 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -239,6 +239,9 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 	pointer = commands;
 	while (commands != NULL)
 	{
+		if (ft_strstr(commands->content, "<<") != NULL)
+			if (set_options(prompt->term, ICANON | ECHO | ISIG) == -1)
+				return (-1);
 		if (dup2(STDIN_FILENO, fd[0]) == -1)
 			return (-1);
 		if (dup2(STDOUT_FILENO, fd[1]) == -1)
@@ -256,6 +259,9 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 			return (-1);
 		if (dup2(fd2[1], STDERR_FILENO) == -1)
 			return (-1);
+		if (ft_strstr(commands->content, "<<") != NULL)
+			if (reset_term(prompt->term) == -1)
+				return (-1);
 		commands = commands->next;
 	}
 	ft_lstfree(&pointer);

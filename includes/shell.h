@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/18 02:42:47 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/19 17:49:26 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -30,16 +30,17 @@
 # define WRITE_END 1
 # define TMP_FILE "/tmp/21sh_tmp"
 
-typedef struct	s_prompt
+typedef struct		s_prompt
 {
-	size_t		pos;
-	size_t		extra;
-	size_t		quoting;
-	char		*line;
-	char		buffer[3];
-	t_dlist		*commands;
-	char		*copy_buffer;
-}				t_prompt;
+	size_t			pos;
+	size_t			extra;
+	size_t			quoting;
+	char			*line;
+	char			buffer[3];
+	t_dlist			*commands;
+	struct termios	term;
+	char			*copy_buffer;
+}					t_prompt;
 
 typedef struct	s_command
 {
@@ -56,7 +57,7 @@ int				set_canonical(char **environ);
 int				reset_term(struct termios term);
 int				valid_command(t_prompt *prompt);
 int				set_options(struct termios term, int options);
-int				wait_prompt(t_prompt *prompt, t_command *cmd, struct termios term);
+int				wait_prompt(t_prompt *prompt, t_command *cmd);
 
 /*
 **	Termcaps

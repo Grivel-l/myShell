@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/18 00:17:22 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/19 17:50:29 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -36,6 +36,7 @@ int		main(int argc, char **argv, char **environ)
 	cmd.fd[1] = -1;
 	prompt.extra = 0;
 	prompt.quoting = 0;
+	prompt.term = term;
 	prompt.line = NULL;
 	prompt.commands = NULL;
 	prompt.copy_buffer = NULL;
@@ -45,7 +46,7 @@ int		main(int argc, char **argv, char **environ)
 		free_everything(&cmd, NULL);
 		return (1);
 	}
-	if (wait_prompt(&prompt, &cmd, term) == -1)
+	if (wait_prompt(&prompt, &cmd) == -1)
 	{
 		if (cmd.args != NULL)
 			exit_status = cmd.args[1] == NULL ? cmd.cmd_ret : ft_atoi(cmd.args[1]);

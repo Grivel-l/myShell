@@ -4,7 +4,9 @@ int				reset_term(struct termios term)
 {
 	if (put_cap("ei") == -1)
 		return (-1);
-	return (tcsetattr(0, TCSANOW, &term));
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+		return (-1);
+	return (0);
 }
 
 int				set_canonical(char **environ)
