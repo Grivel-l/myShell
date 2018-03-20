@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/05 13:56:00 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/06 03:06:29 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 01:37:53 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -80,6 +80,16 @@ size_t	get_output_fd(char *str, size_t default_fd)
 	return (*str < 48 || *str > 57 ? default_fd : ft_atoi(str));
 }
 
+static int	check_range(void)
+{
+	if (errno == EBADF)
+	{
+		generic_error("file descriptor out of range", "Bad file descriptor");
+		return (-2);
+	}
+	return (-1);
+}
+
 int		smp_out(char *before, char *after)
 {
 	int		input;
@@ -90,10 +100,10 @@ int		smp_out(char *before, char *after)
 	output = get_output_fd(before, STDOUT_FILENO);
 	if (input == -3)
 		return (-2);
-	else if (input == -2)
+	else if (input < -2)
 		return (close(output));
 	if (dup2(input, output) == -1)
-		return (-1);
+		return (check_range());
 	return (close(input));
 }
 
@@ -106,7 +116,7 @@ int		dbl_out(char *before, char *after)
 		return (-1);
 	output = get_output_fd(before, STDOUT_FILENO);
 	if (dup2(input, output) == -1)
-		return (-1);
+		return (check_range());
 	return (close(input));
 }
 
@@ -123,7 +133,7 @@ int		smp_in(char *before, char *after)
 	else if (output == -2)
 		return (close(input));
 	if (dup2(output, input) == -1)
-		return (-1);
+		return (check_range());
 	return (close(output));
 }
 
