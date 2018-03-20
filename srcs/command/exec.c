@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/19 18:53:03 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 01:15:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -218,10 +218,13 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 {
 	int		fd[2];
 	int		fd2[2];
+	char	*old_cmd;
 	char	**split_tab;
 	t_list	*pointer;
 	t_list	*commands;
 
+	if ((old_cmd = ft_strdup(prompt->commands->content)) == NULL)
+		return (-1);
 	if (replace_env(&(prompt->commands->content), cmd->environ) == -1)
 		return (-1);
 	if (pipe(fd) == -1)
@@ -265,6 +268,8 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 		commands = commands->next;
 	}
 	ft_lstfree(&pointer);
+	free(prompt->commands->content);
+	prompt->commands->content = old_cmd;
 	prompt->commands = prompt->commands->next;
 	return (close_all_fd(fd, fd2));
 }
