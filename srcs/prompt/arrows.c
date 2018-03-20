@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:39:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/19 17:16:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 21:37:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -61,7 +61,8 @@ int			left_arrow(t_prompt *prompt)
 	if (prompt->pos > 0)
 	{
 		prompt->pos -= 1;
-		if (prompt->commands != NULL && prompt->commands->content != NULL && prompt->commands->content[0] != '\0')
+		if (prompt->commands != NULL &&
+prompt->commands->content != NULL && prompt->commands->content[0] != '\0')
 		{
 			if (!isquoting(prompt->commands) &&
 					prompt->line[prompt->pos] == '\n')

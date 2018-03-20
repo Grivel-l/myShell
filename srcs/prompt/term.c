@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   term.c                                           .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2018/03/20 21:36:28 by legrivel     #+#   ##    ##    #+#       */
+/*   Updated: 2018/03/20 21:36:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
+/* ************************************************************************** */
+
 #include "shell.h"
 
-int				reset_term(struct termios term)
+int			reset_term(struct termios term)
 {
 	if (put_cap("ei") == -1)
 		return (-1);
@@ -9,7 +22,7 @@ int				reset_term(struct termios term)
 	return (0);
 }
 
-int				set_canonical(char **environ)
+int			set_canonical(char **environ)
 {
 	int				ret;
 	char			*name;

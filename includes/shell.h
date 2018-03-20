@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/20 03:30:58 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 21:33:46 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -89,9 +89,17 @@ int					handle_input(t_prompt *prompt, char **environ);
 **	Completion
 */
 int					is_dir(char *file);
-int					free_printed(t_list *printed, int ret);
+int					free_printed(t_list **printed, int ret);
+void				goto_lstend(t_list **match, t_list **last);
 int					check_dir(char *content, t_prompt *prompt);
+int					complete_arg(t_prompt *prompt, char *path);
 size_t				get_match_nbr(t_list *files, char *content);
+int					complete_bin(t_prompt *prompt, char **environ);
+int					check_complete(t_prompt *prompt, t_list *files);
+int					complete_cmd(t_prompt *prompt, t_list *files, char *content);
+int					half_complete(t_prompt *prompt, t_list *printed, size_t index);
+int					print_match(t_list *files, char *content,
+			size_t *index, t_list **match);
 /*
 **	Completion
 */
