@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/20 01:43:24 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 03:30:58 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -84,6 +84,17 @@ int					handle_signals(t_prompt *prompt);
 int					handle_movements(t_prompt *prompt);
 int					handle_tab(t_prompt *prompt, char **environ);
 int					handle_input(t_prompt *prompt, char **environ);
+
+/*
+**	Completion
+*/
+int					is_dir(char *file);
+int					free_printed(t_list *printed, int ret);
+int					check_dir(char *content, t_prompt *prompt);
+size_t				get_match_nbr(t_list *files, char *content);
+/*
+**	Completion
+*/
 
 int					remove_char(char **line, size_t *index);
 int					insert_char(char **line, char c, size_t *index);
