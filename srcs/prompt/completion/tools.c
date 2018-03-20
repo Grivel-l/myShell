@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/20 01:51:29 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/20 03:33:19 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 21:22:30 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -27,9 +27,9 @@ size_t		get_match_nbr(t_list *files, char *content)
 	return (match);
 }
 
-int			free_printed(t_list *printed, int ret)
+int			free_printed(t_list **printed, int ret)
 {
-	ft_lstfree(&printed);
+	ft_lstfree(printed);
 	return (ret);
 }
 
@@ -56,4 +56,14 @@ int			check_dir(char *content, t_prompt *prompt)
 			return (ft_addchar(&(prompt->line), '/'));
 	}
 	return (0);
+}
+
+void		goto_lstend(t_list **match, t_list **last)
+{
+	while (*match != NULL)
+	{
+		if ((*match)->next == NULL)
+			*last = *match;
+		*match = (*match)->next;
+	}
 }

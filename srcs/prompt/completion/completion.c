@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/05 12:10:20 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/20 03:52:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 21:26:15 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,7 +24,7 @@ static int		complete_line_cmd(t_prompt *prompt, char *content)
 	return (write_line(prompt));
 }
 
-static int		check_complete(t_prompt *prompt, t_list *files)
+int				check_complete(t_prompt *prompt, t_list *files)
 {
 	char	*line;
 	size_t	length;
@@ -52,217 +52,21 @@ static int		check_complete(t_prompt *prompt, t_list *files)
 	return (write_line(prompt));
 }
 
-static int		complete_cmd(t_prompt *prompt, t_list *files, char *content)
+static void		update_path(char *path)
 {
-	while (files != NULL)
+	size_t	i;
+
+	if (ft_strrchr(path, '/') != NULL)
 	{
-		if (ft_strncmp(content, files->content, ft_strlen(content)) == 0)
-			return (check_complete(prompt, files));
-		files = files->next;
+		i = ft_strlen(path);
+		while (path[i] != '/')
+			i -= 1;
+		path[i + 1] = '\0';
 	}
-	return (0);
-}
-
-static int		half_complete(t_prompt *prompt, t_list *printed, size_t index)
-{
-	char	c;
-	t_list	*pointer;
-
-	pointer = printed;
-	while (printed != NULL)
-	{
-		if (index >= ft_strlen(printed->content))
-			return (free_printed(pointer, 0));
-		c = ((char *)printed->content)[index];
-		printed = printed->next;
-		if (printed != NULL &&
-				(index >= ft_strlen(printed->content) ||
-				((char *)(printed->content))[index] != c))
-			return (free_printed(pointer, 0));
-	}
-	if (c == '\0')
-		return (free_printed(pointer, 0));
-	if (insert_char(&(prompt->line), c, &(prompt->pos)) == -1)
-		return (free_printed(pointer, -1));
-	return (half_complete(prompt, pointer, index + 1));
-}
-
-static t_list	*check_print(t_list *files, t_list **last,
-		size_t *index, t_list **match)
-{
-	t_list	*pointer;
-
-	if ((*match = ft_lstnew(files->content, ft_strlen(files->content))) == NULL)
-		return (NULL);
-
-
-
-	if (*last != NULL)
-		(*last)->next = *match;
-
-
-
-	pointer = *match;
-	*last = *match;
-	if (*index > 0)
-		ft_putstr("    ");
-	ft_putstr(files->content);
-	*index += 1;
-	return (pointer);
-}
-
-static int		print_match(t_list *files, char *content,
-		size_t *index, t_list **match)
-{
-	t_list	*last;
-	t_list	*pointer;
-
-	last = *match;
-	pointer = *match;
-	while (*match != NULL)
-	{
-		if ((*match)->next == NULL)
-			last = *match;
-		*match = (*match)->next;
-	}
-	while (files != NULL)
-	{
-		if (ft_strncmp(content, files->content, ft_strlen(content)) == 0)
-		{
-			if (pointer == NULL)
-				pointer = check_print(files, &last, index, match);
-			else
-			{
-				if (check_print(files, &last, index, match) == NULL)
-					return (-1);
-			}
-			if (pointer == NULL)
-				return (-1);
-		}
-		files = files->next;
-	}
-	*match = pointer;
-	return (0);
-}
-
-static int		complete_bin_matched(t_prompt *prompt,
-		char **paths, size_t match)
-{
-	size_t	index;
-	t_list	*files;
-	t_list	*printed;
-	char	**pointer;
-
-	if (match > 1)
-		ft_putchar('\n');
-	index = 0;
-	printed = NULL;
-	pointer = paths;
-	while (*pointer != NULL)
-	{
-		if ((files = ft_readdir(*pointer, 1)) == NULL)
-			break ;
-		if (match > 1)
-			if (print_match(files, prompt->line, &index, &printed) == -1)
-				break ;
-		if (match == 1)
-			if (complete_cmd(prompt, files, prompt->line) == -1)
-				break ;
-		ft_lstfree(&files);
-		pointer += 1;
-	}
-	ft_lstfree(&files);
-	if (*pointer != NULL)
-		return (-1);
-	if (match > 1)
-	{
-		if (half_complete(prompt, printed, ft_strlen(prompt->line)) == -1)
-			return (-1);
-		ft_putchar('\n');
-		ft_putstr("\033[01;32m$\033[0m ");
-		ft_putstr(prompt->line);
-	}
-	else
-		ft_lstfree(&printed);
-	return (0);
-}
-
-static int		complete_bin(t_prompt *prompt, char **environ)
-{
-	size_t	match;
-	char	*path;
-	t_list	*files;
-	char	**paths;
-	char	**pointer;
-
-	if ((path = get_myenv("PATH", environ)) == NULL)
-		return (0);
-	if ((paths = ft_strsplit(path, ':')) == NULL)
-		return (-1);
-	match = 0;
-	pointer = paths;
-	while (*pointer)
-	{
-		if ((files = ft_readdir(*pointer, 1)) == NULL)
-			return (-1);
-		match += get_match_nbr(files, prompt->line);
-		ft_lstfree(&files);
-		pointer += 1;
-	}
-	if (complete_bin_matched(prompt, paths, match) == -1)
-		return (-1);
-	ft_freetab(&paths);
-	return (0);
-}
-
-static int		complete_arg(t_prompt *prompt, char *path)
-{
-	size_t	index;
-	size_t	match;
-	t_list	*files;
-	t_list	*printed;
-	char	*content;
-
-	if ((files = ft_readdir(path, 1)) == NULL)
-		return (-1);
-	index = 0;
-	printed = NULL;
-	content = ft_strrchr(prompt->line, ' ') + 1;
-	content = ft_strrchr(content, '/') == NULL ?
-		content : ft_strrchr(content, '/') + 1;
-	match = get_match_nbr(files, content);
-	if (match > 1)
-	{
-		ft_putchar('\n');
-		if (print_match(files, content, &index, &printed) == -1)
-		{
-			ft_lstfree(&files);
-			return (-1);
-		}
-		if (half_complete(prompt, printed, ft_strlen(content)) == -1)
-		{
-			ft_lstfree(&files);
-			return (-1);
-		}
-		ft_putchar('\n');
-		ft_putstr("\033[01;32m$\033[0m ");
-		ft_putstr(prompt->line);
-	}
-	else
-	{
-		if (complete_cmd(prompt, files, content) == -1)
-		{
-			ft_lstfree(&files);
-			return (-1);
-		}
-	}
-	ft_lstfree(&files);
-	return (0);
 }
 
 int				handle_tab(t_prompt *prompt, char **environ)
 {
-	size_t	i;
 	int		ret;
 	int		dir;
 	char	*path;
@@ -276,13 +80,7 @@ int				handle_tab(t_prompt *prompt, char **environ)
 	{
 		if ((path = ft_strdup(ft_strrchr(prompt->line, ' ') + 1)) == NULL)
 			return (-1);
-		if (ft_strrchr(path, '/') != NULL)
-		{
-			i = ft_strlen(path);
-			while (path[i] != '/')
-				i -= 1;
-			path[i + 1] = '\0';
-		}
+		update_path(path);
 		if ((dir = is_dir(path)) == -1)
 		{
 			free(path);
