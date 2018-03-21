@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/02 03:19:24 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 01:22:36 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 18:10:55 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -87,7 +87,8 @@ int			handle_return(t_prompt *prompt)
 {
 	int		ret;
 
-	if (!isquoting(prompt->commands) && prompt->line == NULL)
+	if ((!isquoting(prompt->commands) && prompt->line == NULL) ||
+			(prompt->line != NULL && ft_strochr(prompt->line, ' ')))
 		return (1);
 	while (prompt->commands != NULL && prompt->commands->next != NULL)
 		prompt->commands = prompt->commands->next;
