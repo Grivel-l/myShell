@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/20 00:16:01 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 02:25:41 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -62,7 +62,33 @@ static int	stop_read(char **buffer, char **match, char *before)
 	return (2);
 }
 
-static int	check_return(t_prompt *prompt, char *after, char **buffer, char *before)
+static int	update_buffer(t_prompt *prompt, char **buffer,
+			char *match, char *before)
+{
+	if (*buffer == NULL)
+		*buffer = ft_strdup(prompt->line);
+	else
+		*buffer = ft_strrealloc(*buffer, prompt->line);
+	if (*buffer == NULL)
+	{
+		free(match);
+		return (-1);
+	}
+	if ((*buffer = ft_strrealloc(*buffer, "\n")) == NULL)
+	{
+		free(match);
+		return (-1);
+	}
+	ft_putchar('\n');
+	if (ft_strcmp(prompt->line, match) == 0)
+		return (stop_read(buffer, &match, before));
+	free(match);
+	next_line(&(prompt->line), &(prompt->pos));
+	return (1);
+}
+
+static int	check_return(t_prompt *prompt, char *after,
+		char **buffer, char *before)
 {
 	char	*match;
 
@@ -85,67 +111,79 @@ static int	check_return(t_prompt *prompt, char *after, char **buffer, char *befo
 			next_line(&(prompt->line), &(prompt->pos));
 			return (1);
 		}
-		if (*buffer == NULL)
-			*buffer = ft_strdup(prompt->line);
-		else
-			*buffer = ft_strrealloc(*buffer, prompt->line);
-		if (*buffer == NULL)
-		{
-			free(match);
-			return (-1);
-		}
-		if ((*buffer = ft_strrealloc(*buffer, "\n")) == NULL)
-		{
-			free(match);
-			return (-1);
-		}
-		ft_putchar('\n');
-		if (ft_strcmp(prompt->line, match) == 0)
-			return (stop_read(buffer, &match, before));
-		free(match);
-		next_line(&(prompt->line), &(prompt->pos));
-		return (1);
+		return (update_buffer(prompt, buffer, match, before));
 	}
 	return (0);
 }
 
-int			read_set_stdin(char *after, t_prompt *prompt, char **environ, char *before)
+static char	*init_values(t_prompt *prompt, char *after, int *ret, char **buffer)
+{
+	char	*match;
+
+	if ((match = get_after(after)) == NULL)
+		return (NULL);
+	next_line(&(prompt->line), &(prompt->pos));
+	*ret = 0;
+	*buffer = NULL;
+	prompt->quoting = 1;
+	return (match);
+}
+
+static int	free_quit(char *match)
+{
+	free(match);
+	return (-1);
+}
+
+static int	read_set_stdin(char *after, t_prompt *prompt,
+		char **environ, char *before)
 {
 	int		ret;
 	char	*match;
 	char	*buffer;
 
-	if ((match = get_after(after)) == NULL)
+	if ((match = init_values(prompt, after, &ret, &buffer)) == NULL)
 		return (-1);
-	next_line(&(prompt->line), &(prompt->pos));
-	ret = 0;
-	buffer = NULL;
-	prompt->quoting = 1;
 	while (ret != 2)
 	{
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
-		{
-			free(match);
-			return (-1);
-		}
-		ret = check_return(prompt, after, &buffer, before);
+			return (free_quit(match));
+		if ((ret = check_return(prompt, after, &buffer, before)) == -1)
+			break ;
 		if (ret == 0)
 		{
-		   if ((ret = handle_input(prompt, environ)) == -1)
-			   break ;
-		   if (ret == 2 || ret == 1)
-		   {
+			if ((ret = handle_input(prompt, environ)) == 2 || ret == 1)
 				if (stop_read(&buffer, &match, before) == -1)
 					return (-1);
+			if (ret == 2 || ret == 1 || ret == -1)
 				break ;
-		   }
 		}
 	}
 	ft_strdel(&match);
 	ft_strdel(&buffer);
-	if (ret == -1)
-		return (-1);
 	prompt->quoting = 0;
+	return (ret == -1 ? -1 : 0);
+}
+
+static int	set_str(char **str, size_t *i)
+{
+	while (**str != '<' && **str != '>' && **str != '\0')
+	{
+		*i += 1;
+		*str += 1;
+	}
+	if (**str == '\0')
+		return (1);
+	while (**str != ' ' && *i >= 1)
+	{
+		*i -= 1;
+		*str -= 1;
+	}
+	while (**str == ' ' && *i >= 1)
+	{
+		*i -= 1;
+		*str -= 1;
+	}
 	return (0);
 }
 
@@ -157,23 +195,8 @@ static int	update_args(char *str, char ***args)
 
 	i = 0;
 	pointer = str;
-	while (*str != '<' && *str != '>' && *str != '\0')
-	{
-		i += 1;
-		str += 1;
-	}
-	if (*str == '\0')
+	if (set_str(&str, &i) == 1)
 		return (0);
-	while (*str != ' ' && i >= 1)
-	{
-		i -= 1;
-		str -= 1;
-	}
-	while (*str == ' ' && i >= 1)
-	{
-		i -= 1;
-		str -= 1;
-	}
 	ft_freetab(args);
 	if (i == 0)
 	{
@@ -199,16 +222,8 @@ static int	check_type(t_prompt *prompt, char **environ, char *pointer)
 	else if (*pointer == '<' && *(pointer + 1) != '<' && *(pointer - 1) != '<')
 		return (smp_in(pointer - 1, pointer + 1));
 	else if (*pointer == '<' && *(pointer + 1) == '<')
-		return (dbl_in(prompt, environ, pointer - 1, pointer + 2));
+		return (read_set_stdin(pointer + 2, prompt, environ, pointer - 1));
 	return (0);
-}
-
-static void	check_quotes(t_quote *quotes, char c)
-{
-	if (c == '"' && !quotes->simpleq)
-		quotes->doubleq = !quotes->doubleq;
-	else if (c == '\'' && !quotes->doubleq)
-		quotes->simpleq = !quotes->simpleq;
 }
 
 int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt)
@@ -216,7 +231,7 @@ int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt)
 	size_t		i;
 	int			ret;
 	char		*pointer;
-	t_quote	quotes;
+	t_quote		quotes;
 
 	i = 0;
 	quotes.simpleq = 0;
@@ -225,7 +240,7 @@ int			split_heredoc(t_command *cmd, t_list *split, t_prompt *prompt)
 	while (*pointer)
 	{
 		ret = 0;
-		check_quotes(&quotes, *pointer);
+		ft_checkquotes(&quotes, *pointer);
 		if (!quotes.simpleq && !quotes.doubleq &&
 				(ret = check_type(prompt, cmd->environ, pointer)) == -1)
 			return (-1);

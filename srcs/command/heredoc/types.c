@@ -6,81 +6,14 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/05 13:56:00 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/20 01:37:53 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 02:29:08 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-char			*get_after(char *pointer)
-{
-	char	*str;
-
-	str = NULL;
-	while (*pointer == ' ' && *pointer != '\0')
-		pointer += 1;
-	while (*pointer != ' ' && *pointer != '>' && *pointer != '<' && *pointer != '\0')
-	{
-		if (ft_addchar(&str, *pointer) == -1)
-			return (NULL);
-		pointer += 1;
-	}
-	if (ft_addchar(&str, '\0') == -1)
-		return (NULL);
-	return (str);
-}
-
-static int		get_input_fd(char *str, int flags)
-{
-	int		fd;
-	char	*file;
-
-	if ((file = get_after(str)) == NULL)
-		return (-1);
-	if (file[0] == '&')
-	{
-		if (ft_strcmp(&(file[1]), "-") == 0)
-		{
-			free(file);
-			return (-2);
-		}
-		fd = 1;
-		while (file[fd] >= 48 && file[fd] <= 57 && file[fd] != '\0')
-			fd += 1;
-		if (file[fd] != '\0')
-		{
-			generic_error(&(file[1]), "ambiguous redirect");
-			free(file);
-			return (-3);
-		}
-		fd = ft_atoi(&(file[1]));
-		free(file);
-		return (fd);
-	}
-	if (access(file, W_OK | R_OK) == -1)
-	{
-		if (errno == EACCES)
-		{
-			eacces_error(file, NULL);	
-			return (-3);
-		}
-	}
-	fd = open(file, O_CREAT | O_RDWR | flags, 0666);
-	free(file);
-	return (fd);
-}
-
-size_t	get_output_fd(char *str, size_t default_fd)
-{
-	while (*str >= 48 && *str <= 57)
-		str -= 1;
-	if (*str == ' ')
-		str += 1;
-	return (*str < 48 || *str > 57 ? default_fd : ft_atoi(str));
-}
-
-static int	check_range(void)
+static int		check_range(void)
 {
 	if (errno == EBADF)
 	{
@@ -90,7 +23,7 @@ static int	check_range(void)
 	return (-1);
 }
 
-int		smp_out(char *before, char *after)
+int				smp_out(char *before, char *after)
 {
 	int		input;
 	size_t	output;
@@ -100,14 +33,14 @@ int		smp_out(char *before, char *after)
 	output = get_output_fd(before, STDOUT_FILENO);
 	if (input == -3)
 		return (-2);
-	else if (input < -2)
+	else if (input == -2)
 		return (close(output));
 	if (dup2(input, output) == -1)
 		return (check_range());
 	return (close(input));
 }
 
-int		dbl_out(char *before, char *after)
+int				dbl_out(char *before, char *after)
 {
 	int		input;
 	size_t	output;
@@ -120,7 +53,7 @@ int		dbl_out(char *before, char *after)
 	return (close(input));
 }
 
-int		smp_in(char *before, char *after)
+int				smp_in(char *before, char *after)
 {
 	size_t	input;
 	int		output;
@@ -135,9 +68,4 @@ int		smp_in(char *before, char *after)
 	if (dup2(output, input) == -1)
 		return (check_range());
 	return (close(output));
-}
-
-int		dbl_in(t_prompt *prompt, char **environ, char *before, char *after)
-{
-	return (read_set_stdin(after, prompt, environ, before));
 }
