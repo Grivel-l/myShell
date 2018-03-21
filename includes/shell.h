@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 01:23:59 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 01:42:26 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -98,8 +98,10 @@ int					complete_arg(t_prompt *prompt, char *path);
 size_t				get_match_nbr(t_list *files, char *content);
 int					complete_bin(t_prompt *prompt, char **environ);
 int					check_complete(t_prompt *prompt, t_list *files);
-int					complete_cmd(t_prompt *prompt, t_list *files, char *content);
-int					half_complete(t_prompt *prompt, t_list *printed, size_t index);
+int					complete_cmd(t_prompt *prompt, t_list *files,
+			char *content);
+int					half_complete(t_prompt *prompt, t_list *printe,
+			size_t index);
 int					print_match(t_list *files, char *content,
 			size_t *index, t_list **match);
 /*
@@ -160,6 +162,7 @@ int					configure_builtin_fd(t_command *cmd, int tmp[2]);
 **	Builtins
 */
 int					cd_builtin(t_command *cmd);
+int					echo_builtin(t_command *cmd, char *full_cmd);
 /*
 **	Builtins
 */

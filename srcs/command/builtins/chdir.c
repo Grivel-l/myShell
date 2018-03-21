@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   chdir.c                                          .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2018/03/21 01:29:39 by legrivel     #+#   ##    ##    #+#       */
+/*   Updated: 2018/03/21 01:30:20 by legrivel    ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
+/* ************************************************************************** */
+
 #include "shell.h"
 
 static int	check_errors(t_command *cmd, char *dir)
@@ -71,4 +84,3 @@ int			cd_builtin(t_command *cmd)
 	else
 		return (update_pwd(pwd, &(cmd->environ)));
 }
-

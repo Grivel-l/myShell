@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 19:15:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/18 01:35:23 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 01:36:30 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -205,9 +205,10 @@ void					ft_putlonglong(long long nb);
 /*
 ** Misc
 */
-t_list					*ft_readdir(char *filename, size_t hidden);
+void					ft_checkquotes(t_quote *quotes, char c);
 void					ft_lstappend(t_list **list, t_list *new);
 int						get_next_line(const int fd, char **line);
+t_list					*ft_readdir(char *filename, size_t hidden);
 /*
 ** Misc
 */
