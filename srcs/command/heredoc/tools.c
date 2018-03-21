@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 02:26:56 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 02:29:06 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 02:35:46 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -85,4 +85,30 @@ size_t			get_output_fd(char *str, size_t default_fd)
 	if (*str == ' ')
 		str += 1;
 	return (*str < 48 || *str > 57 ? default_fd : ft_atoi(str));
+}
+
+int				update_args(char *str, char ***args)
+{
+	char	c;
+	size_t	i;
+	char	*pointer;
+
+	i = 0;
+	pointer = str;
+	if (set_str(&str, &i) == 1)
+		return (0);
+	ft_freetab(args);
+	if (i == 0)
+	{
+		while (*str != '>' && *str != '<')
+			str += 1;
+		*str = '\0';
+		return (ft_pushstr(args, pointer));
+	}
+	c = pointer[i + 1];
+	pointer[i + 1] = '\0';
+	if (ft_strsplit_qh(pointer, ' ', args) == -1)
+		return (-1);
+	pointer[i + 1] = c;
+	return (0);
 }

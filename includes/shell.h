@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 02:28:49 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 02:36:50 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -124,11 +124,17 @@ int					treate_command(t_prompt *prompt, t_command *cmd);
 **	Heredocs
 */
 char				*get_after(char *pointer);
+int					set_str(char **str, size_t *i);
 int					smp_in(char *before, char *after);
 int					get_input_fd(char *str, int flags);
 int					smp_out(char *before, char *after);
 int					dbl_out(char *before, char *after);
+int					update_args(char *str, char ***args);
 size_t				get_output_fd(char *str, size_t default_fd);
+int					check_type(t_prompt *prompt, char **environ, char *pointer);
+int					stop_read(char **buffer, char **match, char *before);
+int					read_set_stdin(char *after, t_prompt *prompt,
+			char **environ, char *before);
 int					split_heredoc(t_command *cmd,
 			t_list *split, t_prompt *prompt);
 /*
