@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 22:54:28 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/20 22:31:49 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 04:14:56 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -57,6 +57,8 @@ static int	up(t_prompt *prompt)
 	size_t	pos;
 	size_t	tmp;
 
+	if (prompt->line == NULL)
+		return (0);
 	if ((col = tgetnum("co")) == -1)
 		return (-1);
 	pos = prompt->pos;
