@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/28 01:41:04 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 22:38:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 02:38:16 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -71,7 +71,7 @@ static int	check_semicolon(char *line, t_quote quotes, t_prompt *prompt)
 	return (0);
 }
 
-int		check_syntax(t_prompt *prompt)
+int			check_syntax(t_prompt *prompt)
 {
 	size_t	pipe;
 	char	*line;
