@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 02:31:32 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 02:33:38 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 03:53:26 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,7 +26,7 @@ static char	*init_values(t_prompt *prompt, char *after, int *ret, char **buffer)
 	return (match);
 }
 
-static int	free_quit(char *match)
+static int	free_and_quit(char *match)
 {
 	free(match);
 	return (-1);
@@ -98,7 +98,7 @@ int			read_set_stdin(char *after, t_prompt *prompt,
 	while (ret != 2)
 	{
 		if (read(STDIN_FILENO, prompt->buffer, 3) == -1)
-			return (free_quit(match));
+			return (free_and_quit(match));
 		if ((ret = check_return(prompt, after, &buffer, before)) == -1)
 			break ;
 		if (ret == 0)

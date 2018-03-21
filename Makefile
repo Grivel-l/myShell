@@ -6,7 +6,7 @@
 #    By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2017/12/11 16:25:45 by legrivel     #+#   ##    ##    #+#        #
-#    Updated: 2018/03/21 03:45:28 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/03/21 03:47:41 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -17,7 +17,8 @@ HEADERS = shell.h
 INCS_PATH = ./includes/
 LIB_PATH = ./libft/
 OBJS_PATH = ./objs/
-SUBDIRS = prompt command env command/heredoc command/builtins prompt/completion command/fildes command/exec
+SUBDIRS = prompt command env command/heredoc command/builtins \
+		  prompt/completion command/fildes command/exec
 SRCS = main.c free_alloc.c prompt/prompt.c prompt/inputs.c errors2.c \
 		prompt/line_manipulation.c prompt/copy.c prompt/movements.c \
 		prompt/commands.c prompt/arrows.c prompt/tools.c command/exec/exec.c \
@@ -28,7 +29,9 @@ SRCS = main.c free_alloc.c prompt/prompt.c prompt/inputs.c errors2.c \
 		env/replace.c prompt/completion/tools.c \
 		prompt/completion/complete.c prompt/completion/complete2.c \
 		prompt/tools2.c prompt/handle.c command/builtins/echo.c \
-		command/heredoc/tools.c command/heredoc/read_stdin.c command/fildes/tools.c command/exec/treate.c command/exec/tools.c command/exec/bin_path.c
+		command/heredoc/tools.c command/heredoc/read_stdin.c \
+		command/fildes/tools.c command/exec/treate.c command/exec/tools.c \
+		command/exec/bin_path.c
 OBJS = $(addprefix $(OBJS_PATH), $(SRCS:.c=.o))
 FLAGS = -Wall -Wextra -Werror -Ofast
 COMPILER = clang

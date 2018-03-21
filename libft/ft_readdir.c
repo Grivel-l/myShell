@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 19:30:27 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/26 20:59:33 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 03:52:04 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,8 +16,15 @@
 static void	*quit(t_list *start, DIR *dir)
 {
 	ft_lstfree(&start);
-	closedir(dir);
+	if (dir != NULL)
+		closedir(dir);
 	return (NULL);
+}
+
+static void	create_set(t_list **list, struct dirent *dir, t_list **start)
+{
+	*list = ft_lstnew(dir->d_name, dir->d_reclen);
+	*start = *list;
 }
 
 t_list		*ft_readdir(char *filename, size_t get_hidden)
@@ -35,10 +42,7 @@ t_list		*ft_readdir(char *filename, size_t get_hidden)
 		if ((get_hidden) || (!get_hidden && dir_content->d_name[0] != '.'))
 		{
 			if (start == NULL)
-			{
-				list = ft_lstnew(dir_content->d_name, dir_content->d_reclen);
-				start = list;
-			}
+				create_set(&list, dir_content, &start);
 			else
 				ft_lstappend(&list,
 					ft_lstnew(dir_content->d_name, dir_content->d_reclen));
@@ -47,9 +51,6 @@ t_list		*ft_readdir(char *filename, size_t get_hidden)
 		}
 	}
 	if (closedir(dir) == -1)
-	{
-		ft_lstfree(&start);
-		return (NULL);
-	}
+		return (quit(start, NULL));
 	return (start == NULL ? ft_lstnew("", 0) : start);
 }

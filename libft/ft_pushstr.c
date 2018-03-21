@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/11 18:01:59 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 21:17:02 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/21 03:55:15 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,6 +33,12 @@ static int	short_tab(char ***tab, char **new, char *str)
 	return (0);
 }
 
+static int	quit(char ***pointer)
+{
+	ft_freetab(pointer);
+	return (-1);
+}
+
 int			ft_pushstr(char ***tab, char *str)
 {
 	char	**new;
@@ -48,18 +54,12 @@ int			ft_pushstr(char ***tab, char *str)
 	while (**tab != NULL)
 	{
 		if ((*new++ = ft_strdup(**tab)) == NULL)
-		{
-			ft_freetab(&pointer);
-			return (-1);
-		}
+			return (quit(&pointer));
 		free(**tab);
 		*tab += 1;
 	}
 	if ((*new = malloc(ft_strlen(str) + 1)) == NULL)
-	{
-		ft_freetab(&pointer);
-		return (-1);
-	}
+		return (quit(&pointer));
 	ft_strcpy(*new, str);
 	return (complete(tab, new, tab_pointer, pointer));
 }

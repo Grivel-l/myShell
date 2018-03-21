@@ -6,7 +6,7 @@
 #    By: legrivel <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/09 18:32:02 by legrivel          #+#    #+#              #
-#    Updated: 2018/03/21 01:35:58 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/03/21 03:53:51 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ OBJS = ft_isalpha.o ft_memccpy.o ft_memset.o ft_putnbr_fd.o ft_strcmp.o  \
 	   ft_quotesclosed.o ft_trim.o ft_strsplit_qhv.o ft_strrchr_qh.o \
 	   ft_addchar.o ft_checkquotes.o
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -Ofast
 
 all: $(NAME)
 
