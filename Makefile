@@ -6,7 +6,7 @@
 #    By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2017/12/11 16:25:45 by legrivel     #+#   ##    ##    #+#        #
-#    Updated: 2018/03/16 23:00:31 by legrivel    ###    #+. /#+    ###.fr      #
+#    Updated: 2018/03/21 01:24:10 by legrivel    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -17,16 +17,19 @@ HEADERS = shell.h
 INCS_PATH = ./includes/
 LIB_PATH = ./libft/
 OBJS_PATH = ./objs/
-SUBDIRS = prompt command env command/heredoc command/builtins
+SUBDIRS = prompt command env command/heredoc command/builtins prompt/completion
 SRCS = main.c free_alloc.c prompt/prompt.c prompt/inputs.c errors2.c \
 		prompt/line_manipulation.c prompt/copy.c prompt/movements.c \
 		prompt/commands.c prompt/arrows.c prompt/tools.c command/exec.c \
 		errors.c command/heredoc/heredoc.c command/fildes.c specials.c \
 		command/builtins/builtins.c env/env_manipulations.c env/delete_env.c \
-		command/syntax.c prompt/completion.c command/heredoc/types.c \
-		command/builtins/chdir.c prompt/term.c env/replace.c
+		command/syntax.c prompt/completion/completion.c \
+		command/heredoc/types.c command/builtins/chdir.c prompt/term.c \
+		env/replace.c prompt/completion/tools.c \
+		prompt/completion/complete.c prompt/completion/complete2.c \
+		prompt/tools2.c prompt/handle.c
 OBJS = $(addprefix $(OBJS_PATH), $(SRCS:.c=.o))
-FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -Ofast
 COMPILER = clang
 
 .PHONY: all clean fclean re Makefile

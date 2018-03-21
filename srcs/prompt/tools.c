@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/11 20:46:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/18 02:57:06 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 22:36:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -25,34 +25,6 @@ int			write_line(t_prompt *prompt)
 		return (rewind_cursor(prompt, length));
 	}
 	return (0);
-}
-
-size_t		to_line_start_length(t_prompt *prompt, size_t col, size_t extra)
-{
-	size_t	pos;
-
-	pos = prompt->pos;
-	if (prompt->line[pos] == '\n')
-		pos -= 1;
-	while (prompt->line[pos] != '\n' && pos > 0)
-		pos -= 1;
-	if (pos < prompt->pos && prompt->line[pos] == '\n')
-		pos += 1;
-	if (extra && pos == 0 && ft_strchr(prompt->line, '\n') != NULL)
-		prompt->extra = PL;
-	while (prompt->pos - pos > col)
-		pos += col;
-	return (prompt->pos - pos);
-}
-
-size_t		to_line_end_length(t_prompt *prompt)
-{
-	size_t	pos;
-
-	pos = prompt->pos;
-	while (prompt->line[pos] != '\n' && prompt->line[pos] != '\0')
-		pos += 1;
-	return (pos - prompt->pos);
 }
 
 int			clear_all(t_prompt *prompt)

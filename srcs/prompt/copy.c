@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 20:31:23 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/19 17:12:04 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 22:30:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,40 +48,6 @@ static int	cut(char **line, size_t *pos, char **copy_buffer)
 	return (1);
 }
 
-int			rewind_cursor(t_prompt *prompt, size_t length)
-{
-	while (length > 0)
-	{
-		if (left_arrow(prompt) == -1)
-			return (-1);
-		length -= 1;
-	}
-	while (prompt->extra > 0)
-	{
-		if (put_cap("le") == -1)
-			return (-1);
-		prompt->extra -= 1;
-	}
-	return (0);
-}
-
-int			forward_cursor(t_prompt *prompt, size_t length)
-{
-	while (length > 0)
-	{
-		if (right_arrow(prompt) == -1)
-			return (-1);
-		length -= 1;
-	}
-	while (prompt->extra > 0)
-	{
-		if (put_cap("nd") == -1)
-			return (-1);
-		prompt->extra -= 1;
-	}
-	return (0);
-}
-
 static int	rewrite_line(t_prompt *prompt)
 {
 	if (clear_all(prompt) == -1)
@@ -102,11 +68,13 @@ static int	paste(t_prompt *prompt)
 		return (-1);
 	if (prompt->line == NULL && (prompt->line = ft_strnew(1)) == NULL)
 		return (-1);
-	if (ret == 0 && cut(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer)) == -1)
+	if (ret == 0 &&
+	cut(&(prompt->line), &(prompt->pos), &(prompt->copy_buffer)) == -1)
 		ret = -1;
 	if (ret == 0 && (prompt->line = ft_strrealloc(prompt->line, copy)) == NULL)
 		ret = -1;
-	if (ret == 0 && (prompt->line = ft_strrealloc(prompt->line, prompt->copy_buffer)) == NULL)
+	if (ret == 0 &&
+	(prompt->line = ft_strrealloc(prompt->line, prompt->copy_buffer)) == NULL)
 		ret = -1;
 	if (ret == 0 && rewrite_line(prompt) == -1)
 		ret = -1;

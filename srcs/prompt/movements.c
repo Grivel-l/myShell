@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/06 22:54:28 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 00:29:15 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/20 22:31:49 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,9 +42,11 @@ static int	right(t_prompt *prompt)
 		return (0);
 	length = prompt->pos;
 	max_length = ft_strlen(prompt->line);
-	while (length < max_length && (prompt->line[length] == ' ' || prompt->line[length] == ';'))
+	while (length < max_length &&
+		(prompt->line[length] == ' ' || prompt->line[length] == ';'))
 		length += 1;
-	while (length < max_length && prompt->line[length] != ' ' && prompt->line[length] != ';')
+	while (length < max_length &&
+			prompt->line[length] != ' ' && prompt->line[length] != ';')
 		length += 1;
 	return (forward_cursor(prompt, length - prompt->pos));
 }
@@ -71,7 +73,8 @@ static int	up(t_prompt *prompt)
 		return (rewind_cursor(prompt, prompt->pos - (pos + tmp)));
 	}
 	else
-		return (rewind_cursor(prompt, prompt->pos - pos > (size_t)col ? col : prompt->pos - pos));
+		return (rewind_cursor(prompt, prompt->pos - pos > (size_t)col ?
+					col : prompt->pos - pos));
 }
 
 static int	down(t_prompt *prompt)
@@ -97,7 +100,8 @@ static int	down(t_prompt *prompt)
 	else
 	{
 		length = ft_strlen(prompt->line);
-		return (forward_cursor(prompt, ((size_t)col + prompt->pos) > length ? length - prompt->pos : col));
+		return (forward_cursor(prompt, ((size_t)col + prompt->pos) > length ?
+					length - prompt->pos : col));
 	}
 }
 
