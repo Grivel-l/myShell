@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:44:09 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 03:44:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/24 00:55:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -28,13 +28,6 @@ static char	update_bin(char *bin)
 		bin += 1;
 	}
 	return (0);
-}
-
-static int	denied_error(char **error)
-{
-	eacces_error(*error, NULL);
-	ft_strdel(error);
-	return (2);
 }
 
 static int	create_path(char *path, t_command *cmd, char **error)
@@ -81,6 +74,35 @@ static int	check_paths(char **paths, t_command *cmd)
 	return (0);
 }
 
+static int	check_local_bin(t_command *cmd)
+{
+	char	c;
+	int		ret;
+
+	c = update_bin(cmd->args[0]);
+	if (ft_strchr(cmd->args[0], '/') == NULL)
+		return (0);
+	if ((ret = access(cmd->args[0], F_OK)) == -1 && errno != ENOENT)
+		return (-1);
+	if (ret == -1)
+	{
+		enoent_error(cmd->args[0], NULL);
+		return (1);
+	}
+	if ((ret = access(cmd->args[0], X_OK)) == -1 && errno != EACCES)
+		return (-1);
+	if (ret == -1)
+	{
+		eacces_error(cmd->args[0], NULL);
+		return (1);
+	}
+	if ((cmd->bin = ft_strdup(cmd->args[0])) == NULL)
+		return (-1);
+	if (c != 0)
+		cmd->args[0][ft_strlen(cmd->args[0])] = c;
+	return (1);
+}
+
 int			get_bin_path(t_command *cmd)
 {
 	int		ret;
@@ -89,6 +111,8 @@ int			get_bin_path(t_command *cmd)
 	char	**pointer;
 
 	if ((ret = check_builtins(cmd)) == -1)
+		return (-1);
+	if (ret == 0 && (ret = check_local_bin(cmd)) == -1)
 		return (-1);
 	if (ret == 1)
 		return (2);

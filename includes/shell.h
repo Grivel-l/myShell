@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 03:46:03 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/24 00:55:16 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -200,6 +200,7 @@ int					replace_env(char **line, char **environ);
 */
 void				print_bin(void);
 void				not_found(char *name);
+int					denied_error(char **error);
 void				not_dir(char *path, char *extra);
 void				env_enoent(char *command, char *env);
 void				eacces_error(char *name, char *extra);

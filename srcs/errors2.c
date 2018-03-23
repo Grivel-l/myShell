@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:23:48 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/28 02:22:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/24 00:54:53 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,4 +40,11 @@ void		generic_error(char *name, char *message)
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(message, 2);
 	ft_putchar_fd('\n', 2);
+}
+
+int			denied_error(char **error)
+{
+	eacces_error(*error, NULL);
+	ft_strdel(error);
+	return (2);
 }
