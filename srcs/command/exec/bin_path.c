@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:44:09 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/24 00:55:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/30 01:50:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -66,12 +66,13 @@ static int	check_paths(char **paths, t_command *cmd)
 		}
 		paths += 1;
 	}
+	ret = error != NULL ? 2 : 0;
 	if (error != NULL)
 		denied_error(&error);
 	ft_strdel(&error);
 	if (c != 0)
 		cmd->args[0][ft_strlen(cmd->args[0])] = c;
-	return (0);
+	return (ret);
 }
 
 static int	check_local_bin(t_command *cmd)
