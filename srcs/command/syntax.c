@@ -6,20 +6,12 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/28 01:41:04 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/27 00:31:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/30 01:31:45 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-static void	set_quotes(t_quote *quotes, char c)
-{
-	if (c == '"' && !quotes->simpleq)
-		quotes->doubleq = !quotes->doubleq;
-	else if (c == '\'' && !quotes->doubleq)
-		quotes->simpleq = !quotes->simpleq;
-}
 
 static int	set_heredoc(char *line, size_t *heredoc,
 		t_quote quotes, t_prompt *prompt)
@@ -54,10 +46,39 @@ static int	set_pipe(char *line, size_t *pipe, t_quote quotes, t_prompt *prompt)
 	return (0);
 }
 
+static int	check_binary_name(char *line, t_quote *quotes, t_prompt *prompt)
+{
+	size_t	i;
+
+	i = 0;
+	quotes->simpleq = 0;
+	quotes->doubleq = 0;
+	while (*line != '\0')
+	{
+		if (*line == ' ' && !quotes->simpleq && !quotes->doubleq)
+			break ;
+		ft_checkquotes(quotes, *line);
+		if (!quotes->simpleq && !quotes->doubleq)
+		{
+			if ((*line < 65 || *line > 90) &&
+				(*line < 97 || *line > 122) &&
+				(*line != '>' && *line != '<' && *line != '|' && *line != ';'))
+				return (syntax_error(prompt, *line));
+		}
+		i += 1;
+		line += 1;
+	}
+	quotes->simpleq = 0;
+	quotes->doubleq = 0;
+	return (0);
+}
+
 static int	check_semicolon(char *line, t_quote quotes, t_prompt *prompt)
 {
 	if (!quotes.simpleq && !quotes.doubleq && *line == ';')
 	{
+		if (ft_strlen(line) == ft_strlen(prompt->line))
+			return (syntax_error(prompt, ';'));
 		line += 1;
 		while (*line != '\0')
 		{
@@ -82,12 +103,12 @@ int			check_syntax(t_prompt *prompt)
 
 	pipe = 0;
 	heredoc = 0;
-	quotes.simpleq = 0;
-	quotes.doubleq = 0;
 	line = prompt->line;
+	if (check_binary_name(line, &quotes, prompt) == 1)
+		return (1);
 	while (*line != '\0')
 	{
-		set_quotes(&quotes, *line);
+		ft_checkquotes(&quotes, *line);
 		if (set_heredoc(line, &heredoc, quotes, prompt) == 1)
 			return (1);
 		if (set_pipe(line, &pipe, quotes, prompt) == 1)

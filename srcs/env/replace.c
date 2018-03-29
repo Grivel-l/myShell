@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/16 22:59:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 01:28:54 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/03/30 01:02:04 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -73,7 +73,8 @@ static int		check_env(char **line, char *str, char **environ)
 	char	**pointer;
 
 	length = 0;
-	while (str[length] && str[length] != ' ')
+	while (str[length] && str[length] != ' '
+			&& str[length] != '\'' && str[length] != '"')
 		length += 1;
 	pointer = environ;
 	while (*environ != NULL)
@@ -87,8 +88,7 @@ static int		check_env(char **line, char *str, char **environ)
 					return (-1);
 				return (replace_env(line, pointer));
 			}
-			else
-				i -= 1;
+			i -= 1;
 		}
 		environ += 1;
 	}
