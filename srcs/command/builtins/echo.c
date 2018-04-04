@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 01:41:05 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 01:42:28 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/03 20:24:33 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -32,11 +32,9 @@ static int	print_char(t_quote *quotes, char **str, t_command *cmd)
 		ft_putchar('\n');
 		return (1);
 	}
-	if (**str == '\'' && !quotes->doubleq)
-		quotes->simpleq = !quotes->simpleq;
-	else if (**str == '"' && !quotes->simpleq)
-		quotes->doubleq = !quotes->doubleq;
-	else
+	ft_checkquotes(quotes, **str);
+	if (!((**str == '\'' && !quotes->doubleq) ||
+				(**str == '"' && !quotes->simpleq)))
 		ft_putchar(**str);
 	return (0);
 }
@@ -50,29 +48,33 @@ static void	increase_pointer(char **full_cmd)
 	*full_cmd += 1;
 }
 
-int			echo_builtin(t_command *cmd, char *full_cmd)
+int			echo_builtin(t_command *cmd, char **full_cmd)
 {
 	int		ret;
+	char	*line;
 	t_quote	quotes;
 
 	quotes.simpleq = 0;
 	quotes.doubleq = 0;
-	while (*full_cmd && *full_cmd != ' ')
-		full_cmd += 1;
-	if (*full_cmd != '\0')
-		full_cmd += 1;
-	while (*full_cmd == ' ')
-		full_cmd += 1;
-	while (*full_cmd)
+	if (replace_builtin_tilde(full_cmd, cmd->environ) == -1)
+		return (-1);
+	line = *full_cmd;
+	while (*line && *line != ' ')
+		line += 1;
+	if (*line != '\0')
+		line += 1;
+	while (*line == ' ')
+		line += 1;
+	while (*line)
 	{
-		if ((ret = print_char(&quotes, &full_cmd, cmd)) == -1)
+		if ((ret = print_char(&quotes, &line, cmd)) == -1)
 		{
 			cmd->cmd_ret = 1;
 			return (-1);
 		}
 		if (ret == 1)
 			return (0);
-		increase_pointer(&full_cmd);
+		increase_pointer(&line);
 	}
 	ft_putchar('\n');
 	cmd->cmd_ret = 0;

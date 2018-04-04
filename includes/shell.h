@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/24 00:55:16 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/03 20:18:19 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -150,7 +150,7 @@ int					check_syntax(t_prompt *prompt);
 
 int					check_builtins(t_command *cmd);
 int					exec_builtin(t_command *cmd,
-			char *full_cmd, size_t is_last);
+			char **full_cmd, size_t is_last);
 
 /*
 **	Fildes
@@ -170,7 +170,7 @@ int					configure_builtin_fd(t_command *cmd, int tmp[2]);
 **	Builtins
 */
 int					cd_builtin(t_command *cmd);
-int					echo_builtin(t_command *cmd, char *full_cmd);
+int					echo_builtin(t_command *cmd, char **full_cmd);
 /*
 **	Builtins
 */
@@ -210,5 +210,8 @@ void				generic_error(char *name, char *message);
 /*
 ** Errors
 */
+
+int					replace_tilde(char **args, char **environ);
+int					replace_builtin_tilde(char **args, char **environ);
 
 #endif

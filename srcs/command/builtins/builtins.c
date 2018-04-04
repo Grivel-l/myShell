@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 01:42:56 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/03 20:24:54 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,13 +48,13 @@ static void	crop_cmd(char *cmd)
 	}
 }
 
-int			exec_builtin(t_command *cmd, char *full_cmd, size_t is_last)
+int			exec_builtin(t_command *cmd, char **full_cmd, size_t is_last)
 {
 	int		ret;
 	int		fd[2];
 
 	ret = 0;
-	crop_cmd(full_cmd);
+	crop_cmd(*full_cmd);
 	if (!is_last && configure_builtin_fd(cmd, fd) == -1)
 		return (-1);
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
