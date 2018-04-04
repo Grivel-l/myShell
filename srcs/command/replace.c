@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/03 17:48:45 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/04 05:29:07 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/04 05:39:52 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -47,6 +47,12 @@ static int	join_args(char **str, char **args)
 	return (0);
 }
 
+static int	quit(char *str)
+{
+	free(str);
+	return (-1);
+}
+
 int			replace_builtin_tilde(char **str, char **environ)
 {
 	char	**args;
@@ -76,9 +82,9 @@ int			replace_tilde(char **args, char **environ)
 		{
 			tmp = *pointer;
 			if ((*pointer = ft_strdup(path)) == NULL)
-				return (-1);
+				return (quit(path));
 			if ((*pointer = ft_strrealloc(*pointer, &(tmp[1]))) == NULL)
-				return (-1);
+				return (quit(path));
 			ft_strdel(&tmp);
 		}
 		pointer += 1;
