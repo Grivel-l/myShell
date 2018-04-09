@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 14:01:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 14:19:23 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -125,6 +125,7 @@ int					split_pipe(char *command, t_command *cmd, t_prompt *prompt);
 /*
 **	Bin
 */
+int					check_notdir(char *file);
 int					check_filetype(char *bin);
 int					get_bin_path(t_command *cmd);
 int					exec_bin(t_command *cmd, t_list *split);

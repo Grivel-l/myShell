@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/09 13:45:46 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 14:02:20 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 14:18:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -31,4 +31,14 @@ int		check_filetype(char *bin)
 		return (1);
 	}
 	return (0);
+}
+
+int		check_notdir(char *file)
+{
+	if (errno == ENOTDIR)
+	{
+		generic_error(file, "Not a directory");
+		return (1);
+	}
+	return (-1);
 }
