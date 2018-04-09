@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:44:09 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/30 01:50:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 14:02:42 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -86,17 +86,13 @@ static int	check_local_bin(t_command *cmd)
 	if ((ret = access(cmd->args[0], F_OK)) == -1 && errno != ENOENT)
 		return (-1);
 	if (ret == -1)
-	{
-		enoent_error(cmd->args[0], NULL);
-		return (1);
-	}
+		return (print_bin_error(cmd->args[0], enoent_error));
 	if ((ret = access(cmd->args[0], X_OK)) == -1 && errno != EACCES)
 		return (-1);
 	if (ret == -1)
-	{
-		eacces_error(cmd->args[0], NULL);
-		return (1);
-	}
+		return (print_bin_error(cmd->args[0], eacces_error));
+	if ((ret = check_filetype(cmd->args[0])) != 0)
+		return (ret);
 	if ((cmd->bin = ft_strdup(cmd->args[0])) == NULL)
 		return (-1);
 	if (c != 0)

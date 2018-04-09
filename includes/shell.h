@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/03 20:18:19 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 14:01:39 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -118,12 +118,21 @@ int					insert_char(char **line, char c, size_t *index);
 **	Command exec
 */
 int					free_quit(t_list **pointer);
-int					get_bin_path(t_command *cmd);
-int					exec_bin(t_command *cmd, t_list *split);
-int					check_bin(char *path, char **bin, char **error);
 int					treate_command(t_prompt *prompt, t_command *cmd);
 int					dup_entries(int fd[2], int fd2[2], size_t direction);
 int					split_pipe(char *command, t_command *cmd, t_prompt *prompt);
+
+/*
+**	Bin
+*/
+int					check_filetype(char *bin);
+int					get_bin_path(t_command *cmd);
+int					exec_bin(t_command *cmd, t_list *split);
+int					check_bin(char *path, char **bin, char **error);
+int					print_bin_error(char *bin, void fun(char *path, char *extra));
+/*
+**	Bin
+*/
 
 /*
 **	Heredocs
