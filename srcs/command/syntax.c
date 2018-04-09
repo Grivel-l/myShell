@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/28 01:41:04 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/30 01:31:45 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 13:33:54 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -46,33 +46,6 @@ static int	set_pipe(char *line, size_t *pipe, t_quote quotes, t_prompt *prompt)
 	return (0);
 }
 
-static int	check_binary_name(char *line, t_quote *quotes, t_prompt *prompt)
-{
-	size_t	i;
-
-	i = 0;
-	quotes->simpleq = 0;
-	quotes->doubleq = 0;
-	while (*line != '\0')
-	{
-		if (*line == ' ' && !quotes->simpleq && !quotes->doubleq)
-			break ;
-		ft_checkquotes(quotes, *line);
-		if (!quotes->simpleq && !quotes->doubleq)
-		{
-			if ((*line < 65 || *line > 90) &&
-				(*line < 97 || *line > 122) &&
-				(*line != '>' && *line != '<' && *line != '|' && *line != ';'))
-				return (syntax_error(prompt, *line));
-		}
-		i += 1;
-		line += 1;
-	}
-	quotes->simpleq = 0;
-	quotes->doubleq = 0;
-	return (0);
-}
-
 static int	check_semicolon(char *line, t_quote quotes, t_prompt *prompt)
 {
 	if (!quotes.simpleq && !quotes.doubleq && *line == ';')
@@ -104,8 +77,6 @@ int			check_syntax(t_prompt *prompt)
 	pipe = 0;
 	heredoc = 0;
 	line = prompt->line;
-	if (check_binary_name(line, &quotes, prompt) == 1)
-		return (1);
 	while (*line != '\0')
 	{
 		ft_checkquotes(&quotes, *line);
