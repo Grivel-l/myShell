@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/27 19:24:07 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 02:48:17 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/10 00:56:07 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,9 +17,9 @@ static int	init_values(t_prompt *prompt, t_command *cmd,
 			char ***environ, struct termios *term)
 {
 	if (tcgetattr(0, term) == -1)
-		return (1);
+		return (-1);
 	if ((*environ = ft_tabdup(*environ)) == NULL)
-		return (1);
+		return (-1);
 	cmd->bin = NULL;
 	cmd->exited = 0;
 	cmd->cmd_ret = 0;
