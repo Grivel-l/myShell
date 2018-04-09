@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 01:41:05 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/03 20:24:33 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 19:06:55 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,6 +48,12 @@ static void	increase_pointer(char **full_cmd)
 	*full_cmd += 1;
 }
 
+static int	set_and_stop(t_command *cmd)
+{
+	cmd->cmd_ret = 1;
+	return (-1);
+}
+
 int			echo_builtin(t_command *cmd, char **full_cmd)
 {
 	int		ret;
@@ -67,13 +73,8 @@ int			echo_builtin(t_command *cmd, char **full_cmd)
 		line += 1;
 	while (*line)
 	{
-		if ((ret = print_char(&quotes, &line, cmd)) == -1)
-		{
-			cmd->cmd_ret = 1;
-			return (-1);
-		}
-		if (ret == 1)
-			return (0);
+		if ((ret = print_char(&quotes, &line, cmd)) == -1 || ret == 1)
+			return (ret == 0 ? 0 : set_and_stop(cmd));
 		increase_pointer(&line);
 	}
 	ft_putchar('\n');

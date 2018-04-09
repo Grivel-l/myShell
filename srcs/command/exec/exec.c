@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 17:34:41 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 19:29:08 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -65,7 +65,7 @@ static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)
 	if (ret != 2 && cmd->bin == NULL)
 		not_found(cmd->args[0]);
 	else
-		ret = split_heredoc2(cmd, split, prompt);
+		ret = check_dbl_in(cmd, split, prompt);
 	ft_strdel(&(cmd->bin));
 	return (ret);
 }
@@ -101,15 +101,11 @@ int			split_pipe(char *command, t_command *cmd, t_prompt *prompt)
 
 int			exec_bin(t_command *cmd, t_list *split)
 {
-	if (cmd->bin == NULL)
-		return (exec_builtin(cmd, (char **)(&(split->content)), split->next == NULL));
 	if ((g_pid = fork()) == -1)
 		return (-1);
 	if (g_pid == 0)
 	{
-		if (configure_fd(cmd, split->next == NULL) == -1)
-			return (-1);
-		if (split_heredoc(split->content) == -1)
+		if (configure_fd(cmd, split->next == NULL, split->content) == -1)
 			return (-1);
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);

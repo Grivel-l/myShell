@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/21 00:56:10 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 17:53:25 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 19:28:40 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -84,7 +84,7 @@ int			set_str(char **str, size_t *i)
 	return (0);
 }
 
-int			split_heredoc2(t_command *cmd, t_list *split, t_prompt *prompt)
+int			check_dbl_in(t_command *cmd, t_list *split, t_prompt *prompt)
 {
 	t_quote		quotes;
 	char		*pointer;
@@ -96,19 +96,20 @@ int			split_heredoc2(t_command *cmd, t_list *split, t_prompt *prompt)
 	{
 		ft_checkquotes(&quotes, *pointer);
 		if (!quotes.simpleq && !quotes.doubleq &&
-				*pointer == '<' && *(pointer + 1) == '<')
-				if (read_set_stdin(pointer + 2, prompt, cmd->environ, pointer - 1) == -1)
-					return (-1);
+		*pointer == '<' && *(pointer + 1) == '<' &&
+		read_set_stdin(pointer + 2, prompt, cmd->environ, pointer - 1) == -1)
+			return (-1);
 		pointer += 1;
 	}
-	if (cmd->bin == NULL && split_heredoc(split->content) == -1)
+	if (cmd->bin == NULL && check_all_heredocs(split->content) == -1)
 		return (-1);
 	if (update_args(split->content, &(cmd->args)) == -1)
 		return (-1);
-	return (exec_bin(cmd, split));
+	return (cmd->bin == NULL ? exec_builtin(cmd,
+(char **)(&(split->content)), split->next == NULL) : exec_bin(cmd, split));
 }
 
-int			split_heredoc(char *content)
+int			check_all_heredocs(char *content)
 {
 	int			ret;
 	char		*pointer;

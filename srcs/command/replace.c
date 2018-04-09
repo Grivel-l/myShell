@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/03 17:48:45 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/04 05:39:52 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 19:21:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -78,7 +78,8 @@ int			replace_tilde(char **args, char **environ)
 	pointer = args;
 	while (*pointer)
 	{
-		if ((*pointer)[0] == '~' && ((*pointer)[1] == '\0' || (*pointer)[1] == '/'))
+		if ((*pointer)[0] == '~' && ((*pointer)[1] == '\0' ||
+					(*pointer)[1] == '/'))
 		{
 			tmp = *pointer;
 			if ((*pointer = ft_strdup(path)) == NULL)
