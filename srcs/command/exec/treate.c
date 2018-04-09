@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:19:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 03:29:13 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 14:25:35 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -22,14 +22,18 @@ static int	init_values(t_prompt *prompt, int fd[2],
 		return (-1);
 	if (pipe(fd2) == -1)
 		return (-1);
-	if (ft_strsplit_qh(prompt->commands->content, ';', &split_tab) == -1)
+	*commands = NULL;
+	if (prompt->commands->content[0] != '\0' &&
+			ft_strsplit_qh(prompt->commands->content, ';', &split_tab) == -1)
 		return (-1);
-	if ((*commands = ft_tabtolist(split_tab)) == NULL)
+	if (prompt->commands->content[0] != '\0' &&
+			(*commands = ft_tabtolist(split_tab)) == NULL)
 	{
 		ft_freetab(&split_tab);
 		return (-1);
 	}
-	ft_freetab(&split_tab);
+	if (prompt->commands->content[0] != '\0')
+		ft_freetab(&split_tab);
 	return (0);
 }
 
