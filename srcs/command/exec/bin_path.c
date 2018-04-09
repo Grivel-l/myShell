@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:44:09 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 14:02:42 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 14:16:11 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -84,7 +84,14 @@ static int	check_local_bin(t_command *cmd)
 	if (ft_strchr(cmd->args[0], '/') == NULL)
 		return (0);
 	if ((ret = access(cmd->args[0], F_OK)) == -1 && errno != ENOENT)
+	{
+		if (errno == ENOTDIR)
+		{
+			generic_error(cmd->args[0], "Not a directory");
+			return (1);
+		}
 		return (-1);
+	}
 	if (ret == -1)
 		return (print_bin_error(cmd->args[0], enoent_error));
 	if ((ret = access(cmd->args[0], X_OK)) == -1 && errno != EACCES)
