@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 19:28:01 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 19:37:51 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -130,8 +130,10 @@ int					check_filetype(char *bin);
 int					get_bin_path(t_command *cmd);
 int					check_bin(char *path, char **bin, char **error);
 int					exec_bin(t_command *cmd, t_list *split);
-int					print_bin_error(char *bin, void fun(char *path, char *extra));
-int					check_dbl_in(t_command *cmd, t_list *split, t_prompt *prompt);
+int					check_dbl_in(t_command *cmd,
+			t_list *split, t_prompt *prompt);
+int					print_bin_error(char *bin,
+			void fun(char *path, char *extra));
 /*
 **	Bin
 */
