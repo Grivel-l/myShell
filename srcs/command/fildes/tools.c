@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:01:34 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 03:01:44 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 16:01:51 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,7 +40,5 @@ int			configure_fd(t_command *cmd, size_t is_last)
 	if (!is_last)
 		if (dup2(cmd->fd[WRITE_END], STDOUT_FILENO) == -1)
 			return (-1);
-	if (close(cmd->fd[READ_END]) == -1)
-		return (-1);
 	return (0);
 }

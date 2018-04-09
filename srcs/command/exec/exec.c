@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/03 20:19:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 17:34:41 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -65,7 +65,7 @@ static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)
 	if (ret != 2 && cmd->bin == NULL)
 		not_found(cmd->args[0]);
 	else
-		ret = split_heredoc(cmd, split, prompt);
+		ret = split_heredoc2(cmd, split, prompt);
 	ft_strdel(&(cmd->bin));
 	return (ret);
 }
@@ -108,6 +108,8 @@ int			exec_bin(t_command *cmd, t_list *split)
 	if (g_pid == 0)
 	{
 		if (configure_fd(cmd, split->next == NULL) == -1)
+			return (-1);
+		if (split_heredoc(split->content) == -1)
 			return (-1);
 		if (execve(cmd->bin, cmd->args, cmd->environ) == -1)
 			return (-1);

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 14:19:23 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 17:38:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -128,9 +128,10 @@ int					split_pipe(char *command, t_command *cmd, t_prompt *prompt);
 int					check_notdir(char *file);
 int					check_filetype(char *bin);
 int					get_bin_path(t_command *cmd);
-int					exec_bin(t_command *cmd, t_list *split);
 int					check_bin(char *path, char **bin, char **error);
+int					exec_bin(t_command *cmd, t_list *split);
 int					print_bin_error(char *bin, void fun(char *path, char *extra));
+int					split_heredoc2(t_command *cmd, t_list *split, t_prompt *prompt);
 /*
 **	Bin
 */
@@ -146,12 +147,11 @@ int					smp_out(char *before, char *after);
 int					dbl_out(char *before, char *after);
 int					update_args(char *str, char ***args);
 size_t				get_output_fd(char *str, size_t default_fd);
-int					check_type(t_prompt *prompt, char **environ, char *pointer);
+int					check_type(char *pointer);
 int					stop_read(char **buffer, char **match, char *before);
 int					read_set_stdin(char *after, t_prompt *prompt,
 			char **environ, char *before);
-int					split_heredoc(t_command *cmd,
-			t_list *split, t_prompt *prompt);
+int					split_heredoc(char *content);
 /*
 **	Heredocs
 */

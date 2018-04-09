@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/05 13:56:00 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 02:30:32 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/09 17:18:59 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -70,7 +70,7 @@ int				smp_in(char *before, char *after)
 	return (close(output));
 }
 
-int				check_type(t_prompt *prompt, char **environ, char *pointer)
+int				check_type(char *pointer)
 {
 	if (*pointer == '>' && *(pointer + 1) != '>' && *(pointer - 1) != '>')
 		return (smp_out(pointer - 1, pointer + 1));
@@ -78,7 +78,5 @@ int				check_type(t_prompt *prompt, char **environ, char *pointer)
 		return (dbl_out(pointer - 1, pointer + 2));
 	else if (*pointer == '<' && *(pointer + 1) != '<' && *(pointer - 1) != '<')
 		return (smp_in(pointer - 1, pointer + 1));
-	else if (*pointer == '<' && *(pointer + 1) == '<')
-		return (read_set_stdin(pointer + 2, prompt, environ, pointer - 1));
 	return (0);
 }
