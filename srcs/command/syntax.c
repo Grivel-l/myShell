@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/28 01:41:04 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 00:27:43 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 00:51:20 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -82,6 +82,8 @@ int			check_syntax(t_prompt *prompt)
 
 	pipe = 0;
 	heredoc = 0;
+	quotes.simpleq = 0;
+	quotes.doubleq = 0;
 	line = prompt->line;
 	while (*line != '\0')
 	{

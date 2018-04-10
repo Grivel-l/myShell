@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:19:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 00:26:15 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 00:48:21 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,8 +34,6 @@ static int	init_values(t_prompt *prompt, int fd[2],
 	}
 	if (prompt->commands->content[0] != '\0')
 		ft_freetab(&split_tab);
-	if (*commands == NULL)
-		syntax_error(';');
 	return (0);
 }
 
