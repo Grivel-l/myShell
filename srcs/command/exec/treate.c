@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:19:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 00:48:21 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 01:20:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -75,7 +75,7 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 
 	if ((old_cmd = ft_strdup(prompt->commands->content)) == NULL)
 		return (-1);
-	if (replace_env(&(prompt->commands->content), cmd->environ) == -1)
+	if (replace_all(&(prompt->commands->content), cmd->environ, cmd->cmd_ret) == -1)
 		return (-1);
 	if (init_values(prompt, fd, fd2, &commands) == -1)
 		return (-1);

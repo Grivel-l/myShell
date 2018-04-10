@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/15 19:14:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 19:29:08 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 01:08:58 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,8 +48,6 @@ static int	exec_command(t_list *split, t_command *cmd, t_prompt *prompt)
 	int		ret;
 
 	if (ft_strsplit_qh(split->content, ' ', &(cmd->args)) == -1)
-		return (-1);
-	if (replace_tilde(cmd->args, cmd->environ) == -1)
 		return (-1);
 	if ((ret = get_bin_path(cmd)) == -1)
 	{

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 00:26:38 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 01:25:20 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -223,7 +223,7 @@ void				generic_error(char *name, char *message);
 ** Errors
 */
 
-int					replace_tilde(char **args, char **environ);
 int					replace_builtin_tilde(char **args, char **environ);
+int					replace_all(char **line, char **environ, int cmd_ret);
 
 #endif

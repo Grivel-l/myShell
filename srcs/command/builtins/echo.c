@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 01:41:05 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/10 22:54:10 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 01:26:25 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -56,8 +56,6 @@ int			echo_builtin(t_command *cmd, char **full_cmd)
 
 	quotes.simpleq = 0;
 	quotes.doubleq = 0;
-	if (replace_builtin_tilde(full_cmd, cmd->environ) == -1)
-		return (-1);
 	line = *full_cmd;
 	while (*line && *line != ' ')
 		line += 1;

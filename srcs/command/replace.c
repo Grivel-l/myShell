@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/03 17:48:45 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 19:21:35 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 01:35:01 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,77 +18,62 @@ static char	*get_home_path(char *command, char **environ)
 	char	*path;
 
 	if ((path = get_myenv("HOME", environ)) == NULL)
-	{
 		env_enoent(command, "HOME");
-		return (NULL);
-	}
 	return (path);
 }
 
-static int	join_args(char **str, char **args)
+static int	replace_char(char **line, size_t index, char **environ)
 {
-	char	**pointer;
+	char	*new;
+	char	*path;
 
-	ft_strdel(str);
-	if ((*str = ft_strnew(1)) == NULL)
+	if ((path = get_home_path("yo", environ)) == NULL)
+		return (1);
+	if ((new =
+ft_strnew(index + ft_strlen(path) + ft_strlen(&((*line)[index + 1])) + 1)) == NULL)
 		return (-1);
-	pointer = args;
-	while (*args != NULL)
-	{
-		if (((*str)[0] != '\0' && ft_addchar(str, ' ') == -1) ||
-				(*str = ft_strrealloc(*str, *args)) == NULL)
-		{
-			ft_freetab(&pointer);
-			return (-1);
-		}
-		args += 1;
-	}
-	ft_freetab(&pointer);
+	ft_strncpy(new, *line, index);
+	ft_strcpy(new + index, path);
+	ft_strcpy(new + index + ft_strlen(path), (*line) + index + 1);
+	free(*line);
+	*line = new;
 	return (0);
 }
 
-static int	quit(char *str)
+static int	replace_tilde(char **line, char **environ)
 {
-	free(str);
-	return (-1);
-}
+	size_t	i;
+	int		ret;
+	t_quote	quotes;
+	char	*pointer;
 
-int			replace_builtin_tilde(char **str, char **environ)
-{
-	char	**args;
-
-	if (ft_strsplit_qh(*str, ' ', &args) == -1)
-		return (-1);
-	if (replace_tilde(args, environ) == -1)
-	{
-		ft_freetab(&args);
-		return (-1);
-	}
-	return (join_args(str, args));
-}
-
-int			replace_tilde(char **args, char **environ)
-{
-	char	*tmp;
-	char	*path;
-	char	**pointer;
-
-	if ((path = get_home_path(args[0], environ)) == NULL)
-		return (0);
-	pointer = args;
+	i = 0;
+	pointer = *line;
+	quotes.simpleq = 0;
+	quotes.doubleq = 0;
 	while (*pointer)
 	{
-		if ((*pointer)[0] == '~' && ((*pointer)[1] == '\0' ||
-					(*pointer)[1] == '/'))
+		ft_checkquotes(&quotes, *pointer);
+		if (!quotes.simpleq && !quotes.doubleq && *pointer == '~')
 		{
-			tmp = *pointer;
-			if ((*pointer = ft_strdup(path)) == NULL)
-				return (quit(path));
-			if ((*pointer = ft_strrealloc(*pointer, &(tmp[1]))) == NULL)
-				return (quit(path));
-			ft_strdel(&tmp);
+			if ((ret = replace_char(line, i, environ)) == -1)
+				return (-1);
+			if (ret == 1)
+				return (1);
+			return (replace_tilde(line, environ));
 		}
+		i += 1;
 		pointer += 1;
 	}
+	return (0);
+}
+
+int			replace_all(char **line, char **environ, int cmd_ret)
+{
+	(void)cmd_ret;
+	if (replace_env(line, environ) == -1)
+		return (-1);
+	if (replace_tilde(line, environ) == -1)
+		return (-1);
 	return (0);
 }
