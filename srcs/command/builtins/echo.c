@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 01:41:05 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 19:06:55 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/10 22:54:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,6 +17,7 @@ static int	print_char(t_quote *quotes, char **str, t_command *cmd)
 {
 	char	*tmp;
 
+	ft_checkquotes(quotes, **str);
 	if (**str == '$' && *((*str) + 1) == '?')
 	{
 		if ((tmp = ft_itoa(cmd->cmd_ret)) == NULL)
@@ -26,13 +27,6 @@ static int	print_char(t_quote *quotes, char **str, t_command *cmd)
 		*str += 1;
 		return (0);
 	}
-	if ((**str == '<' || **str == '>') && !quotes->doubleq && !quotes->simpleq)
-	{
-		cmd->cmd_ret = 0;
-		ft_putchar('\n');
-		return (1);
-	}
-	ft_checkquotes(quotes, **str);
 	if (!((**str == '\'' && !quotes->doubleq) ||
 				(**str == '"' && !quotes->simpleq)))
 		ft_putchar(**str);
