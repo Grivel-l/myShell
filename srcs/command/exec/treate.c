@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:19:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 14:25:35 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/10 23:31:54 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,7 +26,7 @@ static int	init_values(t_prompt *prompt, int fd[2],
 	if (prompt->commands->content[0] != '\0' &&
 			ft_strsplit_qh(prompt->commands->content, ';', &split_tab) == -1)
 		return (-1);
-	if (prompt->commands->content[0] != '\0' &&
+	if (prompt->commands->content[0] != '\0' && (*split_tab != NULL) &&
 			(*commands = ft_tabtolist(split_tab)) == NULL)
 	{
 		ft_freetab(&split_tab);
