@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:23:48 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/24 00:54:53 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 00:25:58 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,9 +18,8 @@ void		print_bin(void)
 	ft_putstr_fd("21sh: ", 2);
 }
 
-int			syntax_error(t_prompt *prompt, char c)
+int			syntax_error(char c)
 {
-	prompt->commands = prompt->commands->next;
 	print_bin();
 	ft_putstr_fd("syntax error", 2);
 	if (c != 0)
