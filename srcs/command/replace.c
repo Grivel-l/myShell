@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/03 17:48:45 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 01:57:47 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 02:06:29 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -82,6 +82,7 @@ ft_strnew(index + ft_strlen(number) + ft_strlen(&((*line)[index + 1])) + 1)) == 
 	ft_strcpy(new + index + ft_strlen(number), (*line) + index + 2);
 	free(*line);
 	*line = new;
+	free(number);
 	return (0);
 }
 
@@ -108,7 +109,6 @@ static int	replace_cmdret(char **line, int cmd_ret)
 
 int			replace_all(char **line, char **environ, int cmd_ret)
 {
-	(void)cmd_ret;
 	if (replace_cmdret(line, cmd_ret) == -1)
 		return (-1);
 	if (replace_env(line, environ) == -1)

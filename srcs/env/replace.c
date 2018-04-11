@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/16 22:59:54 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/30 01:02:04 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 02:07:45 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -102,7 +102,8 @@ int				replace_env(char **line, char **environ)
 	line_pointer = *line;
 	while (*line_pointer)
 	{
-		if (*line_pointer == '$')
+		if (*line_pointer == '$' && *(line_pointer) != ' ' &&
+				*(line_pointer + 1) != '\0')
 			return (check_env(line, line_pointer + 1, environ));
 		line_pointer += 1;
 	}
