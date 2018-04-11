@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:19:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 01:20:48 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 16:29:53 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -39,6 +39,8 @@ static int	init_values(t_prompt *prompt, int fd[2],
 
 static int	end_command(t_prompt *prompt, char *old_cmd, int fd[2], int fd2[2])
 {
+	if (old_cmd == NULL)
+		return (-1);
 	free(prompt->commands->content);
 	prompt->commands->content = old_cmd;
 	prompt->commands = prompt->commands->next;
@@ -73,9 +75,9 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 	t_list	*pointer;
 	t_list	*commands;
 
-	if ((old_cmd = ft_strdup(prompt->commands->content)) == NULL)
-		return (-1);
-	if (replace_all(&(prompt->commands->content), cmd->environ, cmd->cmd_ret) == -1)
+	old_cmd = ft_strdup(prompt->commands->content);
+	if (replace_all(&(prompt->commands->content),
+				cmd->environ, cmd->cmd_ret) == -1)
 		return (-1);
 	if (init_values(prompt, fd, fd2, &commands) == -1)
 		return (-1);

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:28:11 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/21 03:28:55 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 17:01:59 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -39,5 +39,16 @@ int		dup_entries(int fd[2], int fd2[2], size_t direction)
 		if (dup2(fd2[1], STDERR_FILENO) == -1)
 			return (-1);
 	}
+	return (0);
+}
+
+int		replace_all(char **line, char **environ, int cmd_ret)
+{
+	if (replace_cmdret(line, cmd_ret) == -1)
+		return (-1);
+	if (replace_env(line, environ) == -1)
+		return (-1);
+	if (replace_tilde(line, environ) == -1)
+		return (-1);
 	return (0);
 }
