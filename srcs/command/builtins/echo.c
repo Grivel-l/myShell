@@ -6,27 +6,16 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 01:41:05 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 01:26:25 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 02:01:22 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-static int	print_char(t_quote *quotes, char **str, t_command *cmd)
+static int	print_char(t_quote *quotes, char **str)
 {
-	char	*tmp;
-
 	ft_checkquotes(quotes, **str);
-	if (**str == '$' && *((*str) + 1) == '?')
-	{
-		if ((tmp = ft_itoa(cmd->cmd_ret)) == NULL)
-			return (-1);
-		ft_putstr(tmp);
-		free(tmp);
-		*str += 1;
-		return (0);
-	}
 	if (!((**str == '\'' && !quotes->doubleq) ||
 				(**str == '"' && !quotes->simpleq)))
 		ft_putchar(**str);
@@ -42,15 +31,8 @@ static void	increase_pointer(char **full_cmd)
 	*full_cmd += 1;
 }
 
-static int	set_and_stop(t_command *cmd)
-{
-	cmd->cmd_ret = 1;
-	return (-1);
-}
-
 int			echo_builtin(t_command *cmd, char **full_cmd)
 {
-	int		ret;
 	char	*line;
 	t_quote	quotes;
 
@@ -65,8 +47,7 @@ int			echo_builtin(t_command *cmd, char **full_cmd)
 		line += 1;
 	while (*line)
 	{
-		if ((ret = print_char(&quotes, &line, cmd)) == -1 || ret == 1)
-			return (ret == 0 ? 0 : set_and_stop(cmd));
+		print_char(&quotes, &line);
 		increase_pointer(&line);
 	}
 	ft_putchar('\n');
