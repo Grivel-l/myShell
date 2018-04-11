@@ -6,21 +6,53 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/03 17:48:45 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 02:06:29 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/11 02:43:00 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
+static char	*get_command_name(char *line)
+{
+	char	c;
+	char	*tmp;
+	char	*pointer;
+	t_quote	quotes;
+
+	pointer = line;
+	while (*line == ' ' && *line != '\0')
+		line += 1;
+	quotes.simpleq = 0;
+	quotes.doubleq = 0;
+	while (*line != ' ' && *line != '<' && *line != '>' &&
+			!quotes.simpleq && !quotes.doubleq)
+	{
+		if (*line == '\0')
+			break ;
+		ft_checkquotes(&quotes, *line);
+		line += 1;
+	}
+	c = *line;
+	*line = '\0';
+	if ((tmp = ft_strdup(pointer)) == NULL)
+		return (NULL);
+	*line = c;
+	return (tmp);
+}
+
 static int	re_tilde(char **line, size_t index, char **environ)
 {
 	char	*new;
 	char	*path;
+	char	*command;
 
 	if ((path = get_myenv("HOME", environ)) == NULL)
 	{
-		env_enoent("yo", "HOME");
+		if ((command = get_command_name(*line)) == NULL)
+			return (-1);
+		env_enoent(command, "HOME");
+		free(command);
 		return (1);
 	}
 	if ((new =
