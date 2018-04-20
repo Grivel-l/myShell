@@ -18,7 +18,6 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
-# include <sys/syslimits.h>
 # include <termios.h>
 # include <term.h>
 # include <errno.h>
@@ -191,6 +190,7 @@ int					echo_builtin(t_command *cmd, char **full_cmd);
 **	Command exec
 */
 
+int					free_and_return(char *str, int return_value);
 void				free_everything(t_command *cmd, t_prompt *prompt);
 
 /*

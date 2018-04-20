@@ -51,18 +51,17 @@ static int		check_access(char *file, int flags)
 
 int				get_input_fd(char *str, int flags)
 {
+	char	c;
 	int		fd;
 	char	*file;
 
 	if ((file = get_after(str)) == NULL)
 		return (-1);
-	if (file[0] == '&')
+	c = file[0];
+	if (c == '&')
 	{
 		if (ft_strcmp(&(file[1]), "-") == 0)
-		{
-			free(file);
-			return (-2);
-		}
+			return(free_and_return(file, -2));
 		fd = 1;
 		while (file[fd] >= 48 && file[fd] <= 57 && file[fd] != '\0')
 			fd += 1;
@@ -75,7 +74,7 @@ int				get_input_fd(char *str, int flags)
 		fd = ft_atoi(&(file[1]));
 		free(file);
 	}
-	return (file[0] == '&' ? fd : check_access(file, flags));
+	return (c == '&' ? fd : check_access(file, flags));
 }
 
 size_t			get_output_fd(char *str, size_t default_fd)

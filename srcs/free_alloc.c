@@ -26,3 +26,9 @@ void		free_everything(t_command *cmd, t_prompt *prompt)
 	ft_freetab(&(cmd->environ));
 	close_fd(cmd->fd);
 }
+
+int			free_and_return(char *str, int return_value)
+{
+	free(str);
+	return (return_value);
+}
