@@ -23,6 +23,9 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <signal.h>
+# ifndef linux
+# include <sys/syslimits.h>
+# endif
 
 # define PL 2
 # define READ_END 0
