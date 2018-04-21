@@ -102,7 +102,7 @@ int			replace_tilde(char **line, char **environ)
 	while (*pointer)
 	{
 		ft_checkquotes(&quotes, *pointer);
-		if (*pointer == '~' && *(pointer - 1) == ' ' && (*(pointer + 1) == ' '
+		if (*pointer == '~' && (i == 0 || *(pointer - 1) == ' ') && (*(pointer + 1) == ' '
 		|| *(pointer + 1) == '\0' || *(pointer + 1) == '/') &&
 		!quotes.simpleq && !quotes.doubleq)
 		{
