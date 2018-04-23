@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 16:33:32 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/23 19:12:04 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -173,7 +173,6 @@ int					close_fd(int fd[2]);
 int					get_fd(char *str, int default_fd);
 int					close_all_fd(int fd[2], int fd2[2]);
 int					set_stdout_fd(char **args, char *previous);
-int					configure_builtin_fd(t_command *cmd, int tmp[2]);
 int					set_stdin_fd(char **file, char ***args, char *previous);
 int					configure_fd(t_command *cmd, size_t is_last, char *content);
 /*

@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/03 20:24:54 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/23 19:12:57 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -51,12 +51,16 @@ static void	crop_cmd(char *cmd)
 int			exec_builtin(t_command *cmd, char **full_cmd, size_t is_last)
 {
 	int		ret;
-	int		fd[2];
+	int		tmp[2];
 
-	ret = 0;
-	crop_cmd(*full_cmd);
-	if (!is_last && configure_builtin_fd(cmd, fd) == -1)
+	if (pipe(tmp) == -1)
 		return (-1);
+	ret = 0;
+	if (dup2(STDOUT_FILENO, tmp[WRITE_END]) == -1)
+		return (-1);
+	if (configure_fd(cmd, is_last, *full_cmd) == -1)
+		return (-1);
+	crop_cmd(*full_cmd);
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
 		ret = cd_builtin(cmd);
 	else if (ft_strcmp(cmd->args[0], "echo") == 0)
@@ -72,8 +76,11 @@ int			exec_builtin(t_command *cmd, char **full_cmd, size_t is_last)
 		ret = set_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "exit") == 0)
 		ret = exit_builtin(cmd);
-	if (!is_last && dup2(fd[WRITE_END], STDOUT_FILENO) == -1)
+	if (dup2(tmp[WRITE_END], STDOUT_FILENO) == -1)
 		return (-1);
+	if (close(cmd->fd[WRITE_END]) == -1)
+		return (-1);
+	cmd->tmp_fd = cmd->fd[READ_END];
 	return (ret);
 }
 

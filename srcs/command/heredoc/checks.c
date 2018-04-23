@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/09 19:33:08 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 19:34:17 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/23 19:08:43 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -30,8 +30,6 @@ int			check_dbl_in(t_command *cmd, t_list *split, t_prompt *prompt)
 			return (-1);
 		pointer += 1;
 	}
-	if (cmd->bin == NULL && check_all_heredocs(split->content) == -1)
-		return (-1);
 	if (update_args(split->content, &(cmd->args)) == -1)
 		return (-1);
 	return (cmd->bin == NULL ? exec_builtin(cmd,
