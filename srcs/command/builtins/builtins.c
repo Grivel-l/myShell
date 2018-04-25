@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:03:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/23 19:12:57 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/25 22:23:06 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,19 +48,25 @@ static void	crop_cmd(char *cmd)
 	}
 }
 
+static int	init(t_command *cmd, int tmp[2], char *full_cmd, size_t is_last)
+{
+	if (pipe(tmp) == -1)
+		return (-1);
+	if (dup2(STDOUT_FILENO, tmp[WRITE_END]) == -1)
+		return (-1);
+	if (configure_fd(cmd, is_last, full_cmd) == -1)
+		return (-1);
+	crop_cmd(full_cmd);
+	return (0);
+}
+
 int			exec_builtin(t_command *cmd, char **full_cmd, size_t is_last)
 {
 	int		ret;
 	int		tmp[2];
 
-	if (pipe(tmp) == -1)
+	if ((ret = init(cmd, tmp, *full_cmd, is_last)) == -1)
 		return (-1);
-	ret = 0;
-	if (dup2(STDOUT_FILENO, tmp[WRITE_END]) == -1)
-		return (-1);
-	if (configure_fd(cmd, is_last, *full_cmd) == -1)
-		return (-1);
-	crop_cmd(*full_cmd);
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
 		ret = cd_builtin(cmd);
 	else if (ft_strcmp(cmd->args[0], "echo") == 0)
@@ -68,10 +74,7 @@ int			exec_builtin(t_command *cmd, char **full_cmd, size_t is_last)
 	else if (ft_strcmp(cmd->args[0], "unsetenv") == 0)
 		ret = unset_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "env") == 0)
-	{
-		cmd->cmd_ret = 0;
-		ft_puttab(cmd->environ);
-	}
+		print_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "setenv") == 0)
 		ret = set_env(cmd);
 	else if (ft_strcmp(cmd->args[0], "exit") == 0)

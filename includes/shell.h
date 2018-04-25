@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/23 19:12:04 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/25 22:29:25 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,7 +24,7 @@
 # include <fcntl.h>
 # include <signal.h>
 # ifndef linux
-# include <sys/syslimits.h>
+#  include <sys/syslimits.h>
 # endif
 
 # define PL 2
@@ -200,6 +200,7 @@ void				free_everything(t_command *cmd, t_prompt *prompt);
 */
 int					set_env(t_command *cmd);
 int					unset_env(t_command *cmd);
+void				print_env(t_command *cmd);
 int					add_env(char *env, char ***environ);
 char				*get_myenv(char *env, char **environ);
 int					delete_env(char ***environ, int index);

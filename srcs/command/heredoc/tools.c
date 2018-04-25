@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 02:26:56 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 14:47:01 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/25 22:09:18 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -61,7 +61,7 @@ int				get_input_fd(char *str, int flags)
 	if (c == '&')
 	{
 		if (ft_strcmp(&(file[1]), "-") == 0)
-			return(free_and_return(file, -2));
+			return (free_and_return(file, -2));
 		fd = 1;
 		while (file[fd] >= 48 && file[fd] <= 57 && file[fd] != '\0')
 			fd += 1;

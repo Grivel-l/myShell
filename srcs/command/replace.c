@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/03 17:48:45 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/19 17:08:39 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/25 22:08:41 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -102,8 +102,8 @@ int			replace_tilde(char **line, char **environ)
 	while (*pointer)
 	{
 		ft_checkquotes(&quotes, *pointer);
-		if (*pointer == '~' && (i == 0 || *(pointer - 1) == ' ') && (*(pointer + 1) == ' '
-		|| *(pointer + 1) == '\0' || *(pointer + 1) == '/') &&
+		if (*pointer == '~' && (i == 0 || *(pointer - 1) == ' ') &&
+(*(pointer + 1) == ' ' || *(pointer + 1) == '\0' || *(pointer + 1) == '/') &&
 		!quotes.simpleq && !quotes.doubleq)
 		{
 			if ((ret = re_tilde(line, i, environ)) == -1 || ret == 1)

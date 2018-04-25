@@ -6,12 +6,18 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/24 01:15:39 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/24 21:18:07 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/25 22:22:36 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
+
+void			print_env(t_command *cmd)
+{
+	cmd->cmd_ret = 0;
+	ft_puttab(cmd->environ);
+}
 
 char			*get_myenv(char *env, char **environ)
 {
