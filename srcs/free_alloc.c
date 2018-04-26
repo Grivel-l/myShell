@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/28 00:08:02 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/03/16 16:34:35 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/26 17:20:27 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -30,5 +30,12 @@ void		free_everything(t_command *cmd, t_prompt *prompt)
 int			free_and_return(char *str, int return_value)
 {
 	free(str);
+	return (return_value);
+}
+
+int			free_and_return2(char *str, t_list **pointer, int return_value)
+{
+	free(str);
+	ft_lstfree(pointer);
 	return (return_value);
 }

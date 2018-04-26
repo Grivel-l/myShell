@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:19:43 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/11 16:29:53 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/26 17:22:09 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -78,18 +78,18 @@ int			treate_command(t_prompt *prompt, t_command *cmd)
 	old_cmd = ft_strdup(prompt->commands->content);
 	if (replace_all(&(prompt->commands->content),
 				cmd->environ, cmd->cmd_ret) == -1)
-		return (-1);
+		return (free_and_return(old_cmd, -1));
 	if (init_values(prompt, fd, fd2, &commands) == -1)
-		return (-1);
+		return (free_and_return(old_cmd, -1));
 	pointer = commands;
 	while (commands != NULL)
 	{
 		if (prepare_command(prompt->term, commands->content, fd, fd2) == -1)
-			return (-1);
+			return (free_and_return(old_cmd, -1));
 		if (split_pipe(commands->content, cmd, prompt) == -1)
-			return (free_quit(&pointer));
+			return (free_and_return2(old_cmd, &pointer, -1));
 		if (reset_command(prompt->term, commands->content, fd, fd2) == -1)
-			return (-1);
+			return (free_and_return2(old_cmd, &pointer, -1));
 		commands = commands->next;
 	}
 	ft_lstfree(&pointer);

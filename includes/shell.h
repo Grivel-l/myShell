@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/02/01 23:15:19 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/25 22:29:25 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/04/26 17:21:09 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -194,6 +194,7 @@ int					echo_builtin(t_command *cmd, char **full_cmd);
 
 int					free_and_return(char *str, int return_value);
 void				free_everything(t_command *cmd, t_prompt *prompt);
+int					free_and_return2(char *str, t_list **pointer, int return_value);
 
 /*
 ** ENV
