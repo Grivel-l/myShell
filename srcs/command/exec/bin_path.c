@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/21 03:44:09 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/09 14:19:03 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/05/03 16:58:10 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -36,6 +36,8 @@ static int	create_path(char *path, t_command *cmd, char **error)
 	char	*tmp;
 
 	ret = 0;
+	if (*cmd->args[0] == '\0')
+		return (1);
 	if ((tmp = ft_strjoin(path, "/")) == NULL)
 		ret = -1;
 	if (ret == 0 && (tmp = ft_strrealloc(tmp, cmd->args[0])) == NULL)
