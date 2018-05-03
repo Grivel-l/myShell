@@ -6,7 +6,7 @@
 /*   By: legrivel <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/03/05 13:56:00 by legrivel     #+#   ##    ##    #+#       */
-/*   Updated: 2018/04/23 19:00:19 by legrivel    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/05/03 17:04:48 by legrivel    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -37,7 +37,7 @@ int				smp_out(char *before, char *after)
 		return (close(output));
 	if (dup2(input, output) == -1)
 		return (check_range());
-	return (close(input));
+	return (input != (int)output ? close(input) : 0);
 }
 
 int				dbl_out(char *before, char *after)
@@ -50,7 +50,7 @@ int				dbl_out(char *before, char *after)
 	output = get_output_fd(before, STDOUT_FILENO);
 	if (dup2(input, output) == -1)
 		return (check_range());
-	return (close(input));
+	return (input != (int)output ? close(input) : 0);
 }
 
 int				smp_in(char *before, char *after)
@@ -67,7 +67,7 @@ int				smp_in(char *before, char *after)
 		return (close(input));
 	if (dup2(output, input) == -1)
 		return (check_range());
-	return (close(output));
+	return ((int)input != output ? close(output) : 0);
 }
 
 int				check_type(char *pointer)
